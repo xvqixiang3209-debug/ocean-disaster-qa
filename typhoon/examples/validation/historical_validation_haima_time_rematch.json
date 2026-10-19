@@ -1,0 +1,19 @@
+{
+  "sid": "2004255N23120",
+  "name": "HAIMA（时间匹配回放）",
+  "source": "IBTrACS历史时间匹配验证",
+  "issued_at": "2004-09-12T18:00:00Z",
+  "validation_purpose": "验证原风暴潮文件0421按时间和浙江路径关联到HAIMA",
+  "expected_storm_surge": {"severity": "轻微", "max_surge_m": 0.70, "source_storm_code": "0421"},
+  "forecast_track": [
+    {"time": "2004-09-12T18:00:00Z", "lat": 26.7, "lon": 121.9, "wind_kt": 34, "pressure_hpa": 996},
+    {"time": "2004-09-12T21:00:00Z", "lat": 27.0, "lon": 121.8, "wind_kt": 34, "pressure_hpa": 996},
+    {"time": "2004-09-13T00:00:00Z", "lat": 27.3, "lon": 121.5, "wind_kt": 34, "pressure_hpa": 996},
+    {"time": "2004-09-13T03:00:00Z", "lat": 27.7, "lon": 121.2, "wind_kt": 34, "pressure_hpa": 997},
+    {"time": "2004-09-13T06:00:00Z", "lat": 27.9, "lon": 120.7, "wind_kt": 34, "pressure_hpa": 998},
+    {"time": "2004-09-13T09:00:00Z", "lat": 28.2, "lon": 120.3, "wind_kt": 29, "pressure_hpa": 1003},
+    {"time": "2004-09-13T12:00:00Z", "lat": 28.5, "lon": 120.0, "wind_kt": 23, "pressure_hpa": 1008},
+    {"time": "2004-09-13T15:00:00Z", "lat": 29.1, "lon": 119.8, "wind_kt": 23, "pressure_hpa": 1008},
+    {"time": "2004-09-13T18:00:00Z", "lat": 30.0, "lon": 119.6, "wind_kt": 23, "pressure_hpa": 1008}
+  ]
+}

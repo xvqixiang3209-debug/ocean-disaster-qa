@@ -1,0 +1,96 @@
+{
+  "captured_at": "2026-10-19T17:27:05.171520+08:00",
+  "note": "Read-only inventory; databases themselves are not in this repository. Counts are source/chunk/record counts, not independently accepted knowledge.",
+  "assets": [
+    {
+      "path": "data/marine_kb/knowledge.sqlite3",
+      "included": false,
+      "size_bytes_at_capture": 66084864,
+      "tables": [
+        "sources",
+        "chunks",
+        "chunk_fts",
+        "chunk_fts_data",
+        "chunk_fts_idx",
+        "chunk_fts_content",
+        "chunk_fts_docsize",
+        "chunk_fts_config",
+        "links",
+        "jobs",
+        "review_log",
+        "capabilities",
+        "requirement_states",
+        "requirement_state_log",
+        "month1_reviews",
+        "source_origin_confirmations"
+      ],
+      "row_counts_at_capture": {
+        "sources": 2797,
+        "chunks": 25101
+      }
+    },
+    {
+      "path": "data/forecast_runtime/forecast.sqlite3",
+      "included": false,
+      "size_bytes_at_capture": 110403584,
+      "tables": [
+        "entities",
+        "tide_hours",
+        "tide_extrema",
+        "tide_files",
+        "grids",
+        "state",
+        "grid_point_series",
+        "typhoon_snapshots",
+        "official_warning_versions",
+        "official_warning_feeds"
+      ],
+      "row_counts_at_capture": {}
+    },
+    {
+      "path": "typhoon/data/typhoon_history.sqlite3",
+      "included": false,
+      "size_bytes_at_capture": 45232128,
+      "tables": [
+        "metadata",
+        "storms",
+        "track_points",
+        "sqlite_sequence",
+        "sqlite_stat1",
+        "storm_surge_events",
+        "storm_surge_stations",
+        "storm_surge_observations",
+        "typhoon_reports",
+        "typhoon_report_cases",
+        "typhoon_report_station_metrics",
+        "typhoon_report_sections",
+        "typhoon_report_qc_issues"
+      ],
+      "row_counts_at_capture": {
+        "storms": 4105,
+        "storm_surge_events": 63,
+        "storm_surge_stations": 1252,
+        "storm_surge_observations": 64565
+      }
+    },
+    {
+      "path": "typhoon/data/typhoon_rag.sqlite3",
+      "included": false,
+      "size_bytes_at_capture": 374902784,
+      "tables": [
+        "knowledge_documents",
+        "knowledge_chunks",
+        "sqlite_sequence",
+        "knowledge_chunks_fts",
+        "knowledge_chunks_fts_data",
+        "knowledge_chunks_fts_idx",
+        "knowledge_chunks_fts_content",
+        "knowledge_chunks_fts_docsize",
+        "knowledge_chunks_fts_config",
+        "knowledge_index_metadata",
+        "knowledge_chunk_storm_links"
+      ],
+      "row_counts_at_capture": {}
+    }
+  ]
+}

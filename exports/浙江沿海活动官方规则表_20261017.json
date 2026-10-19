@@ -1,0 +1,1447 @@
+{
+  "checked_at": "2026-10-17",
+  "catalog_version": "zhejiang-official-activity-policy-20261017.3",
+  "scope": "朱家尖首发；国家共同规则可匹配浙江明确行政位置，县/保护区专属规则分开选择。",
+  "table": [
+    {
+      "activity": "tidal_flat",
+      "label": "赶海",
+      "location": {
+        "key": "zhujiajian",
+        "province": "zhejiang",
+        "city": "zhoushan",
+        "county": "putuo",
+        "country": "CN"
+      },
+      "active_policies": [
+        {
+          "id": "cn-tidal-flat-fire-rescue-advice-2025",
+          "title": "赶海滩涂安全提示",
+          "scope": {
+            "country": "CN"
+          },
+          "summary": "赶海应提高警惕，不贸然深入滩涂；地形、潮汐和返程通道需核查。",
+          "source": {
+            "url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+            "publisher": "国家消防救援局",
+            "paragraph": "末段消防提示",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+              "note": "官方消防科普，作为风险提示而非行政禁令；无风浪流数值和低潮±固定分钟安全线。"
+            }
+          },
+          "numeric_rules": [],
+          "requirements": [],
+          "not_applicable": "不能仅凭本条认定现场允许开展活动或安全。"
+        }
+      ],
+      "inactive_references": [],
+      "excluded_policies": [
+        {
+          "id": "cn-bathing-environment-method-2026",
+          "title": "生态环境部海水浴场环境适游评价口径",
+          "status": "current_method_confirmed",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+            "publisher": "生态环境部",
+            "paragraph": "文末注①",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_method_confirmed",
+              "current_check_url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+              "note": "核到2026官方报告明确水质、水温口径；未取得HY全文，不增补风浪流条款。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ],
+            "application_condition": "仅天然海水浴场环境评价；场地类型及监测代表性需另行确认。"
+          }
+        },
+        {
+          "id": "cn-bathing-service-gbt34420-2017",
+          "title": "海水浴场服务规范",
+          "status": "current",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态、发布实施日期、复审信息",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+              "note": "平台标注现行、修订计划正在批准；不能从名称推导风力或浪高上限。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ]
+          }
+        },
+        {
+          "id": "cn-maritime-traffic-law-2021",
+          "title": "中华人民共和国海上交通安全法",
+          "status": "current",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+            "publisher": "上海海事局",
+            "paragraph": "第2、7、52条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+              "note": "官方法律数据库标注有效，已核2021修订全文。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "application_condition": "中国管辖海域内的船舶活动。"
+          }
+        },
+        {
+          "id": "zhoushan-protected-area-fishing-2023",
+          "title": "舟山市国家级海洋特别保护区海钓管理办法",
+          "status": "current_text_verified",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "publisher": "司法部",
+            "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+            "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_text_verified",
+              "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+              "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "protected_area_ids": [
+              "ma_an_islands",
+              "zhongjieshan_islands"
+            ],
+            "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+          }
+        },
+        {
+          "id": "daishan-recreational-fishery-risk-2022",
+          "title": "休闲渔业气象风险等级",
+          "status": "current_status_unconfirmed",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+            "publisher": "岱山县市场监管局",
+            "paragraph": "第1、3.5、4.2表1、4.3表2、5.1条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_status_unconfirmed",
+              "current_check_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+              "note": "核到官方PDF发布实施日期，未取得当前状态库继续有效确认，仅参考不自动执行。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "county": "daishan",
+            "application_condition": "仅岱山休闲渔业营运、调度及气象服务。"
+          }
+        },
+        {
+          "id": "zhoushan-bathing-service-db3309-2025-withdrawn",
+          "title": "海滨浴场服务规范（已废止）",
+          "status": "withdrawn",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态及废止日期",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "withdrawn",
+              "current_check_url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+              "note": "官方状态页明确已废止。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "city": "zhoushan"
+          }
+        },
+        {
+          "id": "cn-shore-fishing-coast-guard-advice-2021",
+          "title": "海边垂钓防潮汐被困提示",
+          "status": "guidance_published",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+            "publisher": "中国海警局（福建海警署名）",
+            "paragraph": "正文海警提醒",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+              "note": "网页迁移路径为2024，正文署名日期为2021-11-08；提示可参考，不能作为浙江行政限制。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "application_condition": "作为沿海通用风险提示；来源福建海警，非浙江地方许可或禁令。"
+          }
+        }
+      ],
+      "permission_notice": "有官方依据不代表场地开放；实际开放、救生、代表性及返程/航次核验独立判断。"
+    },
+    {
+      "activity": "swimming",
+      "label": "游泳",
+      "location": {
+        "key": "zhujiajian",
+        "province": "zhejiang",
+        "city": "zhoushan",
+        "county": "putuo",
+        "country": "CN"
+      },
+      "active_policies": [
+        {
+          "id": "cn-bathing-environment-method-2026",
+          "title": "生态环境部海水浴场环境适游评价口径",
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ],
+            "application_condition": "仅天然海水浴场环境评价；场地类型及监测代表性需另行确认。"
+          },
+          "summary": "优且20≤水温≤28℃为适宜；良或28<水温≤33℃为较适宜；差或水温<20℃、>33℃为不适宜。负面条件优先，缺测不判适宜。",
+          "source": {
+            "url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+            "publisher": "生态环境部",
+            "paragraph": "文末注①",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_method_confirmed",
+              "current_check_url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+              "note": "核到2026官方报告明确水质、水温口径；未取得HY全文，不增补风浪流条款。"
+            }
+          },
+          "numeric_rules": [
+            {
+              "id": "bathing-water-quality-temperature",
+              "evaluator": "bathing_water_quality_temperature",
+              "effect": "environment_suitability",
+              "input": "matched_bathing_water_observation",
+              "quantity": "surface_bathing_water_temperature",
+              "unit": "degC",
+              "suitable_min": 20,
+              "suitable_max": 28,
+              "maximum": 33,
+              "requires": [
+                "same_site",
+                "full_query_period",
+                "published_by_query",
+                "measured_water_temperature",
+                "water_quality_grade"
+              ]
+            }
+          ],
+          "requirements": [],
+          "not_applicable": "历史结果不迁移到当前；SST模式海表温度不替代浴场实测水温；环境评价不是开放许可。"
+        }
+      ],
+      "inactive_references": [
+        {
+          "id": "cn-bathing-service-gbt34420-2017",
+          "status": "current",
+          "reason": "reference_only_not_executable",
+          "source": {
+            "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态、发布实施日期、复审信息",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+              "note": "平台标注现行、修订计划正在批准；不能从名称推导风力或浪高上限。"
+            }
+          }
+        }
+      ],
+      "excluded_policies": [
+        {
+          "id": "cn-maritime-traffic-law-2021",
+          "title": "中华人民共和国海上交通安全法",
+          "status": "current",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+            "publisher": "上海海事局",
+            "paragraph": "第2、7、52条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+              "note": "官方法律数据库标注有效，已核2021修订全文。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "application_condition": "中国管辖海域内的船舶活动。"
+          }
+        },
+        {
+          "id": "zhoushan-protected-area-fishing-2023",
+          "title": "舟山市国家级海洋特别保护区海钓管理办法",
+          "status": "current_text_verified",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "publisher": "司法部",
+            "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+            "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_text_verified",
+              "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+              "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "protected_area_ids": [
+              "ma_an_islands",
+              "zhongjieshan_islands"
+            ],
+            "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+          }
+        },
+        {
+          "id": "daishan-recreational-fishery-risk-2022",
+          "title": "休闲渔业气象风险等级",
+          "status": "current_status_unconfirmed",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+            "publisher": "岱山县市场监管局",
+            "paragraph": "第1、3.5、4.2表1、4.3表2、5.1条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_status_unconfirmed",
+              "current_check_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+              "note": "核到官方PDF发布实施日期，未取得当前状态库继续有效确认，仅参考不自动执行。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "county": "daishan",
+            "application_condition": "仅岱山休闲渔业营运、调度及气象服务。"
+          }
+        },
+        {
+          "id": "zhoushan-bathing-service-db3309-2025-withdrawn",
+          "title": "海滨浴场服务规范（已废止）",
+          "status": "withdrawn",
+          "reason": "expired_or_withdrawn",
+          "source": {
+            "url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态及废止日期",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "withdrawn",
+              "current_check_url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+              "note": "官方状态页明确已废止。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "city": "zhoushan"
+          }
+        },
+        {
+          "id": "cn-tidal-flat-fire-rescue-advice-2025",
+          "title": "赶海滩涂安全提示",
+          "status": "guidance_published",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+            "publisher": "国家消防救援局",
+            "paragraph": "末段消防提示",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+              "note": "官方消防科普，作为风险提示而非行政禁令；无风浪流数值和低潮±固定分钟安全线。"
+            }
+          },
+          "scope": {
+            "country": "CN"
+          }
+        },
+        {
+          "id": "cn-shore-fishing-coast-guard-advice-2021",
+          "title": "海边垂钓防潮汐被困提示",
+          "status": "guidance_published",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+            "publisher": "中国海警局（福建海警署名）",
+            "paragraph": "正文海警提醒",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+              "note": "网页迁移路径为2024，正文署名日期为2021-11-08；提示可参考，不能作为浙江行政限制。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "application_condition": "作为沿海通用风险提示；来源福建海警，非浙江地方许可或禁令。"
+          }
+        }
+      ],
+      "permission_notice": "有官方依据不代表场地开放；实际开放、救生、代表性及返程/航次核验独立判断。"
+    },
+    {
+      "activity": "shore_fishing",
+      "label": "岸钓/礁钓",
+      "location": {
+        "key": "zhujiajian",
+        "province": "zhejiang",
+        "city": "zhoushan",
+        "county": "putuo",
+        "country": "CN"
+      },
+      "active_policies": [
+        {
+          "id": "cn-shore-fishing-coast-guard-advice-2021",
+          "title": "海边垂钓防潮汐被困提示",
+          "scope": {
+            "country": "CN",
+            "application_condition": "作为沿海通用风险提示；来源福建海警，非浙江地方许可或禁令。"
+          },
+          "summary": "海边游玩垂钓注意礁石暗礁孤岛风险，关注潮汐防止困海。",
+          "source": {
+            "url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+            "publisher": "中国海警局（福建海警署名）",
+            "paragraph": "正文海警提醒",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+              "note": "网页迁移路径为2024，正文署名日期为2021-11-08；提示可参考，不能作为浙江行政限制。"
+            }
+          },
+          "numeric_rules": [],
+          "requirements": [],
+          "not_applicable": "不能仅凭本条认定现场允许开展活动或安全。"
+        }
+      ],
+      "inactive_references": [],
+      "excluded_policies": [
+        {
+          "id": "cn-bathing-environment-method-2026",
+          "title": "生态环境部海水浴场环境适游评价口径",
+          "status": "current_method_confirmed",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+            "publisher": "生态环境部",
+            "paragraph": "文末注①",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_method_confirmed",
+              "current_check_url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+              "note": "核到2026官方报告明确水质、水温口径；未取得HY全文，不增补风浪流条款。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ],
+            "application_condition": "仅天然海水浴场环境评价；场地类型及监测代表性需另行确认。"
+          }
+        },
+        {
+          "id": "cn-bathing-service-gbt34420-2017",
+          "title": "海水浴场服务规范",
+          "status": "current",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态、发布实施日期、复审信息",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+              "note": "平台标注现行、修订计划正在批准；不能从名称推导风力或浪高上限。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ]
+          }
+        },
+        {
+          "id": "cn-maritime-traffic-law-2021",
+          "title": "中华人民共和国海上交通安全法",
+          "status": "current",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+            "publisher": "上海海事局",
+            "paragraph": "第2、7、52条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+              "note": "官方法律数据库标注有效，已核2021修订全文。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "application_condition": "中国管辖海域内的船舶活动。"
+          }
+        },
+        {
+          "id": "zhoushan-protected-area-fishing-2023",
+          "title": "舟山市国家级海洋特别保护区海钓管理办法",
+          "status": "current_text_verified",
+          "reason": "protected_area_not_verified",
+          "source": {
+            "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "publisher": "司法部",
+            "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+            "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_text_verified",
+              "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+              "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "protected_area_ids": [
+              "ma_an_islands",
+              "zhongjieshan_islands"
+            ],
+            "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+          }
+        },
+        {
+          "id": "daishan-recreational-fishery-risk-2022",
+          "title": "休闲渔业气象风险等级",
+          "status": "current_status_unconfirmed",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+            "publisher": "岱山县市场监管局",
+            "paragraph": "第1、3.5、4.2表1、4.3表2、5.1条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_status_unconfirmed",
+              "current_check_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+              "note": "核到官方PDF发布实施日期，未取得当前状态库继续有效确认，仅参考不自动执行。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "county": "daishan",
+            "application_condition": "仅岱山休闲渔业营运、调度及气象服务。"
+          }
+        },
+        {
+          "id": "zhoushan-bathing-service-db3309-2025-withdrawn",
+          "title": "海滨浴场服务规范（已废止）",
+          "status": "withdrawn",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态及废止日期",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "withdrawn",
+              "current_check_url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+              "note": "官方状态页明确已废止。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "city": "zhoushan"
+          }
+        },
+        {
+          "id": "cn-tidal-flat-fire-rescue-advice-2025",
+          "title": "赶海滩涂安全提示",
+          "status": "guidance_published",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+            "publisher": "国家消防救援局",
+            "paragraph": "末段消防提示",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+              "note": "官方消防科普，作为风险提示而非行政禁令；无风浪流数值和低潮±固定分钟安全线。"
+            }
+          },
+          "scope": {
+            "country": "CN"
+          }
+        }
+      ],
+      "permission_notice": "有官方依据不代表场地开放；实际开放、救生、代表性及返程/航次核验独立判断。"
+    },
+    {
+      "activity": "boat_fishing",
+      "label": "船钓",
+      "location": {
+        "key": "zhujiajian",
+        "province": "zhejiang",
+        "city": "zhoushan",
+        "county": "putuo",
+        "country": "CN"
+      },
+      "active_policies": [
+        {
+          "id": "cn-maritime-traffic-law-2021",
+          "title": "中华人民共和国海上交通安全法",
+          "scope": {
+            "country": "CN",
+            "application_condition": "中国管辖海域内的船舶活动。"
+          },
+          "summary": "船舶遵守有关法律、强制性标准及技术规范；恶劣天气海况等可依法公告停航、限速或交通管制，须核本航次适用公告。",
+          "source": {
+            "url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+            "publisher": "上海海事局",
+            "paragraph": "第2、7、52条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+              "note": "官方法律数据库标注有效，已核2021修订全文。"
+            }
+          },
+          "numeric_rules": [],
+          "requirements": [
+            {
+              "kind": "marine_traffic_control",
+              "label": "本航次适用的海事交通管制与开航要求核查"
+            }
+          ],
+          "not_applicable": "未提供所有船型统一海钓风浪上限；未检索到管制不等于无管制。"
+        }
+      ],
+      "inactive_references": [],
+      "excluded_policies": [
+        {
+          "id": "cn-bathing-environment-method-2026",
+          "title": "生态环境部海水浴场环境适游评价口径",
+          "status": "current_method_confirmed",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+            "publisher": "生态环境部",
+            "paragraph": "文末注①",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_method_confirmed",
+              "current_check_url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+              "note": "核到2026官方报告明确水质、水温口径；未取得HY全文，不增补风浪流条款。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ],
+            "application_condition": "仅天然海水浴场环境评价；场地类型及监测代表性需另行确认。"
+          }
+        },
+        {
+          "id": "cn-bathing-service-gbt34420-2017",
+          "title": "海水浴场服务规范",
+          "status": "current",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态、发布实施日期、复审信息",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current",
+              "current_check_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+              "note": "平台标注现行、修订计划正在批准；不能从名称推导风力或浪高上限。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "site_types": [
+              "natural_bathing_beach"
+            ]
+          }
+        },
+        {
+          "id": "zhoushan-protected-area-fishing-2023",
+          "title": "舟山市国家级海洋特别保护区海钓管理办法",
+          "status": "current_text_verified",
+          "reason": "protected_area_not_verified",
+          "source": {
+            "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "publisher": "司法部",
+            "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+            "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_text_verified",
+              "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+              "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "protected_area_ids": [
+              "ma_an_islands",
+              "zhongjieshan_islands"
+            ],
+            "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+          }
+        },
+        {
+          "id": "daishan-recreational-fishery-risk-2022",
+          "title": "休闲渔业气象风险等级",
+          "status": "current_status_unconfirmed",
+          "reason": "outside_county",
+          "source": {
+            "url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+            "publisher": "岱山县市场监管局",
+            "paragraph": "第1、3.5、4.2表1、4.3表2、5.1条",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "current_status_unconfirmed",
+              "current_check_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+              "note": "核到官方PDF发布实施日期，未取得当前状态库继续有效确认，仅参考不自动执行。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "county": "daishan",
+            "application_condition": "仅岱山休闲渔业营运、调度及气象服务。"
+          }
+        },
+        {
+          "id": "zhoushan-bathing-service-db3309-2025-withdrawn",
+          "title": "海滨浴场服务规范（已废止）",
+          "status": "withdrawn",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+            "publisher": "全国标准信息公共服务平台",
+            "paragraph": "标准状态及废止日期",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "withdrawn",
+              "current_check_url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+              "note": "官方状态页明确已废止。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "province": "zhejiang",
+            "city": "zhoushan"
+          }
+        },
+        {
+          "id": "cn-tidal-flat-fire-rescue-advice-2025",
+          "title": "赶海滩涂安全提示",
+          "status": "guidance_published",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+            "publisher": "国家消防救援局",
+            "paragraph": "末段消防提示",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+              "note": "官方消防科普，作为风险提示而非行政禁令；无风浪流数值和低潮±固定分钟安全线。"
+            }
+          },
+          "scope": {
+            "country": "CN"
+          }
+        },
+        {
+          "id": "cn-shore-fishing-coast-guard-advice-2021",
+          "title": "海边垂钓防潮汐被困提示",
+          "status": "guidance_published",
+          "reason": "different_activity",
+          "source": {
+            "url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+            "publisher": "中国海警局（福建海警署名）",
+            "paragraph": "正文海警提醒",
+            "verification": {
+              "checked_at": "2026-10-17",
+              "state": "guidance_published",
+              "current_check_url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+              "note": "网页迁移路径为2024，正文署名日期为2021-11-08；提示可参考，不能作为浙江行政限制。"
+            }
+          },
+          "scope": {
+            "country": "CN",
+            "application_condition": "作为沿海通用风险提示；来源福建海警，非浙江地方许可或禁令。"
+          }
+        }
+      ],
+      "permission_notice": "有官方依据不代表场地开放；实际开放、救生、代表性及返程/航次核验独立判断。"
+    }
+  ],
+  "source_catalog": {
+    "schema": 1,
+    "version": "zhejiang-official-activity-policy-20261017.3",
+    "checked_at": "2026-10-17",
+    "purpose": "按地域、活动、时段、版本与变量语义匹配；环境评价、风险等级、行政许可分别输出。",
+    "coverage_notice": "已核的共同国家规则和地方条目；未找到县级规则不代表没有地方规定。未核全文、已废止及现行未确认条目不作活跃依据。",
+    "policies": [
+      {
+        "id": "cn-bathing-environment-method-2026",
+        "title": "生态环境部海水浴场环境适游评价口径",
+        "kind": "official_monitoring_method",
+        "status": "current_method_confirmed",
+        "execution": "evaluate",
+        "version": "HY/T 0276-2019在2026官方报告中明确的评价口径",
+        "authority": "official",
+        "published_at": "2026-07-17",
+        "effective_from": "2026-07-17",
+        "effective_to": null,
+        "activities": [
+          "swimming"
+        ],
+        "scope": {
+          "country": "CN",
+          "site_types": [
+            "natural_bathing_beach"
+          ],
+          "application_condition": "仅天然海水浴场环境评价；场地类型及监测代表性需另行确认。"
+        },
+        "source": {
+          "url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+          "publisher": "生态环境部",
+          "paragraph": "文末注①",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current_method_confirmed",
+            "current_check_url": "https://www.mee.gov.cn/hjzl/shj/hsycszzb/202607/t20260717_1162087.shtml",
+            "note": "核到2026官方报告明确水质、水温口径；未取得HY全文，不增补风浪流条款。"
+          }
+        },
+        "summary": "优且20≤水温≤28℃为适宜；良或28<水温≤33℃为较适宜；差或水温<20℃、>33℃为不适宜。负面条件优先，缺测不判适宜。",
+        "not_applicable": "历史结果不迁移到当前；SST模式海表温度不替代浴场实测水温；环境评价不是开放许可。",
+        "numeric_rules": [
+          {
+            "id": "bathing-water-quality-temperature",
+            "evaluator": "bathing_water_quality_temperature",
+            "effect": "environment_suitability",
+            "input": "matched_bathing_water_observation",
+            "quantity": "surface_bathing_water_temperature",
+            "unit": "degC",
+            "suitable_min": 20,
+            "suitable_max": 28,
+            "maximum": 33,
+            "requires": [
+              "same_site",
+              "full_query_period",
+              "published_by_query",
+              "measured_water_temperature",
+              "water_quality_grade"
+            ]
+          }
+        ],
+        "requirements": []
+      },
+      {
+        "id": "cn-bathing-service-gbt34420-2017",
+        "title": "海水浴场服务规范",
+        "kind": "recommended_national_standard",
+        "status": "current",
+        "execution": "reference_only",
+        "version": "GB/T 34420-2017",
+        "authority": "official",
+        "published_at": "2017-10-14",
+        "effective_from": "2018-05-01",
+        "effective_to": null,
+        "activities": [
+          "swimming"
+        ],
+        "scope": {
+          "country": "CN",
+          "site_types": [
+            "natural_bathing_beach"
+          ]
+        },
+        "source": {
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+          "publisher": "全国标准信息公共服务平台",
+          "paragraph": "标准状态、发布实施日期、复审信息",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current",
+            "current_check_url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81FB3D3A7E05397BE0A0AB82A",
+            "note": "平台标注现行、修订计划正在批准；不能从名称推导风力或浪高上限。"
+          }
+        },
+        "summary": "现行推荐性国标；尚未核到条款全文，仅收录状态与版本。",
+        "not_applicable": "不能仅凭本条认定现场允许开展活动或安全。",
+        "numeric_rules": [],
+        "requirements": []
+      },
+      {
+        "id": "cn-maritime-traffic-law-2021",
+        "title": "中华人民共和国海上交通安全法",
+        "kind": "law",
+        "status": "current",
+        "execution": "evaluate",
+        "version": "2021年修订，主席令第79号",
+        "authority": "official",
+        "published_at": "2021-04-29",
+        "effective_from": "2021-09-01",
+        "effective_to": null,
+        "activities": [
+          "boat_fishing"
+        ],
+        "scope": {
+          "country": "CN",
+          "application_condition": "中国管辖海域内的船舶活动。"
+        },
+        "source": {
+          "url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+          "publisher": "上海海事局",
+          "paragraph": "第2、7、52条",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current",
+            "current_check_url": "https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=bc74b6becf1848cd9688fe144a96576f",
+            "note": "官方法律数据库标注有效，已核2021修订全文。"
+          }
+        },
+        "summary": "船舶遵守有关法律、强制性标准及技术规范；恶劣天气海况等可依法公告停航、限速或交通管制，须核本航次适用公告。",
+        "not_applicable": "未提供所有船型统一海钓风浪上限；未检索到管制不等于无管制。",
+        "numeric_rules": [],
+        "requirements": [
+          {
+            "kind": "marine_traffic_control",
+            "label": "本航次适用的海事交通管制与开航要求核查"
+          }
+        ]
+      },
+      {
+        "id": "zhoushan-protected-area-fishing-2023",
+        "title": "舟山市国家级海洋特别保护区海钓管理办法",
+        "kind": "local_government_rule",
+        "status": "current_text_verified",
+        "execution": "evaluate",
+        "version": "舟山市政府令第44号",
+        "authority": "official",
+        "published_at": "2023-02-14",
+        "effective_from": "2023-06-01",
+        "effective_to": null,
+        "activities": [
+          "shore_fishing",
+          "boat_fishing"
+        ],
+        "scope": {
+          "country": "CN",
+          "province": "zhejiang",
+          "protected_area_ids": [
+            "ma_an_islands",
+            "zhongjieshan_islands"
+          ],
+          "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+        },
+        "source": {
+          "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+          "publisher": "司法部",
+          "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+          "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current_text_verified",
+            "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+          }
+        },
+        "summary": "仅马鞍、中街山列岛两保护区个人海钓需海钓许可证。第3条规定保护区内休闲渔业船舶上的垂钓活动另按休闲渔业管理规定管理；不能仅据此推定免办第4条要求的个人海钓许可证，具体手续另向主管部门核实。第10条：可线上或线下向保护区所在地县（区）渔业行政主管部门申请。第11条：申请人具完全民事行为能力，完成海钓安全管理、资源保护等规定学习并通过考试，服从安全管理，满足法律法规其他条件。第12条：提交有效身份证明、海钓安全管理和资源保护等知识考试通过证明、服从安全管理承诺书及法律法规其他材料；委托海钓经营、服务组织或他人申领另附委托书。所在地县（区）渔业主管部门自受理之日起10个工作日内作出行政许可决定，期限不代表保证获批。岛礁矶石海钓穿救生衣和专用防滑鞋；船舶须符合本船抗风等级并服从交通管制。",
+        "not_applicable": "不适用于朱家尖全域；第3条所述休闲渔业船舶垂钓另按休闲渔业管理规定管理，不能仅据此推定免办第4条要求的个人海钓许可证或不适用个人许可程序，具体手续另向主管部门核实；无统一6或7级阈值。",
+        "permit_application": {
+          "scope_protected_area_ids": [
+            "ma_an_islands",
+            "zhongjieshan_islands"
+          ],
+          "applicant": "需申请保护区海钓许可证的个人",
+          "receiving_authority": "保护区所在地县（区）渔业行政主管部门",
+          "application_channels": [
+            "线上",
+            "线下"
+          ],
+          "eligibility_conditions": [
+            "具有完全民事行为能力",
+            "完成海钓活动安全管理和资源保护等相关规定的学习，并通过考试",
+            "服从海钓的安全管理",
+            "法律、法规规定的其他条件"
+          ],
+          "required_materials": [
+            "申请人有效身份证明",
+            "通过海钓活动安全管理和资源保护等相关知识考试的证明",
+            "服从海钓安全管理的承诺书",
+            "法律、法规规定的其他材料"
+          ],
+          "delegated_application": {
+            "allowed_agents": [
+              "海钓经营、服务组织",
+              "他人"
+            ],
+            "additional_required_material": "委托书"
+          },
+          "decision_deadline": {
+            "maximum": 10,
+            "unit": "working_days",
+            "starts_from": "受理海钓许可申请之日",
+            "decision_authority": "保护区所在地县（区）渔业主管部门",
+            "action": "作出行政许可决定",
+            "approval_guaranteed": false
+          },
+          "source_articles": [
+            "第10条",
+            "第11条",
+            "第12条"
+          ],
+          "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf#page=4",
+          "does_not_establish_an_issued_permit": true
+        },
+        "numeric_rules": [],
+        "requirements": [
+          {
+            "kind": "fishing_permit",
+            "label": "保护区海钓许可、准钓海域时段及资源限制核验"
+          },
+          {
+            "kind": "protective_equipment",
+            "label": "岛礁矶石海钓救生衣和防滑鞋、船上必要护具核验"
+          },
+          {
+            "kind": "vessel_wind_limit",
+            "label": "本船证书核定抗风限制与航区核验",
+            "activities": [
+              "boat_fishing"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "daishan-recreational-fishery-risk-2022",
+        "title": "休闲渔业气象风险等级",
+        "kind": "county_technical_specification",
+        "status": "current_status_unconfirmed",
+        "execution": "reference_only",
+        "version": "DJG 330921/T 015-2022",
+        "authority": "official",
+        "published_at": "2022-11-07",
+        "effective_from": "2022-12-07",
+        "effective_to": null,
+        "activities": [
+          "boat_fishing"
+        ],
+        "scope": {
+          "country": "CN",
+          "province": "zhejiang",
+          "county": "daishan",
+          "application_condition": "仅岱山休闲渔业营运、调度及气象服务。"
+        },
+        "source": {
+          "url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+          "publisher": "岱山县市场监管局",
+          "paragraph": "第1、3.5、4.2表1、4.3表2、5.1条",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current_status_unconfirmed",
+            "current_check_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2548/site/attach/0/3e3a5cf05ddc4d72adef7db4f4545d38.pdf",
+            "note": "核到官方PDF发布实施日期，未取得当前状态库继续有效确认，仅参考不自动执行。"
+          }
+        },
+        "summary": "预报3秒阵风>6级（>13.8m/s）为重大风力影响；综合风险另取能见度、对流影响最高等级。",
+        "not_applicable": "不是浙江统一禁航标准；SSW矢量模和假设阵风不等于已核3秒阵风；较小风力影响不代表可开航。",
+        "numeric_rules": [
+          {
+            "id": "daishan-gust-wind-risk",
+            "evaluator": "gust_wind_risk",
+            "effect": "risk_classification",
+            "product": "SSW",
+            "quantity": "forecast_maximum_3_second_gust_speed",
+            "unit": "m/s",
+            "major_above": 13.8,
+            "requires": [
+              "verified_product_semantics",
+              "recreational_fishery_operation"
+            ]
+          }
+        ],
+        "requirements": []
+      },
+      {
+        "id": "zhoushan-bathing-service-db3309-2025-withdrawn",
+        "title": "海滨浴场服务规范（已废止）",
+        "kind": "recommended_local_standard",
+        "status": "withdrawn",
+        "execution": "excluded",
+        "version": "DB3309/T 116-2025",
+        "authority": "official",
+        "published_at": "2025-02-13",
+        "effective_from": "2025-03-13",
+        "effective_to": "2025-07-30",
+        "activities": [
+          "swimming"
+        ],
+        "scope": {
+          "country": "CN",
+          "province": "zhejiang",
+          "city": "zhoushan"
+        },
+        "source": {
+          "url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+          "publisher": "全国标准信息公共服务平台",
+          "paragraph": "标准状态及废止日期",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "withdrawn",
+            "current_check_url": "https://std.samr.gov.cn/db/search/stdDBDetailed?id=37D5C78F377E929EE06397BE0A0AFC94",
+            "note": "官方状态页明确已废止。"
+          }
+        },
+        "summary": "2025-07-31已废止；公示稿不作现行规则。",
+        "not_applicable": "不能仅凭本条认定现场允许开展活动或安全。",
+        "numeric_rules": [],
+        "requirements": [],
+        "withdrawn_at": "2025-07-31"
+      },
+      {
+        "id": "cn-tidal-flat-fire-rescue-advice-2025",
+        "title": "赶海滩涂安全提示",
+        "kind": "official_safety_guidance",
+        "status": "guidance_published",
+        "execution": "evaluate",
+        "version": "2025-08-18消防提示",
+        "authority": "official",
+        "published_at": "2025-08-18",
+        "effective_from": "2025-08-18",
+        "effective_to": null,
+        "activities": [
+          "tidal_flat"
+        ],
+        "scope": {
+          "country": "CN"
+        },
+        "source": {
+          "url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+          "publisher": "国家消防救援局",
+          "paragraph": "末段消防提示",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "guidance_published",
+            "current_check_url": "https://www.119.gov.cn/kp/zjts/qtzh/2025/51147.shtml",
+            "note": "官方消防科普，作为风险提示而非行政禁令；无风浪流数值和低潮±固定分钟安全线。"
+          }
+        },
+        "summary": "赶海应提高警惕，不贸然深入滩涂；地形、潮汐和返程通道需核查。",
+        "not_applicable": "不能仅凭本条认定现场允许开展活动或安全。",
+        "numeric_rules": [],
+        "requirements": []
+      },
+      {
+        "id": "cn-shore-fishing-coast-guard-advice-2021",
+        "title": "海边垂钓防潮汐被困提示",
+        "kind": "official_safety_guidance",
+        "status": "guidance_published",
+        "execution": "evaluate",
+        "version": "2021-11-08福建海警署名提示",
+        "authority": "official",
+        "published_at": "2021-11-08",
+        "effective_from": "2021-11-08",
+        "effective_to": null,
+        "activities": [
+          "shore_fishing"
+        ],
+        "scope": {
+          "country": "CN",
+          "application_condition": "作为沿海通用风险提示；来源福建海警，非浙江地方许可或禁令。"
+        },
+        "source": {
+          "url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+          "publisher": "中国海警局（福建海警署名）",
+          "paragraph": "正文海警提醒",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "guidance_published",
+            "current_check_url": "https://www.ccg.gov.cn/haijingzaixingdong/202405/t20240515_1564.html",
+            "note": "网页迁移路径为2024，正文署名日期为2021-11-08；提示可参考，不能作为浙江行政限制。"
+          }
+        },
+        "summary": "海边游玩垂钓注意礁石暗礁孤岛风险，关注潮汐防止困海。",
+        "not_applicable": "不能仅凭本条认定现场允许开展活动或安全。",
+        "numeric_rules": [],
+        "requirements": []
+      }
+    ]
+  },
+  "protected_area_rules": [
+    {
+      "protected_area_id": "ma_an_islands",
+      "name": "浙江嵊泗马鞍列岛海洋特别保护区",
+      "applicable_activities": [
+        "shore_fishing",
+        "boat_fishing"
+      ],
+      "application_condition": "仅在已确认位于该保护区国家批准边界内时适用；不外推朱家尖全域或其他浙江海域。",
+      "policy": {
+        "id": "zhoushan-protected-area-fishing-2023",
+        "title": "舟山市国家级海洋特别保护区海钓管理办法",
+        "kind": "local_government_rule",
+        "status": "current_text_verified",
+        "execution": "evaluate",
+        "version": "舟山市政府令第44号",
+        "authority": "official",
+        "published_at": "2023-02-14",
+        "effective_from": "2023-06-01",
+        "effective_to": null,
+        "activities": [
+          "shore_fishing",
+          "boat_fishing"
+        ],
+        "scope": {
+          "country": "CN",
+          "province": "zhejiang",
+          "protected_area_ids": [
+            "ma_an_islands",
+            "zhongjieshan_islands"
+          ],
+          "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+        },
+        "source": {
+          "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+          "publisher": "司法部",
+          "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+          "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current_text_verified",
+            "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+          }
+        },
+        "summary": "仅马鞍、中街山列岛两保护区个人海钓需海钓许可证。第3条规定保护区内休闲渔业船舶上的垂钓活动另按休闲渔业管理规定管理；不能仅据此推定免办第4条要求的个人海钓许可证，具体手续另向主管部门核实。第10条：可线上或线下向保护区所在地县（区）渔业行政主管部门申请。第11条：申请人具完全民事行为能力，完成海钓安全管理、资源保护等规定学习并通过考试，服从安全管理，满足法律法规其他条件。第12条：提交有效身份证明、海钓安全管理和资源保护等知识考试通过证明、服从安全管理承诺书及法律法规其他材料；委托海钓经营、服务组织或他人申领另附委托书。所在地县（区）渔业主管部门自受理之日起10个工作日内作出行政许可决定，期限不代表保证获批。岛礁矶石海钓穿救生衣和专用防滑鞋；船舶须符合本船抗风等级并服从交通管制。",
+        "not_applicable": "不适用于朱家尖全域；第3条所述休闲渔业船舶垂钓另按休闲渔业管理规定管理，不能仅据此推定免办第4条要求的个人海钓许可证或不适用个人许可程序，具体手续另向主管部门核实；无统一6或7级阈值。",
+        "permit_application": {
+          "scope_protected_area_ids": [
+            "ma_an_islands",
+            "zhongjieshan_islands"
+          ],
+          "applicant": "需申请保护区海钓许可证的个人",
+          "receiving_authority": "保护区所在地县（区）渔业行政主管部门",
+          "application_channels": [
+            "线上",
+            "线下"
+          ],
+          "eligibility_conditions": [
+            "具有完全民事行为能力",
+            "完成海钓活动安全管理和资源保护等相关规定的学习，并通过考试",
+            "服从海钓的安全管理",
+            "法律、法规规定的其他条件"
+          ],
+          "required_materials": [
+            "申请人有效身份证明",
+            "通过海钓活动安全管理和资源保护等相关知识考试的证明",
+            "服从海钓安全管理的承诺书",
+            "法律、法规规定的其他材料"
+          ],
+          "delegated_application": {
+            "allowed_agents": [
+              "海钓经营、服务组织",
+              "他人"
+            ],
+            "additional_required_material": "委托书"
+          },
+          "decision_deadline": {
+            "maximum": 10,
+            "unit": "working_days",
+            "starts_from": "受理海钓许可申请之日",
+            "decision_authority": "保护区所在地县（区）渔业主管部门",
+            "action": "作出行政许可决定",
+            "approval_guaranteed": false
+          },
+          "source_articles": [
+            "第10条",
+            "第11条",
+            "第12条"
+          ],
+          "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf#page=4",
+          "does_not_establish_an_issued_permit": true
+        },
+        "numeric_rules": [],
+        "requirements": [
+          {
+            "kind": "fishing_permit",
+            "label": "保护区海钓许可、准钓海域时段及资源限制核验"
+          },
+          {
+            "kind": "protective_equipment",
+            "label": "岛礁矶石海钓救生衣和防滑鞋、船上必要护具核验"
+          },
+          {
+            "kind": "vessel_wind_limit",
+            "label": "本船证书核定抗风限制与航区核验",
+            "activities": [
+              "boat_fishing"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "protected_area_id": "zhongjieshan_islands",
+      "name": "浙江普陀中街山列岛海洋特别保护区",
+      "applicable_activities": [
+        "shore_fishing",
+        "boat_fishing"
+      ],
+      "application_condition": "仅在已确认位于该保护区国家批准边界内时适用；不外推朱家尖全域或其他浙江海域。",
+      "policy": {
+        "id": "zhoushan-protected-area-fishing-2023",
+        "title": "舟山市国家级海洋特别保护区海钓管理办法",
+        "kind": "local_government_rule",
+        "status": "current_text_verified",
+        "execution": "evaluate",
+        "version": "舟山市政府令第44号",
+        "authority": "official",
+        "published_at": "2023-02-14",
+        "effective_from": "2023-06-01",
+        "effective_to": null,
+        "activities": [
+          "shore_fishing",
+          "boat_fishing"
+        ],
+        "scope": {
+          "country": "CN",
+          "province": "zhejiang",
+          "protected_area_ids": [
+            "ma_an_islands",
+            "zhongjieshan_islands"
+          ],
+          "application_condition": "仅马鞍、中街山列岛两保护区；边界依国家批准坐标，不由朱家尖/普陀地名推定。"
+        },
+        "source": {
+          "url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+          "publisher": "司法部",
+          "paragraph": "第2、3、4、10、11、12、20(七)、21、22条及施行条款；申请机关、条件、材料和期限见官方PDF第4—5页",
+          "full_text_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf",
+          "verification": {
+            "checked_at": "2026-10-17",
+            "state": "current_text_verified",
+            "current_check_url": "https://www.moj.gov.cn/pub/sfbgw/flfggz/flfggzdfzwgz/202307/t20230710_482319.html",
+            "note": "核司法部全文及舟山市政府规章PDF；补核第10—12条的受理机关、申请条件、材料、委托申领与10个工作日许可决定期限；未继续使用2017暂行版本。"
+          }
+        },
+        "summary": "仅马鞍、中街山列岛两保护区个人海钓需海钓许可证。第3条规定保护区内休闲渔业船舶上的垂钓活动另按休闲渔业管理规定管理；不能仅据此推定免办第4条要求的个人海钓许可证，具体手续另向主管部门核实。第10条：可线上或线下向保护区所在地县（区）渔业行政主管部门申请。第11条：申请人具完全民事行为能力，完成海钓安全管理、资源保护等规定学习并通过考试，服从安全管理，满足法律法规其他条件。第12条：提交有效身份证明、海钓安全管理和资源保护等知识考试通过证明、服从安全管理承诺书及法律法规其他材料；委托海钓经营、服务组织或他人申领另附委托书。所在地县（区）渔业主管部门自受理之日起10个工作日内作出行政许可决定，期限不代表保证获批。岛礁矶石海钓穿救生衣和专用防滑鞋；船舶须符合本船抗风等级并服从交通管制。",
+        "not_applicable": "不适用于朱家尖全域；第3条所述休闲渔业船舶垂钓另按休闲渔业管理规定管理，不能仅据此推定免办第4条要求的个人海钓许可证或不适用个人许可程序，具体手续另向主管部门核实；无统一6或7级阈值。",
+        "permit_application": {
+          "scope_protected_area_ids": [
+            "ma_an_islands",
+            "zhongjieshan_islands"
+          ],
+          "applicant": "需申请保护区海钓许可证的个人",
+          "receiving_authority": "保护区所在地县（区）渔业行政主管部门",
+          "application_channels": [
+            "线上",
+            "线下"
+          ],
+          "eligibility_conditions": [
+            "具有完全民事行为能力",
+            "完成海钓活动安全管理和资源保护等相关规定的学习，并通过考试",
+            "服从海钓的安全管理",
+            "法律、法规规定的其他条件"
+          ],
+          "required_materials": [
+            "申请人有效身份证明",
+            "通过海钓活动安全管理和资源保护等相关知识考试的证明",
+            "服从海钓安全管理的承诺书",
+            "法律、法规规定的其他材料"
+          ],
+          "delegated_application": {
+            "allowed_agents": [
+              "海钓经营、服务组织",
+              "他人"
+            ],
+            "additional_required_material": "委托书"
+          },
+          "decision_deadline": {
+            "maximum": 10,
+            "unit": "working_days",
+            "starts_from": "受理海钓许可申请之日",
+            "decision_authority": "保护区所在地县（区）渔业主管部门",
+            "action": "作出行政许可决定",
+            "approval_guaranteed": false
+          },
+          "source_articles": [
+            "第10条",
+            "第11条",
+            "第12条"
+          ],
+          "source_url": "https://zjjcmspublic.oss-cn-hangzhou-zwynet-d01-a.internet.cloud.zj.gov.cn/jcms_files/jcms1/web2237/site/attach/0/bdc789c1a91d4116b820e58cf11e392c.pdf#page=4",
+          "does_not_establish_an_issued_permit": true
+        },
+        "numeric_rules": [],
+        "requirements": [
+          {
+            "kind": "fishing_permit",
+            "label": "保护区海钓许可、准钓海域时段及资源限制核验"
+          },
+          {
+            "kind": "protective_equipment",
+            "label": "岛礁矶石海钓救生衣和防滑鞋、船上必要护具核验"
+          },
+          {
+            "kind": "vessel_wind_limit",
+            "label": "本船证书核定抗风限制与航区核验",
+            "activities": [
+              "boat_fishing"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

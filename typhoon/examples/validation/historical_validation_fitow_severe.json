@@ -1,0 +1,19 @@
+{
+  "sid": "2013272N10135",
+  "name": "FITOW（历史回放）",
+  "source": "IBTrACS历史留一验证",
+  "issued_at": "2013-10-06T06:00:00Z",
+  "validation_purpose": "验证严重风暴潮历史记录",
+  "expected_storm_surge": {"severity": "严重", "max_surge_m": 3.99},
+  "forecast_track": [
+    {"time": "2013-10-06T06:00:00Z", "lat": 26.1, "lon": 122.9, "wind_kt": 81, "pressure_hpa": 955},
+    {"time": "2013-10-06T09:00:00Z", "lat": 26.4, "lon": 122.4, "wind_kt": 81, "pressure_hpa": 955},
+    {"time": "2013-10-06T12:00:00Z", "lat": 26.8, "lon": 121.8, "wind_kt": 81, "pressure_hpa": 955},
+    {"time": "2013-10-06T15:00:00Z", "lat": 27.0, "lon": 121.0, "wind_kt": 81, "pressure_hpa": 960},
+    {"time": "2013-10-06T18:00:00Z", "lat": 27.1, "lon": 120.3, "wind_kt": 81, "pressure_hpa": 965},
+    {"time": "2013-10-06T21:00:00Z", "lat": 27.1, "lon": 119.5, "wind_kt": 58, "pressure_hpa": 980},
+    {"time": "2013-10-07T00:00:00Z", "lat": 27.1, "lon": 118.9, "wind_kt": 34, "pressure_hpa": 995},
+    {"time": "2013-10-07T03:00:00Z", "lat": 26.9, "lon": 118.3, "wind_kt": 30, "pressure_hpa": 998},
+    {"time": "2013-10-07T06:00:00Z", "lat": 26.8, "lon": 117.9, "wind_kt": 25, "pressure_hpa": 1000}
+  ]
+}

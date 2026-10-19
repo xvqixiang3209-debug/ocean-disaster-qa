@@ -1,0 +1,19 @@
+{
+  "sid": "2006180N06140",
+  "name": "EWINIAR（历史回放）",
+  "source": "IBTrACS历史留一验证",
+  "issued_at": "2006-07-09T00:00:00Z",
+  "validation_purpose": "验证一般风暴潮历史记录",
+  "expected_storm_surge": {"severity": "一般", "max_surge_m": 1.19},
+  "forecast_track": [
+    {"time": "2006-07-09T00:00:00Z", "lat": 27.5, "lon": 125.8, "wind_kt": 77, "pressure_hpa": 960},
+    {"time": "2006-07-09T03:00:00Z", "lat": 28.3, "lon": 125.8, "wind_kt": 73, "pressure_hpa": 965},
+    {"time": "2006-07-09T06:00:00Z", "lat": 29.3, "lon": 125.8, "wind_kt": 68, "pressure_hpa": 970},
+    {"time": "2006-07-09T09:00:00Z", "lat": 30.0, "lon": 125.8, "wind_kt": 66, "pressure_hpa": 973},
+    {"time": "2006-07-09T12:00:00Z", "lat": 30.7, "lon": 125.7, "wind_kt": 64, "pressure_hpa": 975},
+    {"time": "2006-07-09T15:00:00Z", "lat": 31.4, "lon": 125.6, "wind_kt": 61, "pressure_hpa": 978},
+    {"time": "2006-07-09T18:00:00Z", "lat": 32.2, "lon": 125.7, "wind_kt": 58, "pressure_hpa": 980},
+    {"time": "2006-07-09T21:00:00Z", "lat": 32.9, "lon": 125.9, "wind_kt": 58, "pressure_hpa": 980},
+    {"time": "2006-07-10T00:00:00Z", "lat": 33.7, "lon": 126.2, "wind_kt": 58, "pressure_hpa": 980}
+  ]
+}

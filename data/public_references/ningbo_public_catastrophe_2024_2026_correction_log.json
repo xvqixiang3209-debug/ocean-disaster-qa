@@ -1,0 +1,49 @@
+{
+  "original_ocr_unchanged": true,
+  "original_pdf_sha256": "f7f498c13d4dcd5819fc5a520be56b76a8f147f4a06a08eb8688a26bcb60d05e",
+  "only_selected_excerpts_verified": true,
+  "reviewed_rendered_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11
+  ],
+  "not_reviewed_pages": [
+    10,
+    12
+  ],
+  "corrections": [
+    {
+      "page": 4,
+      "ocr": "屋顶被、压塌",
+      "verified": "屋顶被掀、压塌"
+    },
+    {
+      "page": 5,
+      "ocr": "住房进水水位线150厘米",
+      "verified": "住房进水水位线>150厘米"
+    },
+    {
+      "page": 6,
+      "ocr": "IⅢI级",
+      "verified": "Ⅲ级"
+    },
+    {
+      "page": 6,
+      "ocr": "台凤、强对流大凤",
+      "verified": "台风、强对流大风"
+    },
+    {
+      "page": 4,
+      "ocr": "凤险",
+      "verified": "风险"
+    }
+  ],
+  "normalization": "selected paragraphs remove typographic line wrapping only; table comparators and numerals explicitly checked against page images; only original text preserved in verified body, no answer synthesis"
+}

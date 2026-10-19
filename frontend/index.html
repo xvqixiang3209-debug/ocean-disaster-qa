@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海洋灾害知识问答</title>
+    <link rel="stylesheet" href="/forecast_panel.css?v=phase1.4.0" />
+    <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
+    <script src="/vendor/leaflet/leaflet.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif; background: #0a0e17; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; }
+
+        /* === Header === */
+        .header { background: linear-gradient(135deg, #0d1b2a, #1b2838); padding: 10px 20px; border-bottom: 1px solid #1e3a5f; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+        .header h1 { font-size: 17px; color: #4fc3f7; font-weight: 600; white-space: nowrap; }
+        .header .spacer { flex: 1; }
+        .header .model-select { display: flex; align-items: center; gap: 8px; }
+        .header .model-select label { font-size: 12px; color: #8899aa; }
+        .header .model-select select { background: #1e3a5f; border: 1px solid #2a5a8f; color: #4fc3f7; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; outline: none; }
+        .header .model-select select option { background: #0d1b2a; color: #e0e0e0; }
+        .header .btn-clear { background: #5c1a1a; border: 1px solid #8b3030; color: #ff6b6b; padding: 5px 14px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .header .btn-clear:hover { background: #8b3030; }
+
+        /* === Main Content === */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .top-section { display: flex; flex: 1; min-height: 0; }
+
+        /* Map Panel */
+        .map-panel { width: 66.666%; min-width: 520px; position: relative; border-right: 1px solid #1e3a5f; }
+        #map { width: 100%; height: 100%; background: #161b22; }
+        /* Only darken the basemap; tracks, markers and labels keep their own colors. */
+        .leaflet-basemap-pane, .leaflet-labels-pane { filter: grayscale(1) invert(1) brightness(0.8) contrast(0.9); }
+        #map .leaflet-control-attribution { background: rgba(13,27,42,0.92); color: #c6d5e5; }
+        #map .leaflet-control-attribution a { color: #79d0f5; }
+        .map-load-notice { position: absolute; z-index: 900; top: 12px; left: 50%; transform: translateX(-50%); max-width: 70%; padding: 9px 14px; border: 1px solid #b88628; border-radius: 6px; background: rgba(40,31,12,.94); color: #ffd27a; font-size: 12px; line-height: 1.5; text-align: center; box-shadow: 0 3px 12px rgba(0,0,0,.35); }
+
+        /* Chat Panel */
+        .chat-panel { width: 33.334%; min-width: 360px; display: flex; flex-direction: column; background: #0d1b2a; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 16px; }
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+
+        .msg { margin-bottom: 14px; display: flex; gap: 10px; min-width: 0; }
+        .msg.user { justify-content: flex-end; }
+        .msg-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .msg.user .msg-avatar { background: #1e3a5f; color: #4fc3f7; order: 2; }
+        .msg.assistant .msg-avatar { background: #0d3b2a; color: #4fc3f7; }
+        .msg-bubble { max-width: 92%; min-width: 0; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+        .msg.user .msg-bubble { background: #1e3a5f; color: #e0e0e0; border-bottom-right-radius: 4px; }
+        .msg.assistant .msg-bubble { flex: 1 1 0; width: 0; background: #111d2e; color: #c8d0d8; border-bottom-left-radius: 4px; border: 1px solid #1a2d42; }
+        .msg-intent { font-size: 11px; color: #5a7a9a; margin-bottom: 4px; }
+        .assistant-answer { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .assistant-table-wrap { width: 100%; overflow-x: auto; margin: 8px 0; border: 1px solid #29445f; border-radius: 7px; }
+        .assistant-table { width: 100%; min-width: 460px; border-collapse: collapse; white-space: normal; font-size: 12px; }
+        .assistant-table th { background: #17324a; color: #75d5ff; font-weight: 600; text-align: left; }
+        .assistant-table th, .assistant-table td { padding: 7px 9px; border-right: 1px solid #29445f; border-bottom: 1px solid #29445f; vertical-align: top; }
+        .assistant-table th:last-child, .assistant-table td:last-child { border-right: 0; }
+        .assistant-table tbody tr:last-child td { border-bottom: 0; }
+        .assistant-table tbody tr:nth-child(even) { background: rgba(30, 58, 95, 0.22); }
+
+        .chat-input-area { padding: 12px 16px; border-top: 1px solid #1e3a5f; display: flex; gap: 10px; flex-shrink: 0; }
+        .chat-input-area input { flex: 1; background: #111d2e; border: 1px solid #1e3a5f; color: #e0e0e0; padding: 10px 14px; border-radius: 8px; font-size: 14px; outline: none; }
+        .chat-input-area input:focus { border-color: #4fc3f7; }
+        .chat-input-area input::placeholder { color: #4a5a6a; }
+        .chat-input-area button { background: #1a5276; border: 1px solid #2980b9; color: #4fc3f7; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; }
+        .chat-input-area button:hover { background: #2980b9; }
+        .chat-input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .selected-context { display: none; padding: 7px 16px; background: #10283b; border-top: 1px solid #1e3a5f; color: #75d5ff; font-size: 12px; }
+        .selected-context button { float: right; background: transparent; color: #8fa3b8; border: 0; cursor: pointer; }
+
+        /* === Bottom Debug Panel === */
+        .debug-panel { height: 180px; border-top: 1px solid #1e3a5f; background: #080c14; flex-shrink: 0; display: flex; flex-direction: column; }
+        .debug-header { padding: 6px 16px; background: #0d1520; border-bottom: 1px solid #1a2a3a; display: flex; align-items: center; gap: 8px; cursor: pointer; flex-shrink: 0; }
+        .debug-header span { font-size: 12px; color: #5a7a9a; }
+        .debug-header .arrow { transition: transform 0.2s; font-size: 10px; color: #5a7a9a; }
+        .debug-header .arrow.open { transform: rotate(90deg); }
+        .debug-content { flex: 1; overflow-y: auto; padding: 10px 16px; font-size: 12px; line-height: 1.6; color: #7a8a9a; font-family: "Consolas", "Monaco", monospace; white-space: pre-wrap; word-break: break-all; }
+        .debug-content::-webkit-scrollbar { width: 6px; }
+        .debug-content::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+
+        /* === Map Overlays === */
+        .legend { position: absolute; bottom: 12px; left: 12px; background: rgba(13,27,42,0.92); border: 1px solid #1e3a5f; border-radius: 6px; padding: 8px 12px; z-index: 1000; max-height: 50vh; overflow-y: auto; }
+        .legend h3 { font-size: 10px; color: #4fc3f7; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; margin-bottom: 2px; color: #b0b8c0; }
+        .legend-color { width: 12px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+        .evolution-controls { position: absolute; top: 12px; right: 12px; background: rgba(13,27,42,0.92); border: 1px solid #1e3a5f; border-radius: 6px; padding: 10px 14px; z-index: 1000; display: none; min-width: 220px; }
+        .evolution-controls h3 { font-size: 11px; color: #4fc3f7; margin-bottom: 8px; }
+        .evolution-controls .time-slider { width: 100%; margin: 6px 0; accent-color: #4fc3f7; }
+        .evolution-controls .time-label { font-size: 11px; color: #e0e0e0; text-align: center; margin-bottom: 6px; }
+        .evolution-controls .btn-row { display: flex; gap: 5px; }
+        .evolution-controls button { background: #1e3a5f; border: 1px solid #2a5a8f; color: #4fc3f7; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; flex: 1; }
+        .evolution-controls button:hover { background: #2a5a8f; }
+        .evolution-controls button.playing { background: #ff6b6b; border-color: #ff6b6b; color: #fff; }
+
+        .wave-info { position: absolute; top: 12px; left: 12px; background: rgba(13,27,42,0.92); border: 1px solid #1e3a5f; border-radius: 6px; padding: 8px 12px; z-index: 1000; font-size: 10px; color: #b0b8c0; }
+        .wave-info .label { color: #4fc3f7; font-weight: 600; margin-bottom: 3px; }
+
+        .map-mode-toggle { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(13,27,42,0.92); border: 1px solid #1e3a5f; border-radius: 6px; padding: 4px; z-index: 1000; display: flex; gap: 3px; }
+        .map-mode-toggle button { background: transparent; border: 1px solid transparent; color: #4fc3f7; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; white-space: nowrap; }
+        .map-mode-toggle button:hover { background: #1e3a5f; }
+        .map-mode-toggle button.active { background: #4fc3f7; color: #0a0e17; border-color: #4fc3f7; font-weight: 600; }
+
+        .typhoon-controls { position: absolute; top: 58px; right: 12px; width: min(340px, calc(100% - 24px)); max-height: calc(100% - 80px); overflow-y: auto; background: rgba(8,20,34,0.96); border: 1px solid #2a5a8f; border-radius: 8px; padding: 12px; z-index: 1001; display: none; box-shadow: 0 8px 30px rgba(0,0,0,0.35); }
+        .typhoon-controls h3 { font-size: 13px; color: #4fc3f7; margin-bottom: 6px; }
+        .typhoon-controls .hint { font-size: 10px; line-height: 1.5; color: #8fa3b8; margin-bottom: 8px; }
+        .typhoon-controls textarea { width: 100%; height: 150px; resize: vertical; background: #07111d; color: #c8d8e8; border: 1px solid #1e3a5f; border-radius: 5px; padding: 7px; font: 10px/1.45 Consolas, monospace; outline: none; }
+        .typhoon-controls textarea:focus { border-color: #4fc3f7; }
+        .typhoon-controls input[type=file] { width: 100%; color: #8fa3b8; font-size: 10px; margin: 7px 0; }
+        .typhoon-controls .action-row { display: flex; flex-wrap: wrap; gap: 6px; }
+        .typhoon-controls button { flex: 1; background: #1a5276; border: 1px solid #2980b9; color: #d9f4ff; padding: 7px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+        .typhoon-controls button.secondary { background: #15283a; border-color: #29445d; color: #8fc9e8; }
+        .typhoon-controls button:disabled { opacity: 0.5; cursor: wait; }
+        .typhoon-status { font-size: 10px; line-height: 1.5; color: #9cb0c3; margin-top: 8px; white-space: pre-wrap; }
+        .typhoon-card { margin-top: 8px; padding: 8px; border: 1px solid #29445d; border-left: 3px solid var(--track-color); border-radius: 5px; background: #0d1b2a; font-size: 10px; line-height: 1.55; color: #b9c8d6; }
+        .typhoon-card strong { color: #fff; font-size: 11px; }
+        .typhoon-card .analogue-analysis { margin-top: 5px; padding-top: 5px; border-top: 1px solid #223b50; color: #a9bfd1; }
+        .typhoon-card .track-toggle { display: flex; align-items: center; gap: 5px; margin-top: 5px; color: #d9e8f5; cursor: pointer; }
+        .typhoon-card .track-toggle input { accent-color: var(--track-color); }
+        .typhoon-card { cursor: pointer; transition: border-color .15s, background .15s; }
+        .typhoon-card:hover { background: #12263a; }
+        .typhoon-card.selected { background: #14324a; box-shadow: 0 0 0 1px var(--track-color); }
+        .typhoon-card .select-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; color: #d9e8f5; }
+
+        /* === Knowledge base manager === */
+        .btn-kb { background: #123b32; border: 1px solid #1f8a70; color: #73e6c2; padding: 5px 14px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .modal-mask { position: fixed; inset: 0; z-index: 3000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.68); }
+        .modal-mask.open { display: flex; }
+        .kb-modal { width: min(900px, 92vw); max-height: 88vh; overflow: auto; background: #0d1b2a; border: 1px solid #2a5a8f; border-radius: 10px; padding: 20px; box-shadow: 0 18px 60px rgba(0,0,0,.55); }
+        .kb-title { display: flex; align-items: center; margin-bottom: 14px; }
+        .kb-title h2 { color: #4fc3f7; font-size: 18px; }
+        .kb-title button { margin-left: auto; background: transparent; border: 0; color: #9cb0c3; font-size: 22px; cursor: pointer; }
+        .kb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .kb-box { border: 1px solid #223b50; border-radius: 7px; padding: 12px; background: #0a1523; }
+        .kb-box h3 { color: #75d5ff; font-size: 13px; margin-bottom: 9px; }
+        .kb-box input[type=file], .kb-box input[type=text], .kb-box input[type=number], .kb-box select { width: 100%; background: #07111d; color: #d5e5f3; border: 1px solid #29445d; border-radius: 5px; padding: 8px; margin-bottom: 8px; }
+        .kb-picker-label { display: block; color: #a9bfd1; font-size: 12px; margin: 2px 0 5px; }
+        .kb-upload-hint { color: #70869a; font-size: 11px; line-height: 1.55; margin: 1px 0 9px; }
+        .kb-selection { color: #75d5ff; font-size: 11px; line-height: 1.5; margin: 0 0 8px; white-space: pre-wrap; }
+        .kb-split-strategy { margin: 9px 0; padding: 9px; border: 1px solid #26445d; border-radius: 6px; background: #0c1a28; }
+        .kb-split-strategy label { display: block; color: #c4d8e8; font-size: 12px; margin-bottom: 6px; }
+        .kb-split-strategy select { margin-bottom: 5px; }
+        .kb-strategy-help { color: #7f9bb1; font-size: 11px; line-height: 1.55; white-space: pre-wrap; }
+        .kb-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .kb-options[hidden], .kb-chunk-auto[hidden] { display: none; }
+        .kb-option-field label { display: block; color: #9fb6c9; font-size: 11px; margin: 0 0 4px; }
+        .kb-option-field input { margin-bottom: 0 !important; }
+        .kb-chunk-auto { margin: 0 0 8px; padding: 9px; border: 1px solid #25617a; border-radius: 6px; background: #0b2231; color: #9eddf5; font-size: 11px; line-height: 1.55; }
+        .kb-chunk-auto strong { color: #d9f4ff; }
+        .kb-box button { background: #1a5276; color: #d9f4ff; border: 1px solid #2980b9; padding: 7px 12px; border-radius: 5px; cursor: pointer; }
+        .kb-status { color: #9cb0c3; font-size: 12px; line-height: 1.6; white-space: pre-wrap; margin-top: 8px; }
+        .kb-documents { margin-top: 14px; max-height: 280px; overflow: auto; border: 1px solid #223b50; border-radius: 7px; }
+        .kb-doc { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-bottom: 1px solid #172b3d; font-size: 12px; }
+        .kb-doc:last-child { border-bottom: 0; }
+        .kb-doc small { color: #70869a; }
+        .kb-doc button { background: #4a2020; color: #ff9999; border: 1px solid #713434; padding: 3px 7px; border-radius: 4px; cursor: pointer; }
+        .kb-results { max-height: 210px; overflow: auto; margin-top: 8px; font-size: 12px; line-height: 1.55; white-space: pre-wrap; color: #b9c8d6; }
+        .web-sources { margin-top: 8px; padding-top: 7px; border-top: 1px solid #223b50; font-size: 11px; color: #8fb4c9; }
+        .web-sources a { color: #4fc3f7; }
+        .web-source { margin-top: 8px; padding: 8px; border: 1px solid #223b50; border-radius: 5px; white-space: normal; }
+        .web-source-status { margin-top: 4px; color: #b6c9d8; }
+        .web-source details { margin-top: 4px; }
+        .web-source summary { color: #81abc2; cursor: pointer; }
+        .web-source-metadata { margin-top: 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .summary-progress { margin-top: 5px; color: #8fb4c9; font-size: 12px; }
+        @media (max-width: 1100px) {
+            .map-panel { width: 62%; min-width: 430px; }
+            .chat-panel { width: 38%; min-width: 330px; }
+            .kb-grid { grid-template-columns: 1fr; }
+        }
+
+        .region-tooltip { background: rgba(13,27,42,0.95) !important; border: 1px solid #2a5a8f !important; color: #e0e0e0 !important; font-size: 11px !important; padding: 3px 7px !important; border-radius: 4px !important; }
+        .region-tooltip::before { border-top-color: rgba(13,27,42,0.95) !important; }
+
+        /* Date nav on map */
+        .map-date-nav { position: absolute; bottom: 32px; right: 12px; background: rgba(13,27,42,0.92); border: 1px solid #1e3a5f; border-radius: 6px; padding: 6px 10px; z-index: 1000; display: flex; align-items: center; gap: 5px; }
+        .map-date-nav button { background: #1e3a5f; border: 1px solid #2a5a8f; color: #4fc3f7; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; }
+        .map-date-nav button:hover { background: #2a5a8f; }
+        .map-date-nav .date-display { color: #fff; font-size: 12px; font-weight: 500; min-width: 90px; text-align: center; }
+
+        /* Typing indicator */
+        .typing-indicator { display: inline-flex; gap: 4px; padding: 4px 0; }
+        .typing-indicator span { width: 6px; height: 6px; background: #4fc3f7; border-radius: 50%; animation: typing 1.2s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); } 30% { opacity: 1; transform: scale(1); } }
+    </style>
+    <link rel="stylesheet" href="/map_assistant.css?v=phase1.4.0">
+</head>
+
+<body>
+    <div class="header">
+        <h1>海洋灾害知识问答</h1>
+        <div class="spacer"></div>
+        <button class="btn-kb" id="forecastToggle">潮汐与预报</button>
+        <a class="btn-kb" href="/knowledge.html" target="_blank" rel="noopener" style="text-decoration:none;white-space:nowrap" title="资料审核、异步导入与专业RAG问答">专业知识工作台</a>
+        <button class="btn-kb" onclick="openKnowledgeManager()" title="旧版台风专用库；新资料请使用专业知识工作台">原台风知识库</button>
+        <div class="model-select" hidden>
+            <label>模型：</label>
+            <select id="modelSelect">
+                <option value="deepseek-v4-flash">DeepSeek-V4-Flash</option>
+            </select>
+        </div>
+        <button class="btn-clear" onclick="clearChat()">新建对话</button>
+    </div>
+
+    <div class="main-content">
+        <div class="top-section">
+            <!-- Left: Map -->
+            <div class="map-panel">
+                <div id="map"></div>
+
+                <div class="map-mode-toggle">
+                    <button id="btnMap" onclick="setMode('map')">海区地图</button>
+                    <button id="btnEvolution" onclick="setMode('evolution')">大浪区演变</button>
+                    <button id="btnTyphoon" class="active" onclick="setMode('typhoon'); document.getElementById('chatInput').focus()">海洋灾害知识问答</button>
+                </div>
+
+                <div class="legend" id="legend">
+                    <h3>海区图例</h3>
+                    <div id="legendItems"></div>
+                </div>
+
+                <div class="wave-info" id="waveInfo" style="display:none;">
+                    <div class="label" id="waveInfoName">-</div>
+                    <div id="waveInfoDetail">-</div>
+                </div>
+
+                <div class="evolution-controls" id="evolutionControls">
+                    <h3>大浪区演变 (≥2.5m)</h3>
+                    <input type="range" class="time-slider" id="timeSlider" min="0" max="12" value="0" oninput="updateEvolution()">
+                    <div class="time-label" id="timeLabel">-</div>
+                    <div class="btn-row">
+                        <button id="btnPlay" onclick="togglePlay()">▶ 播放</button>
+                        <button onclick="resetEvolution()">⏮ 重置</button>
+                    </div>
+                </div>
+
+                <div class="typhoon-controls" id="typhoonControls">
+                    <h3>台风路径与历史案例</h3>
+                    <div class="hint">所有问题都在右侧提问和继续追问。需要查看台风路径或比较历史案例时，可使用下方工具。</div>
+                    <textarea id="typhoonJson" placeholder='{"name":"当前台风","source":"CMA","forecast_track":[{"time":"...","lat":...,"lon":...,"wind_kt":...,"pressure_hpa":...}, ...]}'></textarea>
+                    <input type="file" id="typhoonFile" accept=".json,application/json" onchange="loadTyphoonFile(event)">
+                    <div class="action-row">
+                        <button id="liveTyphoonBtn" onclick="loadLiveTyphoon()">查看实时台风</button>
+                        <button id="typhoonMatchBtn" onclick="runTyphoonMatch()">检索10个相似台风</button>
+                        <button class="secondary" onclick="matchConfiguredTyphoon()">实时台风历史类比</button>
+                    </div>
+                    <div class="typhoon-status" id="typhoonStatus">正在检查知识库……</div>
+                    <div id="typhoonResults"></div>
+                </div>
+
+                <div class="map-date-nav">
+                    <button onclick="changeDate(-7)">◀◀</button>
+                    <button onclick="changeDate(-1)">◀</button>
+                    <div class="date-display" id="dateDisplay">-</div>
+                    <button onclick="changeDate(1)">▶</button>
+                    <button onclick="changeDate(7)">▶▶</button>
+                </div>
+            </div>
+
+            <!-- Right: Chat -->
+            <div class="chat-panel" role="region" aria-label="海洋灾害知识问答">
+                <div class="map-chat-heading"><strong>海洋助手</strong><span>DeepSeek · 专业资料与官方来源</span></div>
+                <div class="chat-messages" id="chatMessages" role="log" aria-label="连续问答记录" aria-live="polite">
+                    <div class="msg assistant">
+                        <div class="msg-avatar">🤖</div>
+                        <div class="msg-bubble">你好！海洋灾害知识、预报数据、历史案例和活动咨询，都可以直接在这里提问。回答后继续问“为什么”“第二点具体怎么做”，我会结合前面的对话重新查询并回答。</div>
+                    </div>
+                </div>
+                <div class="selected-context" id="selectedContext">
+                    <span id="selectedContextText"></span>
+                    <button onclick="clearSelectedTyphoon()">退出该台风对话</button>
+                </div>
+                <div class="conversation-status" id="conversationStatus">支持连续追问；历史案例信息与当前预警分别查询。</div>
+                <div class="chat-input-area">
+                    <textarea id="chatInput" rows="2" maxlength="2000" aria-label="输入问题或继续追问" placeholder="输入问题，或根据上面的回答继续追问"></textarea>
+                    <button id="sendBtn" onclick="sendMessage()">发送</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom: Debug Panel -->
+        <div class="debug-panel" id="debugPanel">
+            <div class="debug-header" onclick="toggleDebug()">
+                <span class="arrow" id="debugArrow">▶</span>
+                <span>模型输入/输出详情（点击展开/收起）</span>
+            </div>
+            <div class="debug-content" id="debugContent" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="modal-mask" id="knowledgeModal" onclick="if(event.target===this)closeKnowledgeManager()">
+        <div class="kb-modal">
+            <div class="kb-title"><h2>RAG 知识库管理</h2><button onclick="closeKnowledgeManager()">×</button></div>
+            <div class="kb-grid">
+                <div class="kb-box">
+                    <h3>导入并自动处理原始知识</h3>
+                    <label class="kb-picker-label" for="knowledgeFiles">选择文件（可多选）</label>
+                    <input type="file" id="knowledgeFiles" multiple
+                           accept=".txt,.md,.json,.csv,.tsv,.pdf,.doc,.docx,.xlsx,.xls,.zip"
+                           onchange="updateKnowledgeSelection()">
+                    <label class="kb-picker-label" for="knowledgeFolder">或选择整个文件夹（Chrome / Edge）</label>
+                    <input type="file" id="knowledgeFolder" multiple webkitdirectory directory
+                           onchange="updateKnowledgeSelection()">
+                    <div class="kb-upload-hint">支持 TXT、MD、JSON、CSV、TSV、PDF（需有文本层）、DOC、DOCX、XLSX、XLS；压缩包目前稳定支持 ZIP。历史年度 DOC（如 50.doc、2000.doc）无需安装 Word：后台会恢复逐站逐时表，按事件代码拆分，并用事件日期、站点坐标与台风路径自动关联 SID；高置信度直接确认，中低置信度进入待复核。选择“台风风暴潮数据”文件夹时，XLS/XLSX 会同时写入逐站逐时结构化数据和 RAG 全文索引。PDF 不超过 50 MB 时直接入库，超过 50 MB 且不超过 180 MB 时可选择按页或智能章节拆分；其他文件单个最多 50 MB。单批最多 200 个文件且总量不超过 200 MB。</div>
+                    <div class="kb-selection" id="knowledgeSelection">尚未选择文件</div>
+                    <div class="kb-split-strategy">
+                        <label for="pdfSplitStrategy">PDF 处理方法（分卷仅对超过 50 MB 的 PDF 生效）</label>
+                        <select id="pdfSplitStrategy" onchange="updatePdfSplitStrategyHelp(); updateKnowledgeSelection()">
+                            <option value="pages" selected>按约 60 页拆分 + 手动切片参数（快速、稳定）</option>
+                            <option value="semantic">智能章节拆分 + DeepSeek 自适应切片</option>
+                        </select>
+                        <div class="kb-strategy-help" id="pdfSplitStrategyHelp">按页数和分卷大小均匀拆分，不调用大模型；若分卷仍超过 50 MB，后台会继续安全细分。</div>
+                    </div>
+                    <div class="kb-options" id="manualChunkOptions">
+                        <div class="kb-option-field">
+                            <label for="chunkSize">切片长度（字符）</label>
+                            <input type="number" id="chunkSize" min="200" max="3000" step="1" value="800" title="每个切片的字符数">
+                        </div>
+                        <div class="kb-option-field">
+                            <label for="chunkOverlap">重叠长度（字符）</label>
+                            <input type="number" id="chunkOverlap" min="0" max="800" step="1" value="120" title="相邻切片重叠字符数">
+                        </div>
+                    </div>
+                    <div class="kb-chunk-auto" id="automaticChunkOptions" hidden><strong>DeepSeek 自适应文本切片（所选 PDF）</strong><br>系统对每份原始 PDF 规划一次，从经过校验的“切片长度 / 重叠长度”组合中选择：600/80、800/120、1000/150、1200/180、1500/220。模型不可用、超时或结果不合规时，安全回退为 800 / 120。模型只接收结构统计、标题/书签和受限页首摘录，不接收 PDF 全文或文件名；同批非 PDF 文件采用默认 800 / 120。</div>
+                    <button id="knowledgeImportBtn" onclick="importKnowledge()">导入、解析并建立索引</button>
+                    <button onclick="relinkKnowledge()">重新关联台风 SID</button>
+                    <div class="kb-status" id="knowledgeStatus">正在读取知识库状态……</div>
+                </div>
+                <div class="kb-box">
+                    <h3>检索验证</h3>
+                    <input type="text" id="knowledgeQuery" placeholder="例如：利奇马 最大增水 站点" onkeydown="if(event.key==='Enter')searchKnowledge()">
+                    <button onclick="searchKnowledge()">RAG 检索</button>
+                    <div class="kb-results" id="knowledgeResults">可在这里检查切片是否能被召回。</div>
+                </div>
+            </div>
+            <div class="kb-documents" id="knowledgeDocuments"></div>
+        </div>
+    </div>
+
+<script src="/assistant_client.js?v=phase1.4.0"></script>
+<script src="/map_assistant.js?v=phase1.4.0"></script>
+<script>
+const API_BASE = '';
+const MB_BYTES = 1024 * 1024;
+const KNOWLEDGE_FILE_MAX_BYTES = 50 * MB_BYTES;
+const KNOWLEDGE_PDF_MAX_BYTES = 180 * MB_BYTES;
+const KNOWLEDGE_BATCH_MAX_BYTES = 200 * MB_BYTES;
+const KNOWLEDGE_PDF_SPLIT_TARGET_PAGES = 60;
+const KNOWLEDGE_CHUNK_SIZE_MIN = 200;
+const KNOWLEDGE_CHUNK_SIZE_MAX = 3000;
+const KNOWLEDGE_CHUNK_OVERLAP_MIN = 0;
+const KNOWLEDGE_CHUNK_OVERLAP_MAX = 800;
+const KNOWLEDGE_CHUNK_SIZE_DEFAULT = 800;
+const KNOWLEDGE_CHUNK_OVERLAP_DEFAULT = 120;
+const KNOWLEDGE_SEMANTIC_CHUNK_PROFILES = [[600, 80], [800, 120], [1000, 150], [1200, 180], [1500, 220]];
+
+// Map
+const REGION_DEFS = [
+    { name: "渤海", color: "#E53935", order: 1 },
+    { name: "黄海北部", color: "#FB8C00", order: 2 },
+    { name: "黄海中部", color: "#FFB74D", order: 3 },
+    { name: "黄海南部", color: "#FDD835", order: 4 },
+    { name: "东海北部", color: "#43A047", order: 5 },
+    { name: "东海南部", color: "#66BB6A", order: 6 },
+    { name: "钓鱼岛附近海域", color: "#EC407A", order: 7 },
+    { name: "台湾海峡", color: "#29B6F6", order: 8 },
+    { name: "台湾以东洋面", color: "#26C6DA", order: 9 },
+    { name: "巴士海峡", color: "#AB47BC", order: 10 },
+    { name: "南海北部", color: "#00897B", order: 11 },
+    { name: "南海中部", color: "#26A69A", order: 12 },
+    { name: "南海南部", color: "#80CBC4", order: 13 },
+    { name: "北部湾", color: "#00ACC1", order: 14 },
+    { name: "日本海", color: "#5C6BC0", order: 15 },
+    { name: "日本以东洋面", color: "#42A5F5", order: 16 },
+    { name: "日本以南洋面", color: "#CE93D8", order: 17 },
+    { name: "菲律宾以东至关岛附近洋面", color: "#FFCA28", order: 18 },
+];
+const REGION_MAP = {};
+REGION_DEFS.forEach(r => REGION_MAP[r.name] = r);
+
+function getWaveColor(maxWave) {
+    if (maxWave >= 6.0) return '#ff2222';
+    if (maxWave >= 4.0) return '#ff6600';
+    if (maxWave >= 2.5) return '#ff9900';
+    if (maxWave >= 1.2) return '#44aaff';
+    return '#44cc88';
+}
+function getWaveLevel(height) {
+    if (height >= 6.0) return '狂浪';
+    if (height >= 4.0) return '巨浪';
+    if (height >= 2.5) return '大浪';
+    if (height >= 1.2) return '中浪';
+    return '轻浪';
+}
+
+let map, regionLayers = {}, bigWaveLayer = null, typhoonLayer = null;
+let currentDate = '';
+let currentMode = 'map';
+let evolutionData = null;
+let playTimer = null;
+let allDates = [];
+let regionGeoData = null;
+let currentInfoData = null;
+
+function setMapNotice(message) {
+    let notice = document.getElementById('mapLoadNotice');
+    if (!message) {
+        if (notice) notice.remove();
+        return;
+    }
+    if (!notice) {
+        notice = document.createElement('div');
+        notice.id = 'mapLoadNotice';
+        notice.className = 'map-load-notice';
+        document.querySelector('.map-panel').appendChild(notice);
+    }
+    notice.textContent = message;
+}
+
+async function initMap() {
+    map = L.map('map', {
+        center: [25, 130],
+        zoom: 4,
+        zoomControl: true,
+        attributionControl: true
+    });
+    // A separate pane keeps the basemap filter below all analytical overlays.
+    const basemapPane = map.createPane('basemap');
+    basemapPane.style.zIndex = '200';
+    basemapPane.style.pointerEvents = 'none';
+    const labelsPane = map.createPane('labels');
+    labelsPane.style.zIndex = '201';
+    labelsPane.style.pointerEvents = 'none';
+    try {
+        const response = await fetch(`${API_BASE}/api/map/config`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const config = await response.json();
+        const key = String(config.api_key || '').trim();
+        if (!config.configured || !key) {
+            setMapNotice('天地图尚未配置：请在 app\\.env 中填写 TIANDITU_API_KEY，然后重启服务。');
+        } else {
+            const encodedKey = encodeURIComponent(key);
+            const commonOptions = {
+                subdomains: '01234567',
+                minZoom: 1,
+                maxZoom: 18,
+            };
+            const baseUrl = 'https://t{s}.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}&tk=' + encodedKey;
+            const labelUrl = 'https://t{s}.tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}&tk=' + encodedKey;
+            let tileErrors = 0;
+            const reportTileError = () => {
+                tileErrors += 1;
+                if (tileErrors >= 4) {
+                    setMapNotice('天地图加载失败：请检查 API Key、网络访问以及天地图控制台中的域名/IP限制。');
+                }
+            };
+            const baseLayer = L.tileLayer(baseUrl, {
+                ...commonOptions,
+                pane: 'basemap',
+                attribution: '&copy; 天地图',
+            }).on('tileerror', reportTileError).addTo(map);
+            L.tileLayer(labelUrl, {
+                ...commonOptions,
+                pane: 'labels',
+            }).on('tileerror', reportTileError).addTo(map);
+            baseLayer.once('load', () => setMapNotice(''));
+        }
+    } catch (error) {
+        console.error('Failed to initialize TianDiTu:', error);
+        setMapNotice('无法读取地图配置，请确认服务已重启并检查 /api/map/config。');
+    }
+    const legendItems = document.getElementById('legendItems');
+    for (const r of REGION_DEFS) {
+        legendItems.innerHTML += `<div class="legend-item"><div class="legend-color" style="background:${r.color}"></div>${r.name}</div>`;
+    }
+}
+
+async function loadRegionGeo() {
+    try {
+        const resp = await fetch(`${API_BASE}/api/regions`);
+        if (resp.ok) { regionGeoData = await resp.json(); drawRegionPolygons(); }
+    } catch (e) { console.error('Failed to load region geo:', e); }
+}
+
+function drawRegionPolygons() {
+    for (const [name, layer] of Object.entries(regionLayers)) { map.removeLayer(layer); }
+    regionLayers = {};
+    if (!regionGeoData) return;
+    for (const [name, data] of Object.entries(regionGeoData)) {
+        const def = REGION_MAP[name];
+        if (!def) continue;
+        const points = data.contour || data.grid_points;
+        if (!points || points.length < 3) continue;
+        const latlngs = points.map(p => [p[0], p[1]]);
+        const polygon = L.polygon(latlngs, { color: def.color, weight: 1.5, fillColor: def.color, fillOpacity: 0.1, opacity: 0.6 }).addTo(map);
+        polygon.bindTooltip(name, { sticky: true, className: 'region-tooltip' });
+        polygon.on('click', () => showWaveInfo(name));
+        regionLayers[name] = polygon;
+    }
+}
+
+function showWaveInfo(name) {
+    if (!currentInfoData || !currentInfoData.day1) return;
+    const region = currentInfoData.day1.regions.find(r => r.name === name);
+    const infoDiv = document.getElementById('waveInfo');
+    const nameDiv = document.getElementById('waveInfoName');
+    const detailDiv = document.getElementById('waveInfoDetail');
+    if (region) {
+        nameDiv.textContent = name;
+        detailDiv.innerHTML = `浪高: ${region.wave_min}~${region.wave_max}m<br>浪级: ${getWaveLevel(region.wave_min)}~${getWaveLevel(region.wave_max)}<br>网格点: ${region.grid_count}`;
+        infoDiv.style.display = 'block';
+    } else { infoDiv.style.display = 'none'; }
+}
+
+async function loadDate(date) {
+    currentInfoData = null;
+    document.getElementById('waveInfo').style.display = 'none';
+    try {
+        const infoResp = await fetch(`${API_BASE}/api/data/${date}`);
+        if (!infoResp.ok) return;
+        currentInfoData = await infoResp.json();
+        try { updateMapHighlight(currentInfoData); } catch (e) {}
+        if (currentMode === 'evolution') loadEvolutionData();
+    } catch (e) {}
+}
+
+function updateMapHighlight(info) {
+    for (const [name, layer] of Object.entries(regionLayers)) {
+        const def = REGION_MAP[name];
+        if (def) layer.setStyle({ fillOpacity: 0.1, weight: 1.5, color: def.color });
+    }
+    if (info.day1 && info.day1.regions) {
+        for (const r of info.day1.regions) {
+            if (regionLayers[r.name]) {
+                const maxWave = r.wave_max;
+                const color = getWaveColor(maxWave);
+                let opacity = Math.min(0.5, maxWave / 10);
+                let weight = maxWave >= 2.5 ? 2.5 : 1.5;
+                regionLayers[r.name].setStyle({ fillOpacity: opacity, weight: weight, color: color });
+            }
+        }
+    }
+}
+
+function changeDate(delta) {
+    if (allDates.length === 0) return;
+    const currentIdx = allDates.indexOf(currentDate);
+    let newIdx = currentIdx + delta;
+    if (newIdx < 0) newIdx = 0;
+    if (newIdx >= allDates.length) newIdx = allDates.length - 1;
+    currentDate = allDates[newIdx];
+    document.getElementById('dateDisplay').textContent = currentDate;
+    loadDate(currentDate);
+}
+
+function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btnMap').classList.toggle('active', mode === 'map');
+    document.getElementById('btnEvolution').classList.toggle('active', mode === 'evolution');
+    document.getElementById('btnTyphoon').classList.toggle('active', mode === 'typhoon');
+    document.getElementById('evolutionControls').style.display = mode === 'evolution' ? 'block' : 'none';
+    document.getElementById('legend').style.display = mode === 'map' ? 'block' : 'none';
+    document.getElementById('typhoonControls').style.display = mode === 'typhoon' ? 'block' : 'none';
+    document.querySelector('.map-date-nav').style.display = mode === 'typhoon' ? 'none' : 'flex';
+    if (mode === 'evolution') loadEvolutionData();
+    else { stopPlay(); if (bigWaveLayer) { map.removeLayer(bigWaveLayer); bigWaveLayer = null; } }
+    if (mode !== 'typhoon' && typhoonLayer) { map.removeLayer(typhoonLayer); typhoonLayer = null; }
+}
+
+const TYPHOON_COLORS = [
+    '#ff4d6d', '#4fc3f7', '#ffd166', '#8be28b', '#b388ff', '#ff9f43',
+    '#22d3c5', '#f78fb3', '#7aa2f7', '#c3e88d', '#f6c177',
+];
+let lastTyphoonMatchData = null;
+let selectedTyphoonTrackIndexes = new Set();
+let selectedTyphoonSid = null;
+
+async function loadTyphoonFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    try {
+        document.getElementById('typhoonJson').value = await file.text();
+        document.getElementById('typhoonStatus').textContent = `已载入 ${file.name}`;
+    } catch (e) {
+        document.getElementById('typhoonStatus').textContent = `读取文件失败：${e.message}`;
+    }
+}
+
+async function checkTyphoonStatus() {
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/status`);
+        const data = await resp.json();
+        const kb = data.knowledge_base || {};
+        const rag = data.rag || {};
+        const provider = data.current_provider || {};
+        document.getElementById('typhoonStatus').textContent = kb.available
+            ? `知识库已就绪：${kb.storm_count || 0}个西北太平洋台风，${kb.zhejiang_candidate_count || 0}个浙江候选；RAG含${rag.document_count || 0}份文档、${rag.chunk_count || 0}个切片。\n专家数据源：${provider.available ? '已配置' : '尚未配置，可直接上传JSON'}`
+            : '知识库尚未构建，请先运行 python -m typhoon.build_knowledge_base';
+    } catch (e) {
+        document.getElementById('typhoonStatus').textContent = `状态检查失败：${e.message}`;
+    }
+}
+
+async function runTyphoonMatch() {
+    const text = document.getElementById('typhoonJson').value.trim();
+    if (!text) {
+        document.getElementById('typhoonStatus').textContent = '请先上传或粘贴当前台风JSON。';
+        return;
+    }
+    let payload;
+    try { payload = JSON.parse(text); }
+    catch (e) {
+        document.getElementById('typhoonStatus').textContent = `JSON格式错误：${e.message}`;
+        return;
+    }
+    await requestTyphoonMatch(payload);
+}
+
+async function matchConfiguredTyphoon() {
+    await requestTyphoonMatch({ top_k: 10 });
+}
+
+async function requestTyphoonMatch(payload) {
+    const button = document.getElementById('typhoonMatchBtn');
+    button.disabled = true;
+    document.getElementById('typhoonStatus').textContent = '正在对全部浙江候选计算路径相似度和风暴潮关联影响……';
+    document.getElementById('typhoonResults').innerHTML = '';
+    try {
+        const requestPayload = { ...payload, top_k: 10, compact: true };
+        const resp = await fetch(`${API_BASE}/api/typhoon/similar`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestPayload),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '匹配失败');
+        renderTyphoonMatch(data);
+        appendMessage('assistant', data.report, '台风路径检索');
+    } catch (e) {
+        document.getElementById('typhoonStatus').textContent = `匹配失败：${e.message}`;
+    } finally { button.disabled = false; }
+}
+
+function renderTyphoonMatch(data) {
+    lastTyphoonMatchData = data;
+    selectedTyphoonTrackIndexes = new Set();
+    selectedTyphoonSid = null;
+    updateSelectedContext();
+    const results = document.getElementById('typhoonResults');
+    results.innerHTML = data.analogues.map((item, index) => `
+        <div class="typhoon-card" data-index="${index}" style="--track-color:${TYPHOON_COLORS[index + 1]}" onclick="selectTyphoon(${index})">
+            <strong>第${item.rank}名 ${escapeHtml(String(item.season))} ${escapeHtml(item.name)}</strong><br>
+            相似度 ${item.similarity_score.toFixed(2)} · ${escapeHtml(item.category)}<br>
+            最大风速 ${formatWind(item.max_wind)} · 最低气压 ${formatMetric(item.min_pressure, 'hPa')}<br>
+            路径DTW ${formatMetric(item.track_dtw_km, 'km')} · ${escapeHtml(formatZhejiangRelation(item))}<br>
+            风暴潮 ${escapeHtml(item.storm_surge?.severity || '待判断')} · ${item.storm_surge?.is_estimate ? '代理估算' : '关联记录'}
+            <div class="select-row"><input type="radio" name="selectedTyphoon" tabindex="-1"> 选择该台风并查看详情</div>
+        </div>`).join('');
+    updateTyphoonMatchStatus();
+    drawTyphoonTracks(data);
+}
+
+async function selectTyphoon(index) {
+    if (!lastTyphoonMatchData || !lastTyphoonMatchData.analogues[index]) return;
+    const item = lastTyphoonMatchData.analogues[index];
+    const matchRequestId = lastTyphoonMatchData.request_id;
+    selectedTyphoonTrackIndexes = new Set([index]);
+    selectedTyphoonSid = item.sid;
+    document.getElementById('chatInput').placeholder = '可追问所选台风，也可直接问其他海洋问题';
+    document.querySelectorAll('.typhoon-card').forEach((card, cardIndex) => {
+        card.classList.toggle('selected', cardIndex === index);
+        const radio = card.querySelector('input[type=radio]');
+        if (radio) radio.checked = cardIndex === index;
+    });
+    updateSelectedContext();
+    updateTyphoonMatchStatus();
+    drawTyphoonTracks(lastTyphoonMatchData);
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/conversation/select`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ request_id: matchRequestId, sid: item.sid }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '读取详情失败');
+        if (String(selectedTyphoonSid) !== String(item.sid) || lastTyphoonMatchData.request_id !== matchRequestId) return;
+        lastTyphoonMatchData.analogues[index] = { ...item, ...data.analogue };
+        drawTyphoonTracks(lastTyphoonMatchData);
+        appendMessage('assistant', data.answer, `${item.season}年${item.name}`);
+    } catch (e) {
+        appendMessage('assistant', `读取台风详情失败：${e.message}`, '系统提示');
+    }
+}
+
+function updateTyphoonMatchStatus() {
+    if (!lastTyphoonMatchData) return;
+    const data = lastTyphoonMatchData;
+    const selectedNames = [...selectedTyphoonTrackIndexes]
+        .sort((a, b) => a - b)
+        .map(index => `第${index + 1}名 ${data.analogues[index].name}`);
+    document.getElementById('typhoonStatus').textContent =
+        `纯路径模式：共评分${data.method.scored_candidate_count}个候选，输出前${data.analogues.length}名。\n` +
+        `地图始终显示输入路径；` +
+        (selectedNames.length ? `当前选择${selectedNames[0]}，可在右侧继续追问。` : '请选择一个历史台风查看路径和详情。');
+}
+
+function updateSelectedContext() {
+    if (window.MapAssistant) window.MapAssistant.setSelection({sid:selectedTyphoonSid,
+        request_id:selectedTyphoonSid && lastTyphoonMatchData ? lastTyphoonMatchData.request_id : null});
+    const bar = document.getElementById('selectedContext');
+    const label = document.getElementById('selectedContextText');
+    if (!selectedTyphoonSid || !lastTyphoonMatchData) {
+        bar.style.display = 'none';
+        label.textContent = '';
+        return;
+    }
+    const item = lastTyphoonMatchData.analogues.find(candidate => String(candidate.sid) === String(selectedTyphoonSid));
+    label.textContent = item ? `地图所选：${item.season}年 ${item.name}` : '地图已选择历史台风';
+    bar.style.display = 'block';
+}
+
+function clearSelectedTyphoon() {
+    selectedTyphoonSid = null;
+    selectedTyphoonTrackIndexes = new Set();
+    document.querySelectorAll('.typhoon-card').forEach(card => {
+        card.classList.remove('selected');
+        const radio = card.querySelector('input[type=radio]');
+        if (radio) radio.checked = false;
+    });
+    updateSelectedContext();
+    updateTyphoonMatchStatus();
+    if (lastTyphoonMatchData) drawTyphoonTracks(lastTyphoonMatchData);
+    document.getElementById('chatInput').placeholder = '已退出单台风对话，可提问今年浙江登陆台风、最新海洋信息等';
+}
+
+function formatMetric(value, unit) {
+    return value === null || value === undefined ? '无数据' : `${Number(value).toFixed(1)} ${unit}`;
+}
+
+function formatZhejiangRelation(item) {
+    const report = item && item.historical_report ? item.historical_report : {};
+    const location = String(report.landfall_location || '').trim();
+    const zhejiangPlaces = /浙江|杭州|宁波|温州|嘉兴|湖州|绍兴|金华|衢州|舟山|台州|丽水|温岭|玉环|苍南|象山|乐清|瑞安|平阳|三门|椒江|临海/;
+    const distance = formatMetric(item && item.closest_distance_zhejiang, 'km');
+    if (location && zhejiangPlaces.test(location)) {
+        return `已在${location}登陆；轨迹采样点至浙江参考边界最小计算距离 ${distance}`;
+    }
+    return `距浙江参考边界最近 ${distance}`;
+}
+
+function windForceLevel(windMs) {
+    const upperBounds = [0.2, 1.5, 3.3, 5.4, 7.9, 10.7, 13.8, 17.1, 20.7, 24.4, 28.4, 32.6, 36.9, 41.4, 46.1, 50.9, 56.0];
+    for (let level = 0; level < upperBounds.length; level += 1) {
+        if (windMs <= upperBounds[level]) return level;
+    }
+    return 17;
+}
+
+function formatWind(windKt) {
+    if (windKt === null || windKt === undefined || windKt === '') return '无数据';
+    const windMs = Number(windKt) * 0.514444;
+    if (!Number.isFinite(windMs)) return '无数据';
+    return `${windMs.toFixed(1)} m/s（${windForceLevel(windMs)}级）`;
+}
+
+function drawTyphoonTracks(data) {
+    if (typhoonLayer) map.removeLayer(typhoonLayer);
+    typhoonLayer = L.layerGroup();
+    const bounds = [];
+    const tracks = [{ label: `输入：${data.current.name}`, track: data.current.track, color: TYPHOON_COLORS[0], current: true }];
+    data.analogues.forEach((item, index) => {
+        if (selectedTyphoonTrackIndexes.has(index)) {
+            tracks.push({
+                label: `第${item.rank}名：${item.season} ${item.name}`,
+                track: item.track,
+                color: TYPHOON_COLORS[index + 1],
+                current: false,
+            });
+        }
+    });
+    tracks.forEach(entry => {
+        const latlngs = (entry.track || []).map(point => [point.lat, point.lon]);
+        if (latlngs.length < 2) return;
+        bounds.push(...latlngs);
+        const line = L.polyline(latlngs, { color: entry.color, weight: entry.current ? 4 : 3, opacity: 0.9 }).addTo(typhoonLayer);
+        line.bindTooltip(entry.label, { sticky: true, className: 'region-tooltip' });
+        L.circleMarker(latlngs[0], { radius: 4, color: entry.color, fillOpacity: 1 }).addTo(typhoonLayer).bindTooltip(`${entry.label} 起点`);
+        L.circleMarker(latlngs[latlngs.length - 1], { radius: 5, color: entry.color, fillOpacity: 0.5 }).addTo(typhoonLayer).bindTooltip(`${entry.label} 终点`);
+    });
+    typhoonLayer.addTo(map);
+    if (bounds.length) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 6 });
+}
+
+async function loadEvolutionData() {
+    try {
+        const resp = await fetch(`${API_BASE}/api/evolution/${currentDate}`);
+        if (resp.ok) {
+            evolutionData = await resp.json();
+            if (evolutionData.length > 0) {
+                const slider = document.getElementById('timeSlider');
+                slider.max = evolutionData.length - 1;
+                slider.value = 0;
+                updateEvolution();
+            }
+        } else {
+            evolutionData = null;
+            document.getElementById('timeLabel').textContent = '无演变数据';
+            if (bigWaveLayer) { map.removeLayer(bigWaveLayer); bigWaveLayer = null; }
+        }
+    } catch (e) { evolutionData = null; }
+}
+
+function updateEvolution() {
+    if (!evolutionData || evolutionData.length === 0) return;
+    const idx = parseInt(document.getElementById('timeSlider').value);
+    const slice = evolutionData[idx];
+    document.getElementById('timeLabel').textContent = slice.time_bj || slice.time;
+    if (bigWaveLayer) map.removeLayer(bigWaveLayer);
+    bigWaveLayer = L.layerGroup();
+    if (slice.systems && slice.systems.length > 0) {
+        for (const system of slice.systems) {
+            if (system.contour && system.contour.length > 2) {
+                const points = system.contour.map(p => [p[0], p[1]]);
+                const color = getWaveColor(system.height_max);
+                const regionName = system.region || '';
+                L.polygon(points, { color: '#ffffff', weight: 2, fillColor: color, fillOpacity: 0.35 }).addTo(bigWaveLayer).bindTooltip(
+                    `${regionName} ${system.height_min}~${system.height_max}m ${getWaveLevel(system.height_max)}`,
+                    { sticky: true, className: 'region-tooltip' }
+                );
+            }
+        }
+    }
+    bigWaveLayer.addTo(map);
+}
+
+function togglePlay() {
+    if (playTimer) { stopPlay(); return; }
+    document.getElementById('btnPlay').classList.add('playing');
+    document.getElementById('btnPlay').textContent = '⏸ 暂停';
+    const slider = document.getElementById('timeSlider');
+    playTimer = setInterval(() => {
+        let val = parseInt(slider.value) + 1;
+        if (val > parseInt(slider.max)) val = 0;
+        slider.value = val;
+        updateEvolution();
+    }, 800);
+}
+function stopPlay() {
+    if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    document.getElementById('btnPlay').classList.remove('playing');
+    document.getElementById('btnPlay').textContent = '▶ 播放';
+}
+function resetEvolution() { stopPlay(); document.getElementById('timeSlider').value = 0; updateEvolution(); }
+
+async function loadDates() {
+    try {
+        const resp = await fetch(`${API_BASE}/api/dates`);
+        if (resp.ok) {
+            const data = await resp.json();
+            allDates = data.dates;
+            if (allDates.length > 0) {
+                currentDate = allDates[allDates.length - 1];
+                document.getElementById('dateDisplay').textContent = currentDate;
+            }
+        }
+    } catch (e) {}
+}
+
+// Chat
+let isSending = false;
+let debugOpen = false;
+
+const INTENT_LABELS = {
+    'query_single': '单地点查询',
+    'query_multi': '多地点查询',
+    'judgment_advice': '判断建议',
+    'sea_area_forecast': '海区预报',
+    'typhoon_analogue': '台风历史类比',
+    'typhoon_selected_qa': '已选择台风 · RAG问答',
+    'other': '通用问答',
+};
+
+function toggleDebug() {
+    debugOpen = !debugOpen;
+    document.getElementById('debugPanel').style.height = debugOpen ? '180px' : '30px';
+    document.getElementById('debugContent').style.display = debugOpen ? 'block' : 'none';
+    document.getElementById('debugArrow').classList.toggle('open', debugOpen);
+}
+
+function appendMessage(role, content, intentLabel) {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    const avatar = role === 'user' ? '👤' : '🤖';
+    let html = `<div class="msg-avatar">${avatar}</div><div class="msg-bubble">`;
+    if (intentLabel) html += `<div class="msg-intent">${intentLabel}</div>`;
+    html += `</div>`;
+    div.innerHTML = html;
+    const bubble = div.querySelector('.msg-bubble');
+    if (role === 'assistant') {
+        appendAssistantAnswer(bubble, content);
+    } else {
+        bubble.appendChild(document.createTextNode(String(content ?? '')));
+    }
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    return div;
+}
+
+function appendStreamMessage(intentLabel) {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg assistant';
+    let html = `<div class="msg-avatar">🤖</div><div class="msg-bubble">`;
+    if (intentLabel) html += `<div class="msg-intent">${intentLabel}</div>`;
+    html += `<span class="typing-indicator"><span></span><span></span><span></span></span>`;
+    html += `</div>`;
+    div.innerHTML = html;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    return div;
+}
+
+function updateStreamMessage(div, text, append = false) {
+    const bubble = div.querySelector('.msg-bubble');
+    const typing = bubble.querySelector('.typing-indicator');
+    if (typing) typing.remove();
+    const progress = bubble.querySelector('.summary-progress');
+    if (progress) progress.remove();
+    const combined = append ? `${div.dataset.streamText || ''}${String(text ?? '')}` : String(text ?? '');
+    div.dataset.streamText = combined;
+    bubble.querySelectorAll('.assistant-answer').forEach(node => node.remove());
+    appendAssistantAnswer(bubble, combined);
+    const container = document.getElementById('chatMessages');
+    container.scrollTop = container.scrollHeight;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function markdownTableCells(line) {
+    const trimmed = String(line || '').trim();
+    if (!trimmed.includes('|')) return null;
+    const normalized = trimmed.replace(/^\|/, '').replace(/\|$/, '');
+    const cells = normalized.split(/(?<!\\)\|/).map(cell =>
+        cell.trim().replace(/\\\|/g, '|').replace(/^\*\*(.*)\*\*$/, '$1').replace(/^`(.*)`$/, '$1')
+    );
+    return cells.length >= 2 ? cells : null;
+}
+
+function isMarkdownTableSeparator(cells) {
+    return Array.isArray(cells) && cells.every(cell => /^:?-{3,}:?$/.test(cell.trim()));
+}
+
+function appendAssistantAnswer(bubble, text) {
+    if (window.MapAssistant) return window.MapAssistant.renderAnswer(bubble,text);
+    const answer = document.createElement('div');
+    answer.className = 'assistant-answer';
+    const lines = String(text ?? '').replace(/\r/g, '').split('\n');
+    let buffer = [];
+
+    const flushText = () => {
+        if (!buffer.length) return;
+        const block = document.createElement('div');
+        block.textContent = buffer.join('\n');
+        answer.appendChild(block);
+        buffer = [];
+    };
+
+    for (let index = 0; index < lines.length;) {
+        const header = markdownTableCells(lines[index]);
+        const separator = index + 1 < lines.length ? markdownTableCells(lines[index + 1]) : null;
+        if (!header || !isMarkdownTableSeparator(separator) || header.length !== separator.length) {
+            buffer.push(lines[index]);
+            index += 1;
+            continue;
+        }
+        flushText();
+        const wrap = document.createElement('div');
+        wrap.className = 'assistant-table-wrap';
+        const table = document.createElement('table');
+        table.className = 'assistant-table';
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        header.forEach(value => {
+            const th = document.createElement('th');
+            th.textContent = value;
+            headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        index += 2;
+        while (index < lines.length) {
+            const row = markdownTableCells(lines[index]);
+            if (!row || row.length !== header.length || !lines[index].trim()) break;
+            const tr = document.createElement('tr');
+            row.forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+            index += 1;
+        }
+        table.appendChild(tbody);
+        wrap.appendChild(table);
+        answer.appendChild(wrap);
+    }
+    flushText();
+    bubble.appendChild(answer);
+}
+
+function updateDebug(meta, fullResponse) {
+    const content = document.getElementById('debugContent');
+    let text = `━━━ 意图识别 ━━━\n`;
+    text += `意图类型: ${meta.intent} (${INTENT_LABELS[meta.intent] || meta.intent})\n`;
+    text += `使用模型: ${meta.model}\n`;
+    text += `提示词类型: ${meta.prompt_key}\n\n`;
+    text += `━━━ 传入模型层的内容 ━━━\n`;
+    text += (meta.formatted_message || '').substring(0, 3000);
+    if (meta.formatted_message && meta.formatted_message.length > 3000) text += '\n...(已截断)';
+    if (fullResponse) {
+        text += `\n\n━━━ 模型输出 ━━━\n`;
+        text += fullResponse.substring(0, 2000);
+    }
+    content.textContent = text;
+    if (!debugOpen) toggleDebug();
+}
+
+// Source data is untrusted: render text nodes and allow only public HTTP(S) links.
+function publicWebSourceUrl(value) {
+    if (typeof value !== 'string') return null;
+    try {
+        const url = new URL(value);
+        if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) return null;
+        const hostname = url.hostname.toLowerCase().replace(/\.$/, '');
+        if (!hostname || hostname === 'localhost' || /\.(localhost|local|internal|test|invalid)$/.test(hostname)) return null;
+        if (hostname.startsWith('[')) {
+            // Only globally routable IPv6 addresses; exclude local/mapped literals.
+            if (!/^\[[23][0-9a-f]{3}:/.test(hostname) || hostname.startsWith('[2001:db8:')) return null;
+        } else if (/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+            const [a, b, c] = hostname.split('.').map(Number);
+            if (a === 0 || a === 10 || a === 127 || a >= 224 ||
+                (a === 100 && b >= 64 && b <= 127) ||
+                (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) ||
+                (a === 192 && (b === 168 || (b === 0 && (c === 0 || c === 2)))) ||
+                (a === 198 && (b === 18 || b === 19 || (b === 51 && c === 100))) ||
+                (a === 203 && b === 0 && c === 113)) return null;
+        } else if (!hostname.includes('.')) {
+            return null;
+        }
+        return url.href;
+    } catch (e) {
+        return null;
+    }
+}
+
+function webSourceReadLabel(source) {
+    const readLabels = {
+        success: '正文已提取',
+        partial: '正文仅部分提取',
+        failed: '正文读取失败',
+        blocked: '网页访问受限（未读取正文）',
+        unsupported: '页面格式不支持（未读取正文）',
+        not_attempted: '未尝试读取正文',
+        disabled: '正文读取已关闭',
+    };
+    let extraction = readLabels[source.read_status] || '正文读取状态未返回';
+    if (source.truncated) extraction += '（已截断）';
+    if (source.model_read_status === 'not_completed') return `${extraction}，但模型总结未完成`;
+    const total = Number.isInteger(source.segments_total) && source.segments_total > 0 ? source.segments_total : 0;
+    const read = Number.isInteger(source.segments_read) && source.segments_read >= 0 ? source.segments_read : 0;
+    const segments = total ? `分段阅读${Math.min(read, total)}/${total}` : '分段阅读';
+    const modelLabels = {
+        body_direct: '模型已读取提取正文',
+        body_summarized: `${segments}（已汇总）`,
+        partial: `${segments}（部分）`,
+        snippet_only: '模型仅使用搜索摘要，未读取正文',
+    };
+    let modelRead = modelLabels[source.model_read_status] || '模型正文阅读状态未返回';
+    if (source.model_read_status === 'body_summarized' && total && read < total) modelRead = `${segments}（部分）`;
+    return `${extraction}；${modelRead}`;
+}
+
+function renderWebSources(items) {
+    const container = document.createElement('div');
+    container.className = 'web-sources';
+    const heading = document.createElement('div');
+    heading.textContent = '联网来源与阅读记录（正文提取不等于整页完整读取）：';
+    container.appendChild(heading);
+    items.forEach((rawSource, index) => {
+        const source = rawSource && typeof rawSource === 'object' ? rawSource : {};
+        const card = document.createElement('div');
+        card.className = 'web-source';
+        const href = publicWebSourceUrl(source.url) || publicWebSourceUrl(source.final_url);
+        const title = document.createElement(href ? 'a' : 'span');
+        title.textContent = `${index + 1}. ${source.page_title || source.title || source.url || '未命名来源'}`;
+        if (href) {
+            title.href = href;
+            title.target = '_blank';
+            title.rel = 'noopener noreferrer';
+        }
+        card.appendChild(title);
+        const status = document.createElement('div');
+        status.className = 'web-source-status';
+        status.textContent = webSourceReadLabel(source);
+        card.appendChild(status);
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        summary.textContent = '查看提取信息与节选';
+        details.appendChild(summary);
+        const metadata = document.createElement('div');
+        metadata.className = 'web-source-metadata';
+        const lines = [];
+        if (source.url) lines.push(`原始链接：${source.url}`);
+        if (source.final_url) lines.push(`最终链接：${source.final_url}`);
+        if (Number.isFinite(source.content_chars) && source.content_chars >= 0) lines.push(`提取正文：${source.content_chars}字符`);
+        if (source.read_at) lines.push(`读取时间：${source.read_at}`);
+        if (source.published_at) lines.push(`网页标注发布时间：${source.published_at}`);
+        if (source.content_sha256) lines.push(`正文SHA-256：${source.content_sha256}`);
+        if (source.read_error) lines.push(`读取说明：${source.read_error}`);
+        if (source.summary_error) lines.push(`模型阅读说明：${source.summary_error}`);
+        if (source.truncated) lines.push('正文达到提取上限，仅使用截断后的内容。');
+        if (typeof source.excerpt === 'string' && source.excerpt) lines.push(`正文节选（最多500字符）：\n${source.excerpt.slice(0, 500)}`);
+        if (!href) lines.push('链接格式或地址不符合公开HTTP(S)链接要求，未启用点击。');
+        if (!lines.length) lines.push('未返回额外读取信息。');
+        metadata.textContent = lines.join('\n');
+        details.appendChild(metadata);
+        card.appendChild(details);
+        container.appendChild(card);
+    });
+    return container;
+}
+
+async function sendSelectedTyphoonQuestion(message, model) {
+    const assistantDiv = appendStreamMessage('已选择台风 · RAG问答');
+    const progress = document.createElement('div');
+    progress.className = 'summary-progress';
+    progress.setAttribute('role', 'status');
+    progress.textContent = '正在查询本地资料与官方网络来源，筛选相关内容并组织回答；数值与路径计算按业务数据处理……';
+    assistantDiv.querySelector('.msg-bubble').appendChild(progress);
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/conversation/ask`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                request_id: lastTyphoonMatchData.request_id,
+                sid: selectedTyphoonSid,
+                question: message,
+                model,
+            }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '问答失败');
+        updateStreamMessage(assistantDiv, data.answer);
+        if ((data.evidence || []).length) {
+            const bubble = assistantDiv.querySelector('.msg-bubble');
+            const sources = document.createElement('div');
+            sources.className = 'web-sources';
+            sources.textContent = `本地RAG证据：${data.evidence.map(item => item.filename + '（切片' + item.chunk_index + '）').join('、')}`;
+            bubble.appendChild(sources);
+        }
+        if ((data.web_sources || []).length) {
+            assistantDiv.querySelector('.msg-bubble').appendChild(renderWebSources(data.web_sources));
+        }
+        const meta = data.answer_meta || {};
+        const routeStatus = document.createElement('div');
+        routeStatus.className = 'web-sources';
+        if (meta.answer_policy === 'always_local_and_official_web') {
+            routeStatus.textContent = meta.web_search_executed
+                ? `已检索资料库和官方网络来源，选用${meta.web_selected_count || 0}篇相关网页正文。`
+                : '本次联网未获得可用搜索结果，按已有证据回答。';
+        } else if (meta.web_search_trigger === 'explicit_request') {
+            routeStatus.textContent = `检索路线：用户明确要求联网。${meta.knowledge_sufficiency_reason || ''}`;
+        } else if (meta.web_search_trigger === 'knowledge_insufficient') {
+            routeStatus.textContent = `检索路线：本地知识不足，系统自动联网。${meta.knowledge_sufficiency_reason || ''}`;
+        } else {
+            routeStatus.textContent = `检索路线：本地知识足以回答，未联网。${meta.knowledge_sufficiency_reason || ''}`;
+        }
+        assistantDiv.querySelector('.msg-bubble').appendChild(routeStatus);
+        if (meta.web_search_requested) {
+            const webStatus = document.createElement('div');
+            webStatus.className = 'web-sources';
+            if (meta.web_search_state === 'disabled') {
+                webStatus.textContent = '联网搜索已关闭，本次使用本地知识库回答。';
+            } else if (meta.web_search_error) {
+                const attempts = meta.web_search_attempts || [];
+                const blocked = attempts.filter(item => item.state === 'blocked').map(item => item.provider);
+                const triedBackup = attempts.some(item => item.state === 'empty' || item.state === 'error' || item.state === 'timeout');
+                if (blocked.length && triedBackup) {
+                    webStatus.textContent = `${blocked.join('、')}要求安全验证，系统已自动跳过并尝试备用搜索源，但未找到可用结果；无需在本页面人工验证。`;
+                } else if (blocked.length) {
+                    webStatus.textContent = `${blocked.join('、')}要求安全验证，系统未尝试绕过；请启用自动搜索模式或检查备用搜索源网络。`;
+                } else {
+                    webStatus.textContent = `联网搜索失败：${meta.web_search_error}`;
+                }
+            } else if (meta.web_search_result_count) {
+                webStatus.textContent = `联网搜索已执行，返回${meta.web_search_result_count}条结果（${meta.web_search_provider || '搜索服务'}）。`;
+                if ((meta.web_search_attempts || []).some(item => item.state === 'blocked')) {
+                    webStatus.textContent += ' 首选搜索服务要求验证，已使用备用来源。';
+                }
+                if ((meta.web_search_attempts || []).some(item => item.state === 'success' && item.query_scope === 'name_only')) {
+                    webStatus.textContent += ' 已放宽为台风名称搜索，请结合来源核对年份。';
+                }
+                if (Number.isFinite(meta.web_read_count)) {
+                    webStatus.textContent += ` 提取到正文${meta.web_read_count}页`;
+                    if (Number.isFinite(meta.web_body_used_count)) webStatus.textContent += `，模型使用正文${meta.web_body_used_count}页`;
+                    webStatus.textContent += '（范围与部分读取情况见各来源记录）。';
+                }
+            } else {
+                webStatus.textContent = '联网搜索已执行，但没有返回可用网页结果；回答仅使用本地知识库。';
+            }
+            assistantDiv.querySelector('.msg-bubble').appendChild(webStatus);
+        }
+        updateDebug({
+            intent: 'typhoon_selected_qa',
+            model: meta.model || '模板降级',
+            prompt_key: 'selected_typhoon_rag',
+            formatted_message: `选中SID: ${selectedTyphoonSid}\n检索方式: ${meta.retrieval}\n知识充分: ${meta.knowledge_sufficient}\n判定原因: ${meta.knowledge_sufficiency_reason || '未返回'}\n联网触发: ${meta.web_search_trigger || '未返回'}\n联网搜索: ${meta.web_search_state || '未触发'}\n实际来源: ${meta.web_search_provider || '无'}\n正文提取页数: ${meta.web_read_count ?? '未返回'}\n模型使用正文页数: ${meta.web_body_used_count ?? '未返回'}\n搜索尝试: ${JSON.stringify(meta.web_search_attempts || [])}\n证据片段: ${(data.evidence || []).map(item => item.filename + '#' + item.chunk_index).join('、')}`,
+        }, data.answer);
+    } catch (e) {
+        updateStreamMessage(assistantDiv, `\n⚠️ 请求失败：${e.message}`);
+    }
+}
+
+async function sendMessage() {
+    if (window.MapAssistant) return window.MapAssistant.send();
+    if (isSending) return;
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    isSending = true;
+    document.getElementById('sendBtn').disabled = true;
+    input.value = '';
+
+    appendMessage('user', message);
+
+    const model = document.getElementById('modelSelect').value;
+    if (selectedTyphoonSid && lastTyphoonMatchData) {
+        await sendSelectedTyphoonQuestion(message, model);
+        isSending = false;
+        document.getElementById('sendBtn').disabled = false;
+        input.focus();
+        return;
+    }
+    const assistantDiv = appendStreamMessage(null);
+    let fullResponse = '';
+    let meta = null;
+
+    try {
+        const resp = await fetch(`${API_BASE}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, model }),
+        });
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+                if (!line.startsWith('data: ')) continue;
+                try {
+                    const data = JSON.parse(line.slice(6));
+                    if (data.type === 'meta') {
+                        meta = data;
+                        const bubble = assistantDiv.querySelector('.msg-bubble');
+                        const typing = bubble.querySelector('.typing-indicator');
+                        if (typing) typing.remove();
+                        const intentLabel = INTENT_LABELS[data.intent] || data.intent;
+                        const labelDiv = document.createElement('div');
+                        labelDiv.className = 'msg-intent';
+                        labelDiv.textContent = intentLabel;
+                        bubble.insertBefore(labelDiv, bubble.firstChild);
+                    } else if (data.type === 'content') {
+                        fullResponse += data.content;
+                        updateStreamMessage(assistantDiv, data.content, true);
+                    } else if (data.type === 'rag_sources') {
+                        if (Array.isArray(data.items) && data.items.length) {
+                            const sources = document.createElement('div');
+                            sources.className = 'web-sources';
+                            const title = document.createElement('div');
+                            title.textContent = '专业知识库证据（请核对资料状态与适用范围）：';
+                            sources.appendChild(title);
+                            data.items.forEach((item, index) => {
+                                const card = document.createElement('div');
+                                card.className = 'web-source';
+                                const heading = document.createElement(item.source_id ? 'a' : 'div');
+                                heading.textContent = `${index + 1}. ${item.filename || item.title || '知识库资料'}`;
+                                if (item.source_id) {
+                                    heading.href = `/knowledge.html?source=${encodeURIComponent(String(item.source_id))}`;
+                                    heading.target = '_blank';
+                                    heading.rel = 'noopener noreferrer';
+                                }
+                                card.appendChild(heading);
+                                const locator = document.createElement('div');
+                                locator.className = 'web-source-status';
+                                locator.textContent = `定位：${item.locator || item.citation || '未提供'} · ${item.review_label || (item.status === 'approved' ? '已审核资料' : '历史参考，未审定')}`;
+                                card.appendChild(locator);
+                                if (item.excerpt) {
+                                    const details = document.createElement('details');
+                                    const summary = document.createElement('summary');
+                                    summary.textContent = '查看证据节选';
+                                    const excerpt = document.createElement('div');
+                                    excerpt.className = 'web-source-metadata';
+                                    excerpt.textContent = String(item.excerpt);
+                                    details.append(summary, excerpt);
+                                    card.appendChild(details);
+                                }
+                                sources.appendChild(card);
+                            });
+                            assistantDiv.querySelector('.msg-bubble').appendChild(sources);
+                        }
+                    } else if (data.type === 'sources') {
+                        if ((data.items || []).length) {
+                            assistantDiv.querySelector('.msg-bubble').appendChild(renderWebSources(data.items));
+                        }
+                    } else if (data.type === 'error') {
+                        updateStreamMessage(assistantDiv, `\n⚠️ ${data.content}`, true);
+                    } else if (data.type === 'done') {
+                        // done
+                    }
+                } catch (e) {}
+            }
+        }
+    } catch (e) {
+        updateStreamMessage(assistantDiv, `\n⚠️ 请求失败: ${e.message}`, true);
+    }
+
+    if (meta) updateDebug(meta, fullResponse);
+
+    isSending = false;
+    document.getElementById('sendBtn').disabled = false;
+    input.focus();
+}
+
+function clearChat() {
+    if (window.MapAssistant) {window.MapAssistant.reset();return;}
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = `
+        <div class="msg assistant">
+            <div class="msg-avatar">🤖</div>
+            <div class="msg-bubble">对话已清空。请问有什么可以帮你的？</div>
+        </div>
+    `;
+    document.getElementById('debugContent').textContent = '';
+}
+
+function openKnowledgeManager() {
+    document.getElementById('knowledgeModal').classList.add('open');
+    updatePdfSplitStrategyHelp();
+    loadKnowledgeManager();
+}
+
+function closeKnowledgeManager() {
+    document.getElementById('knowledgeModal').classList.remove('open');
+}
+
+async function loadKnowledgeManager() {
+    const statusDiv = document.getElementById('knowledgeStatus');
+    try {
+        const [statusResp, documentsResp] = await Promise.all([
+            fetch(`${API_BASE}/api/typhoon/knowledge/status`),
+            fetch(`${API_BASE}/api/typhoon/knowledge/documents`),
+        ]);
+        const status = await statusResp.json();
+        const documents = await documentsResp.json();
+        const pdfSplit = status.pdf_auto_split || {};
+        const semanticChunking = status.chunking && status.chunking.semantic || {};
+        const regularMaxMb = Number(status.max_upload_mb) || KNOWLEDGE_FILE_MAX_BYTES / MB_BYTES;
+        const pdfMaxMb = Number(status.max_pdf_upload_mb) || KNOWLEDGE_PDF_MAX_BYTES / MB_BYTES;
+        const targetPages = Number(pdfSplit.target_pages) || KNOWLEDGE_PDF_SPLIT_TARGET_PAGES;
+        const partMaxMb = Number(pdfSplit.max_part_mb) || regularMaxMb;
+        const pdfLimits = [
+            'PDF仅解析文本层',
+            pdfSplit.encrypted_supported === false ? '不支持加密 PDF' : '',
+            Number(pdfSplit.max_pages) ? `最多 ${Number(pdfSplit.max_pages)} 页` : '',
+        ].filter(Boolean).join('；');
+        const profiles = Array.isArray(semanticChunking.profiles) && semanticChunking.profiles.length
+            ? semanticChunking.profiles.map(item => `${item.chunk_size}/${item.overlap}`).join('、')
+            : KNOWLEDGE_SEMANTIC_CHUNK_PROFILES.map(item => item.join('/')).join('、');
+        const fallback = semanticChunking.fallback || {};
+        const fallbackSize = Number(fallback.chunk_size) || KNOWLEDGE_CHUNK_SIZE_DEFAULT;
+        const fallbackOverlap = Number(fallback.overlap) || KNOWLEDGE_CHUNK_OVERLAP_DEFAULT;
+        updateAutomaticChunkingHelp(semanticChunking);
+        const linking = status.storm_linking || {};
+        statusDiv.textContent = `检索引擎：${status.engine}\n文档：${status.document_count}份；切片：${status.chunk_count}个\n台风自动关联：${linking.linked_chunk_count || 0}个切片已关联、${linking.unlinked_chunk_count || 0}个未关联，涉及${linking.linked_sid_count || 0}个SID；待复核关系${linking.pending_review_count || 0}条\n支持：${(status.supported_extensions || []).join('、')}\n大 PDF：超过 ${regularMaxMb} MB 且不超过 ${pdfMaxMb} MB 时，可选按约 ${targetPages} 页或智能章节拆分；每卷不超过 ${partMaxMb} MB\n智能方式按“书签/目录/标题 → 必要时 DeepSeek 辅助 → 规则校验 → 失败按页回退”处理，不发送 PDF 全文\nDeepSeek 自适应切片候选（长度/重叠）：${profiles}；失败回退 ${fallbackSize}/${fallbackOverlap}\n${pdfLimits}；压缩包支持：${(status.archive_formats || ['.zip']).join('、')}`;
+        renderKnowledgeDocuments(documents.documents || []);
+    } catch (e) {
+        statusDiv.textContent = `知识库状态读取失败：${e.message}`;
+    }
+}
+
+function renderKnowledgeDocuments(documents) {
+    const container = document.getElementById('knowledgeDocuments');
+    if (!documents.length) {
+        container.innerHTML = '<div class="kb-doc">知识库中暂无文档</div>';
+        return;
+    }
+    container.innerHTML = documents.map(doc => {
+        const metadata = doc.metadata || {};
+        let displayName;
+        if (metadata.auto_split) {
+            const originalName = metadata.relative_path || metadata.original_filename || '原 PDF';
+            const pageRange = metadata.page_start != null && metadata.page_end != null
+                ? `第 ${metadata.page_start}–${metadata.page_end} 页`
+                : '页码范围未知';
+            const partOrder = metadata.part_index != null && metadata.part_total != null
+                ? `分卷 ${metadata.part_index}/${metadata.part_total}，`
+                : '';
+            const strategy = pdfSplitStrategyLabel(metadata.split_strategy_used || metadata.requested_split_strategy);
+            const sectionTitle = metadata.section_title ? `，章节“${metadata.section_title}”` : '';
+            const fallback = metadata.split_fallback_reason ? '，已安全回退' : '';
+            displayName = `${originalName} → ${doc.filename}（${partOrder}${pageRange}，${strategy}${sectionTitle}${fallback}）`;
+        } else if (metadata.archive_member) {
+            displayName = `${metadata.relative_path || metadata.archive || doc.filename} → ${metadata.archive_member}`;
+        } else {
+            displayName = metadata.relative_path || doc.filename;
+        }
+        const storedChunking = formatChunkingResult({ metadata });
+        const chunkingLine = storedChunking ? `<br><small>${escapeHtml(storedChunking)}</small>` : '';
+        const linkingLine = `<br><small>SID关联：${Number(doc.linked_chunk_count || 0)}/${Number(doc.chunk_count || 0)}个切片，${Number(doc.linked_sid_count || 0)}个台风${Number(doc.pending_link_count || 0) ? `，${Number(doc.pending_link_count)}条待复核` : ''}</small>`;
+        return `
+        <div class="kb-doc">
+            <span>${escapeHtml(displayName)}<br><small>${escapeHtml(doc.source_kind)} · ${doc.chunk_count}个切片 · ${doc.char_count}字</small>${chunkingLine}${linkingLine}</span>
+            <small>${escapeHtml((doc.imported_at || '').replace('T', ' ').slice(0, 19))}</small>
+            ${doc.source_kind === 'historical_report' ? '<small>内置资料</small>' : `<button onclick="deleteKnowledge('${escapeHtml(doc.document_id)}')">删除</button>`}
+        </div>`;
+    }).join('');
+}
+
+function getKnowledgeSelection() {
+    const regular = Array.from(document.getElementById('knowledgeFiles').files || []);
+    const folder = Array.from(document.getElementById('knowledgeFolder').files || []);
+    return [...regular, ...folder];
+}
+
+function isPdfKnowledgeFile(file) {
+    return /\.pdf$/i.test(String(file && file.name || ''));
+}
+
+function isAutoSplitPdf(file) {
+    const size = Number(file && file.size || 0);
+    return isPdfKnowledgeFile(file) && size > KNOWLEDGE_FILE_MAX_BYTES && size <= KNOWLEDGE_PDF_MAX_BYTES;
+}
+
+function getPdfSplitStrategy() {
+    const select = document.getElementById('pdfSplitStrategy');
+    return select && select.value === 'semantic' ? 'semantic' : 'pages';
+}
+
+function pdfSplitStrategyLabel(value) {
+    const labels = {
+        pages: '按页拆分',
+        semantic: '智能章节拆分',
+        semantic_hybrid: '智能混合拆分',
+        outline: 'PDF书签/目录',
+        title_heuristic: '标题结构识别',
+        llm: 'DeepSeek辅助判界',
+        not_split: '无需拆分',
+    };
+    return labels[String(value || '').toLowerCase()] || String(value || '未返回');
+}
+
+function pdfBoundarySourceLabel(value) {
+    const raw = String(value || '').toLowerCase();
+    const tokens = raw.split('+').filter(Boolean);
+    const base = tokens[0];
+    const guard = tokens.slice(1).join('+');
+    const labels = {
+        page_count: '页数边界',
+        page_count_fallback: '页数安全回退边界',
+        pdf_outline: 'PDF书签边界',
+        page_title: '页面标题边界',
+        natural_heading: '自然标题边界',
+        llm: 'DeepSeek判断边界',
+    };
+    const label = labels[base] || String(value || '边界来源未返回');
+    if (guard.includes('page_midpoint_size_guard')) return `${label}，超大章节按页中点细分`;
+    if (guard.includes('size_guard')) return `${label}，超大章节按大小保护细分`;
+    return label;
+}
+
+function pdfSplitFallbackLabel(value) {
+    const labels = {
+        model_timeout: '模型调用超时',
+        invalid_model_output: '模型边界未通过校验',
+        model_unavailable: '模型未配置或不可用',
+        no_structure: '可用结构和页面文本不足',
+        model_error: '模型调用失败',
+    };
+    return labels[String(value || '').toLowerCase()] || String(value || '');
+}
+
+function chunkingSourceLabel(value) {
+    const labels = {
+        user: '用户设置',
+        llm: 'DeepSeek 自适应规划',
+        default_fallback: '默认安全回退',
+        stored_plan: '复用已保存的 DeepSeek 规划',
+        duplicate_chunking_preserved: '重复文件，保留既有索引参数',
+        mixed: '多种来源',
+        stored_plan: '复用该 PDF 已保存的规划',
+        duplicate_chunking_preserved: '重复内容沿用既有索引参数',
+        mixed: '多个分卷采用不同的既有参数',
+    };
+    return labels[String(value || '').toLowerCase()] || String(value || '未返回');
+}
+
+function chunkingFallbackLabel(value) {
+    const labels = {
+        model_timeout: 'DeepSeek 调用超时',
+        model_unavailable: 'DeepSeek 未配置或不可用',
+        invalid_model_output: 'DeepSeek 返回值未通过范围校验',
+        no_structure: 'PDF 可提取的结构文本不足',
+        model_error: 'DeepSeek 调用失败',
+    };
+    return labels[String(value || '').toLowerCase()] || String(value || '');
+}
+
+function chunkingInfo(item) {
+    const metadata = item && item.metadata || {};
+    return {
+        requestedSize: item && item.requested_chunk_size != null ? item.requested_chunk_size : metadata.requested_chunk_size,
+        requestedOverlap: item && item.requested_overlap != null ? item.requested_overlap : metadata.requested_overlap,
+        actualSize: item && item.actual_chunk_size != null ? item.actual_chunk_size : metadata.actual_chunk_size,
+        actualOverlap: item && item.actual_overlap != null ? item.actual_overlap : metadata.actual_overlap,
+        source: item && item.chunking_source ? item.chunking_source : metadata.chunking_source,
+        reason: item && item.chunking_reason ? item.chunking_reason : metadata.chunking_reason,
+        fallback: item && item.chunking_fallback_reason ? item.chunking_fallback_reason : metadata.chunking_fallback_reason,
+    };
+}
+
+function formatChunkingResult(item) {
+    const info = chunkingInfo(item);
+    if (info.actualSize == null || info.actualOverlap == null) return '';
+    const automatic = String(info.requestedSize).toLowerCase() === 'auto'
+        || String(info.requestedOverlap).toLowerCase() === 'auto';
+    const requested = automatic
+        ? 'DeepSeek 自动规划'
+        : `${info.requestedSize ?? info.actualSize} / ${info.requestedOverlap ?? info.actualOverlap}`;
+    const fallback = info.fallback
+        ? `；安全回退：是（${chunkingFallbackLabel(info.fallback)}，采用 ${info.actualSize} / ${info.actualOverlap}）`
+        : '；安全回退：否';
+    const reason = info.reason ? `；依据：${info.reason}` : '';
+    return `请求${requested}；实际 ${info.actualSize} / ${info.actualOverlap}；来源：${chunkingSourceLabel(info.source)}${reason}${fallback}`;
+}
+
+function updateChunkingControls() {
+    const semantic = getPdfSplitStrategy() === 'semantic';
+    const manualOptions = document.getElementById('manualChunkOptions');
+    const automaticOptions = document.getElementById('automaticChunkOptions');
+    const chunkSizeInput = document.getElementById('chunkSize');
+    const overlapInput = document.getElementById('chunkOverlap');
+    if (!manualOptions || !automaticOptions || !chunkSizeInput || !overlapInput) return;
+    manualOptions.hidden = semantic;
+    automaticOptions.hidden = !semantic;
+    chunkSizeInput.disabled = semantic;
+    overlapInput.disabled = semantic;
+    if (!semantic) {
+        if (!String(chunkSizeInput.value || '').trim()) chunkSizeInput.value = KNOWLEDGE_CHUNK_SIZE_DEFAULT;
+        if (!String(overlapInput.value || '').trim()) overlapInput.value = KNOWLEDGE_CHUNK_OVERLAP_DEFAULT;
+    }
+}
+
+function updateAutomaticChunkingHelp(config = {}) {
+    const automaticOptions = document.getElementById('automaticChunkOptions');
+    if (!automaticOptions) return;
+    const profiles = Array.isArray(config.profiles) && config.profiles.length
+        ? config.profiles.map(item => `${item.chunk_size}/${item.overlap}`).join('、')
+        : KNOWLEDGE_SEMANTIC_CHUNK_PROFILES.map(item => item.join('/')).join('、');
+    const fallback = config.fallback || {};
+    const fallbackSize = Number(fallback.chunk_size) || KNOWLEDGE_CHUNK_SIZE_DEFAULT;
+    const fallbackOverlap = Number(fallback.overlap) || KNOWLEDGE_CHUNK_OVERLAP_DEFAULT;
+    automaticOptions.innerHTML = `<strong>DeepSeek 自适应文本切片（所选 PDF）</strong><br>系统对每份原始 PDF 规划一次，从经过校验的“切片长度 / 重叠长度”组合中选择：${escapeHtml(profiles)}。模型不可用、超时或结果不合规时，安全回退为 ${fallbackSize} / ${fallbackOverlap}。模型只接收结构统计、标题/书签和受限页首摘录，不接收 PDF 全文或文件名；同批非 PDF 文件采用默认 ${fallbackSize} / ${fallbackOverlap}。`;
+}
+
+function updatePdfSplitStrategyHelp() {
+    const help = document.getElementById('pdfSplitStrategyHelp');
+    if (!help) return;
+    if (getPdfSplitStrategy() === 'semantic') {
+        help.textContent = '先识别 PDF 书签、目录和页面标题等结构证据；只有结构不足时才把候选标题、目录和页首短摘录发送给已配置的 DeepSeek 辅助判界，不发送 PDF 全文。DeepSeek 同时为每份所选 PDF 自适应设置文本切片长度和重叠长度，所有分卷共用同一决策；模型不可用、结果不合规或超时时，章节边界会安全回退为按页拆分，切片参数会回退为 800 / 120。该方式可能增加处理时间和模型调用费用；敏感材料请选“按约 60 页拆分”。';
+    } else {
+        help.textContent = '按页数和分卷大小均匀拆分，不调用大模型；若分卷仍超过 50 MB，后台会继续安全细分。下方切片长度和重叠长度由用户手动设置。';
+    }
+    updateChunkingControls();
+}
+
+function formatMb(byteSize) {
+    const bytes = Number(byteSize || 0);
+    return Number.isFinite(bytes) ? (bytes / MB_BYTES).toFixed(2) : '0.00';
+}
+
+function updateKnowledgeImportButton(files, busy = false) {
+    const button = document.getElementById('knowledgeImportBtn');
+    const hasLargePdf = files.some(isAutoSplitPdf);
+    const semantic = getPdfSplitStrategy() === 'semantic';
+    if (busy) {
+        button.textContent = hasLargePdf
+            ? (semantic ? '正在智能拆分并导入……' : '正在按页拆分并导入……')
+            : '正在导入……';
+    } else {
+        button.textContent = hasLargePdf
+            ? (semantic ? '智能拆分大PDF并导入' : '按页拆分大PDF并导入')
+            : '导入、解析并建立索引';
+    }
+}
+
+function updateKnowledgeSelection() {
+    const files = getKnowledgeSelection();
+    const status = document.getElementById('knowledgeSelection');
+    updateKnowledgeImportButton(files);
+    if (!files.length) {
+        status.textContent = '尚未选择文件';
+        return;
+    }
+    const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
+    const folderCount = files.filter(file => file.webkitRelativePath).length;
+    const selectedPdfs = files.filter(isPdfKnowledgeFile);
+    const largePdfs = files.filter(isAutoSplitPdf);
+    const splitStrategy = getPdfSplitStrategy();
+    const oversizedPdfs = files.filter(file => isPdfKnowledgeFile(file) && Number(file.size || 0) > KNOWLEDGE_PDF_MAX_BYTES);
+    const oversizedOtherFiles = files.filter(file => !isPdfKnowledgeFile(file) && Number(file.size || 0) > KNOWLEDGE_FILE_MAX_BYTES);
+    const lines = [
+        `已选择 ${files.length} 个文件（${formatMb(totalBytes)} MB）${folderCount ? `，其中 ${folderCount} 个来自文件夹` : ''}`,
+    ];
+    if (largePdfs.length) {
+        lines.push(splitStrategy === 'semantic'
+            ? `检测到 ${largePdfs.length} 个大 PDF，将智能识别章节边界；失败时安全回退为按页拆分：`
+            : `检测到 ${largePdfs.length} 个大 PDF，导入时将由后台按约 ${KNOWLEDGE_PDF_SPLIT_TARGET_PAGES} 页拆分并入库：`);
+        largePdfs.forEach(file => lines.push(`- ${file.name}（${formatMb(file.size)} MB）`));
+    }
+    if (splitStrategy === 'semantic' && selectedPdfs.length) {
+        lines.push(`所选 ${selectedPdfs.length} 个 PDF 将分别由 DeepSeek 自适应规划切片长度和重叠长度；每份原始 PDF 只决策一次，失败时使用 ${KNOWLEDGE_CHUNK_SIZE_DEFAULT} / ${KNOWLEDGE_CHUNK_OVERLAP_DEFAULT}。`);
+    } else if (splitStrategy === 'semantic') {
+        lines.push(`本批没有 PDF；非 PDF 文件将使用默认切片参数 ${KNOWLEDGE_CHUNK_SIZE_DEFAULT} / ${KNOWLEDGE_CHUNK_OVERLAP_DEFAULT}。`);
+    }
+    oversizedPdfs.forEach(file => lines.push(`无法导入：PDF“${file.name}”为 ${formatMb(file.size)} MB，超过 180 MB 上限。`));
+    oversizedOtherFiles.forEach(file => lines.push(`无法导入：非 PDF 文件“${file.name}”为 ${formatMb(file.size)} MB，超过 50 MB 上限。`));
+    if (files.length > 200) lines.push('无法导入：单批最多选择 200 个文件。');
+    if (totalBytes > KNOWLEDGE_BATCH_MAX_BYTES) lines.push('无法导入：本批文件总量超过 200 MB。');
+    status.textContent = lines.join('\n');
+}
+
+async function importKnowledge() {
+    const regularInput = document.getElementById('knowledgeFiles');
+    const folderInput = document.getElementById('knowledgeFolder');
+    const statusDiv = document.getElementById('knowledgeStatus');
+    const button = document.getElementById('knowledgeImportBtn');
+    const files = getKnowledgeSelection();
+    if (!files.length) {
+        statusDiv.textContent = '请先选择一个或多个文件，或选择一个文件夹。';
+        return;
+    }
+    const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
+    const oversizedPdf = files.find(file => isPdfKnowledgeFile(file) && Number(file.size || 0) > KNOWLEDGE_PDF_MAX_BYTES);
+    const oversizedOtherFile = files.find(file => !isPdfKnowledgeFile(file) && Number(file.size || 0) > KNOWLEDGE_FILE_MAX_BYTES);
+    const largePdfs = files.filter(isAutoSplitPdf);
+    const selectedPdfs = files.filter(isPdfKnowledgeFile);
+    const splitStrategy = getPdfSplitStrategy();
+    const chunkSizeInput = document.getElementById('chunkSize');
+    const overlapInput = document.getElementById('chunkOverlap');
+    if (files.length > 200) {
+        statusDiv.textContent = '一次最多导入 200 个文件，请拆分后再试。';
+        return;
+    }
+    if (oversizedPdf) {
+        statusDiv.textContent = `PDF“${oversizedPdf.name}”为 ${formatMb(oversizedPdf.size)} MB，超过 180 MB 上限，请缩小文件后再试。`;
+        return;
+    }
+    if (oversizedOtherFile) {
+        statusDiv.textContent = `非 PDF 文件“${oversizedOtherFile.name}”为 ${formatMb(oversizedOtherFile.size)} MB，超过 50 MB 上限。`;
+        return;
+    }
+    if (totalBytes > KNOWLEDGE_BATCH_MAX_BYTES) {
+        statusDiv.textContent = '本批文件总量超过 200 MB，请拆分后再试。';
+        return;
+    }
+    let chunkSize = 'auto';
+    let overlap = 'auto';
+    if (splitStrategy !== 'semantic') {
+        chunkSize = Number(chunkSizeInput.value);
+        overlap = Number(overlapInput.value);
+        if (!Number.isInteger(chunkSize) || chunkSize < KNOWLEDGE_CHUNK_SIZE_MIN || chunkSize > KNOWLEDGE_CHUNK_SIZE_MAX) {
+            statusDiv.textContent = `切片长度必须为 ${KNOWLEDGE_CHUNK_SIZE_MIN}–${KNOWLEDGE_CHUNK_SIZE_MAX} 之间的整数。`;
+            chunkSizeInput.focus();
+            return;
+        }
+        if (!Number.isInteger(overlap) || overlap < KNOWLEDGE_CHUNK_OVERLAP_MIN || overlap > KNOWLEDGE_CHUNK_OVERLAP_MAX || overlap >= chunkSize) {
+            statusDiv.textContent = `重叠长度必须为 ${KNOWLEDGE_CHUNK_OVERLAP_MIN}–${KNOWLEDGE_CHUNK_OVERLAP_MAX} 之间且小于切片长度的整数。`;
+            overlapInput.focus();
+            return;
+        }
+    }
+    const form = new FormData();
+    files.forEach(file => {
+        form.append('files', file, file.name);
+        form.append('relative_paths', file.webkitRelativePath || file.name);
+    });
+    form.append('chunk_size', String(chunkSize));
+    form.append('overlap', String(overlap));
+    form.append('pdf_split_strategy', splitStrategy);
+    button.disabled = true;
+    updateKnowledgeImportButton(files, true);
+    statusDiv.textContent = largePdfs.length
+        ? (splitStrategy === 'semantic'
+            ? `正在上传并处理 ${files.length} 个文件，其中 ${largePdfs.length} 个大 PDF 将按结构拆分：读取书签/目录/标题 → 必要时 DeepSeek 辅助判界 → 为每份 PDF 自适应规划切片参数 → 解析 → 清洗 → 切片 → 建立全文索引……`
+            : `正在上传并处理 ${files.length} 个文件，其中 ${largePdfs.length} 个大 PDF 将按约 ${KNOWLEDGE_PDF_SPLIT_TARGET_PAGES} 页拆分：拆分 → 解析 → 清洗 → 切片 → 建立全文索引……`)
+        : (splitStrategy === 'semantic' && selectedPdfs.length
+            ? `正在上传并处理 ${files.length} 个文件：为所选 PDF 调用 DeepSeek 自适应规划切片参数 → 解析 → 清洗 → 切片 → 建立全文索引……`
+            : `正在上传并处理 ${files.length} 个文件：解析 → 清洗 → 切片 → 建立全文索引……`);
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/knowledge/import`, { method: 'POST', body: form });
+        const data = await resp.json();
+        if (!resp.ok && !(data.files || []).length) throw new Error(data.error || '导入失败');
+        const imported = data.imported || [];
+        const summary = data.summary || {};
+        const fileResults = data.files || [];
+        const failures = fileResults.filter(item => item.status === 'failed');
+        const failureText = failures.length
+            ? `\n失败明细：\n${failures.slice(0, 12).map(item => `- ${item.relative_path || item.filename}：${item.error}`).join('\n')}${failures.length > 12 ? `\n- 另有 ${failures.length - 12} 个失败项` : ''}`
+            : '';
+        const chunkingResults = fileResults.filter(item => item.status !== 'failed' && formatChunkingResult(item));
+        const chunkingText = chunkingResults.length
+            ? `\n文本切片参数执行结果（长度 / 重叠）：\n${chunkingResults.map(item => `- ${item.relative_path || item.filename}：${formatChunkingResult(item)}`).join('\n')}`
+            : '';
+        const splitFileResults = fileResults.filter(item => item.auto_split);
+        const splitStrategyText = splitFileResults.length
+            ? `\n拆分策略执行结果：\n${splitFileResults.map(item => {
+                const requested = pdfSplitStrategyLabel(item.requested_split_strategy || splitStrategy);
+                const used = pdfSplitStrategyLabel(item.split_strategy_used || item.requested_split_strategy);
+                const usedDetails = (item.split_strategies_used || []).map(pdfSplitStrategyLabel).join('、');
+                const sources = (item.boundary_sources || []).map(pdfBoundarySourceLabel).join('、') || '未返回';
+                const reason = item.split_strategy_reason ? `；依据：${item.split_strategy_reason}` : '';
+                const fallback = item.split_fallback_reason
+                    ? `；安全回退：是（${pdfSplitFallbackLabel(item.split_fallback_reason)}）`
+                    : '；安全回退：否';
+                return `- ${item.relative_path || item.filename}：请求${requested}；实际${used}${usedDetails ? `（含${usedDetails}）` : ''}；边界来源：${sources}${reason}${fallback}`;
+            }).join('\n')}`
+            : '';
+        const splitParts = imported.filter(item => item.metadata && item.metadata.auto_split);
+        const splitText = splitParts.length
+            ? `\n自动拆分分卷：\n${splitParts.map(item => {
+                const metadata = item.metadata || {};
+                const pageRange = metadata.page_start != null && metadata.page_end != null
+                    ? `第 ${metadata.page_start}–${metadata.page_end} 页`
+                    : '页码范围未知';
+                const partOrder = metadata.part_index != null && metadata.part_total != null
+                    ? `（分卷 ${metadata.part_index}/${metadata.part_total}）`
+                    : '';
+                const duplicateText = item.duplicate ? ' · 已存在，未重复入库' : '';
+                const requestedStrategy = pdfSplitStrategyLabel(metadata.requested_split_strategy || splitStrategy);
+                const actualStrategy = pdfSplitStrategyLabel(metadata.split_strategy_used || metadata.requested_split_strategy);
+                const boundarySource = pdfBoundarySourceLabel(metadata.boundary_source);
+                const sectionTitle = metadata.section_title ? ` · 章节“${metadata.section_title}”` : '';
+                const strategyReason = metadata.split_strategy_reason ? ` · ${metadata.split_strategy_reason}` : '';
+                const fallbackText = metadata.split_fallback_reason
+                    ? ` · 已安全回退：${pdfSplitFallbackLabel(metadata.split_fallback_reason)}`
+                    : ' · 未发生策略回退';
+                const chunkingText = formatChunkingResult(item);
+                return `- ${item.filename}${partOrder}：${pageRange} · 请求${requestedStrategy}，实际${actualStrategy}（${boundarySource}）${sectionTitle}${strategyReason} · ${formatMb(item.byte_size)} MB · ${Number(item.chunk_count || 0)} 个切片${chunkingText ? ` · ${chunkingText}` : ''}${fallbackText}${duplicateText}`;
+            }).join('\n')}`
+            : '';
+        const linkingText = `\nSID自动关联：${Number(summary.linked_chunk_count || 0)}个切片已关联，${Number(summary.unlinked_chunk_count || 0)}个未关联；自动确认${Number(summary.auto_accepted_link_count || 0)}条，待复核${Number(summary.needs_review_link_count || 0)}条。`;
+        const surgeCount = Number(summary.structured_storm_surge_file_count || 0);
+        const surgeText = surgeCount
+            ? `\n结构化风暴潮自动处理：识别${surgeCount}个事件，关联${Number(summary.structured_storm_surge_linked_event_count || 0)}个SID（高置信度${Number(summary.structured_storm_surge_high_confidence_count || 0)}个、事件时间重叠${Number(summary.structured_storm_surge_time_overlap_count || 0)}个）；写入${Number(summary.structured_storm_surge_station_count || 0)}个站点、${Number(summary.structured_storm_surge_observation_count || 0)}条逐时观测。重复导入会更新对应事件，不删除其他事件。`
+            : '';
+        const legacyEventCount = Number(summary.legacy_doc_event_count || 0);
+        const legacyText = legacyEventCount
+            ? `\n历史年度DOC自动处理：识别${Number(summary.legacy_doc_file_count || 0)}个年度文件、拆分${legacyEventCount}个台风事件；高置信度自动关联${Number(summary.legacy_doc_high_confidence_count || 0)}个，待人工复核${Number(summary.legacy_doc_needs_review_count || 0)}个，未关联${Number(summary.legacy_doc_unlinked_count || 0)}个。`
+            : '';
+        const reindexText = Number(summary.reindexed_document_count || 0)
+            ? `，升级重建索引${Number(summary.reindexed_document_count)}份/${Number(summary.reindexed_chunk_count || 0)}个切片`
+            : '';
+        const message = `处理完成：选择${summary.selected_file_count ?? files.length}个，成功${summary.succeeded_file_count ?? (files.length - failures.length)}个，失败${summary.failed_file_count ?? failures.length}个；展开后入库${summary.imported_document_count ?? imported.length}份，新增${summary.new_document_count ?? imported.filter(item => !item.duplicate && !item.reindexed).length}份，本次新建${summary.new_chunk_count ?? imported.filter(item => !item.duplicate && !item.reindexed).reduce((sum, item) => sum + Number(item.chunk_count || 0), 0)}个切片${reindexText}。${linkingText}${surgeText}${legacyText}${chunkingText}${splitStrategyText}${splitText}${failureText}`;
+        regularInput.value = '';
+        folderInput.value = '';
+        updateKnowledgeSelection();
+        await loadKnowledgeManager();
+        statusDiv.textContent = message;
+    } catch (e) {
+        statusDiv.textContent = `导入失败：${e.message}`;
+    } finally {
+        button.disabled = false;
+        updateKnowledgeImportButton(getKnowledgeSelection());
+    }
+}
+
+async function relinkKnowledge() {
+    const statusDiv = document.getElementById('knowledgeStatus');
+    statusDiv.textContent = '正在依据结构化台风库重新关联全部切片，请稍候……';
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/knowledge/relink`, { method: 'POST' });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || 'SID重新关联失败');
+        const result = data.result || {};
+        await loadKnowledgeManager();
+        statusDiv.textContent = `SID重新关联完成：处理${Number(result.chunk_count || 0)}个切片，关联${Number(result.linked_chunk_count || 0)}个，未关联${Number(result.unlinked_chunk_count || 0)}个；生成${Number(result.link_count || 0)}条关系，自动确认${Number(result.auto_accepted_count || 0)}条，待复核${Number(result.needs_review_count || 0)}条。`;
+    } catch (e) {
+        statusDiv.textContent = `SID重新关联失败：${e.message}`;
+    }
+}
+
+async function searchKnowledge() {
+    const query = document.getElementById('knowledgeQuery').value.trim();
+    const container = document.getElementById('knowledgeResults');
+    if (!query) return;
+    container.textContent = '正在检索切片……';
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/knowledge/search`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, limit: 8 }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '检索失败');
+        container.textContent = (data.results || []).length
+            ? data.results.map((item, index) => {
+                const scores = item.retrieval_scores || {};
+                const link = item.linked_sid
+                    ? ` · SID ${item.linked_sid}（${item.link_method || '已关联'}，${Math.round(Number(item.link_confidence || 0) * 100)}%）`
+                    : '';
+                const score = Number.isFinite(Number(scores.final)) ? ` · 综合分${Number(scores.final).toFixed(3)}` : '';
+                return `${index + 1}. ${item.filename} [切片${item.chunk_index}]${link}${score}\n${item.content.slice(0, 420)}`;
+            }).join('\n\n')
+            : '没有召回相关切片。';
+    } catch (e) {
+        container.textContent = `检索失败：${e.message}`;
+    }
+}
+
+async function deleteKnowledge(documentId) {
+    if (!confirm('确定删除这份知识文档及其全部切片吗？')) return;
+    try {
+        const resp = await fetch(`${API_BASE}/api/typhoon/knowledge/documents/${encodeURIComponent(documentId)}`, { method: 'DELETE' });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '删除失败');
+        await loadKnowledgeManager();
+    } catch (e) {
+        document.getElementById('knowledgeStatus').textContent = `删除失败：${e.message}`;
+    }
+}
+
+(async function() {
+    await initMap();
+    setMode('typhoon');
+    await loadRegionGeo();
+    await loadDates();
+    await checkTyphoonStatus();
+    if (currentDate) loadDate(currentDate);
+})();
+</script>
+
+<script src="/forecast_panel.js?v=phase1.4.0"></script>
+</body>
+</html>

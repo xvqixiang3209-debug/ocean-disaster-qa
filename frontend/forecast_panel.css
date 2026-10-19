@@ -1,0 +1,19 @@
+.forecast-panel { position:absolute; top:54px; right:12px; width:390px; max-width:calc(100% - 24px); max-height:calc(100% - 72px); overflow:auto; z-index:1200; padding:14px; border:1px solid #41617a; border-radius:10px; background:#101f30f5; box-shadow:0 8px 30px #0007; font-size:12px; color:#d9e8f5; }
+.forecast-panel[hidden] { display:none; }
+.forecast-panel [hidden] { display:none !important; }
+.forecast-panel h2 { font-size:15px; margin:0 0 10px; }
+.forecast-panel .forecast-close { float:right; background:none; border:0; color:#b9cfe0; cursor:pointer; font-size:19px; }
+.forecast-panel .trial-label { padding:7px 9px; background:#513b1d; color:#ffe0a4; border-radius:5px; line-height:1.5; margin-bottom:10px; }
+.forecast-panel label { display:block; margin:7px 0; color:#a9c3d5; }
+.forecast-panel input,.forecast-panel select { width:100%; margin-top:5px; padding:7px; border:1px solid #35546c; border-radius:5px; background:#0a1726; color:#e1edf7; }
+.forecast-panel .forecast-pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.forecast-panel button { border:1px solid #3d6e87; background:#15455b; color:#e0f3ff; border-radius:5px; padding:7px 10px; cursor:pointer; }
+.forecast-panel button:disabled { opacity:.6; cursor:wait; }
+.forecast-panel p { line-height:1.6; margin:8px 0; }
+.forecast-panel table { width:100%; border-collapse:collapse; font-size:11px; margin:9px 0; }
+.forecast-panel th,.forecast-panel td { padding:6px 4px; border-bottom:1px solid #2b4356; text-align:left; }
+.forecast-panel .forecast-status { color:#9dbdcd; font-size:11px; }
+.forecast-panel svg { width:100%; height:145px; background:#0a1726; border-radius:6px; }
+.forecast-panel details { margin:10px 0; font-size:11px; line-height:1.6; }
+.forecast-panel summary { color:#8cdce6; cursor:pointer; }
+.forecast-trial-badge { margin:10px 0; color:#ffe0a4; background:#513b1d; padding:8px; border-radius:5px; white-space:normal; font-size:12px; }

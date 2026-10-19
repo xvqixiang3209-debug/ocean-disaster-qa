@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "version": "activity-official-catalog-20261017.1",
+  "mode": "official_catalog",
+  "status": "official_catalog",
+  "authority": "official",
+  "catalog_file": "activity_policy_catalog.json",
+  "label": "按地域、活动、版本与量纲匹配官方规则",
+  "purpose": "分别判断官方条款、环境适游评价、地方风险等级及现场开放许可。",
+  "assumption": "不预设无来源的风浪流数值上限。缺规则或变量含义不支持时显示未评价，仍提供取得的逐时预报。",
+  "limits": {},
+  "low_tide_reference_minutes": null
+}

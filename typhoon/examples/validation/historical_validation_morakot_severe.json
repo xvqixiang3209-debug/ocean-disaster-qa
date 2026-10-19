@@ -1,0 +1,19 @@
+{
+  "sid": "2009215N20133",
+  "name": "MORAKOT（历史回放）",
+  "source": "IBTrACS历史留一验证",
+  "issued_at": "2009-08-10T06:00:00Z",
+  "validation_purpose": "验证严重风暴潮历史记录",
+  "expected_storm_surge": {"severity": "严重", "max_surge_m": 3.04},
+  "forecast_track": [
+    {"time": "2009-08-10T06:00:00Z", "lat": 28.8, "lon": 119.8, "wind_kt": 38, "pressure_hpa": 990},
+    {"time": "2009-08-10T09:00:00Z", "lat": 29.4, "lon": 119.9, "wind_kt": 38, "pressure_hpa": 992},
+    {"time": "2009-08-10T12:00:00Z", "lat": 30.1, "lon": 120.0, "wind_kt": 38, "pressure_hpa": 994},
+    {"time": "2009-08-10T15:00:00Z", "lat": 30.6, "lon": 120.0, "wind_kt": 38, "pressure_hpa": 995},
+    {"time": "2009-08-10T18:00:00Z", "lat": 31.0, "lon": 120.1, "wind_kt": 38, "pressure_hpa": 995},
+    {"time": "2009-08-10T21:00:00Z", "lat": 31.6, "lon": 120.3, "wind_kt": 36, "pressure_hpa": 995},
+    {"time": "2009-08-11T00:00:00Z", "lat": 32.2, "lon": 120.6, "wind_kt": 34, "pressure_hpa": 995},
+    {"time": "2009-08-11T03:00:00Z", "lat": 32.6, "lon": 120.9, "wind_kt": 34, "pressure_hpa": 995},
+    {"time": "2009-08-11T06:00:00Z", "lat": 32.9, "lon": 121.2, "wind_kt": 34, "pressure_hpa": 995}
+  ]
+}

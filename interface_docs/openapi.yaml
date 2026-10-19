@@ -1,0 +1,326 @@
+openapi: 3.0.3
+info:
+  title: 浙江台风历史相似案例智能体 API
+  version: "1.2"
+  description: |
+    根据当前/预报台风路径检索历史相似案例，并返回路径、风暴潮、历史影响总结和文本分析。
+    当前核心接口不能只凭普通台风编号计算相似度，调用方必须同时提供路径点。
+servers:
+  - url: http://127.0.0.1:8766
+    description: 部署服务器本机联调地址
+paths:
+  /api/typhoon/status:
+    get:
+      summary: 健康检查及数据状态
+      operationId: getTyphoonStatus
+      responses:
+        "200":
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/typhoon/similar:
+    post:
+      summary: 检索历史相似台风并生成分析
+      operationId: findSimilarTyphoons
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimilarRequest"
+            examples:
+              standard:
+                externalValue: ./request_example.json
+      responses:
+        "200":
+          description: 分析成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimilarResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          $ref: "#/components/responses/MatchFailed"
+        "503":
+          $ref: "#/components/responses/DataNotReady"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/typhoon/{sid}:
+    get:
+      summary: 按 IBTrACS SID 查询已入库历史台风详情
+      operationId: getHistoricalTyphoon
+      parameters:
+        - name: sid
+          in: path
+          required: true
+          description: IBTrACS SID，不是“1909”之类的普通业务编号
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 历史台风详情
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/typhoon/conversation/select:
+    post:
+      summary: 选择一条相似历史台风，进入后续问答
+      operationId: selectAnalogue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [request_id, sid]
+              properties:
+                request_id:
+                  type: string
+                sid:
+                  type: string
+      responses:
+        "200":
+          description: 选择成功
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/typhoon/conversation/ask:
+    post:
+      summary: 对选中的历史台风继续提问
+      operationId: askSelectedAnalogue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [request_id, sid, question]
+              properties:
+                request_id:
+                  type: string
+                sid:
+                  type: string
+                question:
+                  type: string
+                model:
+                  type: string
+      responses:
+        "200":
+          description: 问答成功
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/typhoon/knowledge/status:
+    get:
+      summary: 查询 RAG 索引、切片和台风 SID 关联状态
+      operationId: getKnowledgeStatus
+      responses:
+        "200":
+          description: 知识库状态
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/typhoon/knowledge/search:
+    post:
+      summary: 验证 RAG 检索和可解释重排结果
+      operationId: searchKnowledge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                limit:
+                  type: integer
+                  minimum: 1
+                  maximum: 20
+      responses:
+        "200":
+          description: 返回片段、SID 关联依据及 BM25/身份/主题/最终分数
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /api/typhoon/knowledge/relink:
+    post:
+      summary: 依据结构化历史库重新计算全部知识切片的 SID 关联
+      operationId: relinkKnowledge
+      responses:
+        "200":
+          description: 关联完成
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "503":
+          $ref: "#/components/responses/DataNotReady"
+components:
+  schemas:
+    TrackPoint:
+      type: object
+      required: [time, lat, lon]
+      properties:
+        time:
+          type: string
+          format: date-time
+          example: "2026-08-20T08:00:00+08:00"
+        lat:
+          type: number
+          minimum: -90
+          maximum: 90
+        lon:
+          type: number
+          minimum: -180
+          maximum: 180
+        wind_kt:
+          type: number
+          minimum: 0
+          maximum: 250
+        pressure_hpa:
+          type: number
+          minimum: 800
+          maximum: 1100
+        nature:
+          type: string
+    SimilarRequest:
+      type: object
+      required: [sid, forecast_track]
+      properties:
+        sid:
+          type: string
+        name:
+          type: string
+        source:
+          type: string
+        issued_at:
+          type: string
+          format: date-time
+        top_k:
+          type: integer
+          minimum: 2
+          maximum: 10
+          default: 10
+        request_id:
+          type: string
+        compact:
+          type: boolean
+          default: false
+        forecast_track:
+          type: array
+          minItems: 2
+          items:
+            $ref: "#/components/schemas/TrackPoint"
+      description: 所有路径点中至少一个需提供 wind_kt 或 pressure_hpa。
+    SimilarResponse:
+      type: object
+      required: [request_id, current, analogues, report_meta, processing_ms]
+      properties:
+        request_id:
+          type: string
+        api_version:
+          type: string
+        current:
+          type: object
+          additionalProperties: true
+        analogues:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        method:
+          type: object
+          additionalProperties: true
+        report:
+          type: string
+        report_meta:
+          type: object
+          properties:
+            requested_mode:
+              type: string
+              enum: [template, llm]
+            used_mode:
+              type: string
+              enum: [template, llm]
+            model:
+              type: string
+              nullable: true
+            fallback:
+              type: boolean
+            fallback_reason:
+              type: string
+              nullable: true
+            fact_validation:
+              type: string
+          additionalProperties: true
+        processing_ms:
+          type: number
+      additionalProperties: true
+    Error:
+      type: object
+      required: [code, error]
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+  responses:
+    BadRequest:
+      description: 请求不合法
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    MatchFailed:
+      description: 无法完成匹配
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    DataNotReady:
+      description: 数据未就绪
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalError:
+      description: 服务端错误
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

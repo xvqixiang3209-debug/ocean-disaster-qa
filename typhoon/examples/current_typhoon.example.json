@@ -1,0 +1,16 @@
+{
+  "sid": "DEMO_CURRENT",
+  "name": "演示台风（非实况）",
+  "source": "DEMO",
+  "issued_at": "2026-08-19T00:00:00+08:00",
+  "forecast_track": [
+    {"time": "2026-08-19T00:00:00+08:00", "lat": 21.5, "lon": 128.5, "wind_kt": 70, "pressure_hpa": 970},
+    {"time": "2026-08-19T06:00:00+08:00", "lat": 22.4, "lon": 127.4, "wind_kt": 75, "pressure_hpa": 965},
+    {"time": "2026-08-19T12:00:00+08:00", "lat": 23.5, "lon": 126.2, "wind_kt": 80, "pressure_hpa": 960},
+    {"time": "2026-08-19T18:00:00+08:00", "lat": 24.7, "lon": 125.1, "wind_kt": 85, "pressure_hpa": 955},
+    {"time": "2026-08-20T00:00:00+08:00", "lat": 26.0, "lon": 124.0, "wind_kt": 85, "pressure_hpa": 955},
+    {"time": "2026-08-20T06:00:00+08:00", "lat": 27.3, "lon": 122.9, "wind_kt": 80, "pressure_hpa": 960},
+    {"time": "2026-08-20T12:00:00+08:00", "lat": 28.5, "lon": 121.9, "wind_kt": 70, "pressure_hpa": 970},
+    {"time": "2026-08-20T18:00:00+08:00", "lat": 29.5, "lon": 120.9, "wind_kt": 55, "pressure_hpa": 985}
+  ]
+}

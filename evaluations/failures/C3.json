@@ -1,0 +1,772 @@
+{
+  "id": "C3",
+  "family": "channels",
+  "question": "浙江海洋预报网上有台风路径，是不是就能替代气象台发布的台风预警？我应怎样查询两类信息？",
+  "baseline_id": null,
+  "http_status": 200,
+  "started_at": "2026-10-19T08:59:05.768709+00:00",
+  "completed_at": "2026-10-19T08:59:43.194622+00:00",
+  "answer_sha256": "c65438125e0a119be241de5d89b0fbeeb4a728458380499432bcc50352fda314",
+  "answer": "不能替代。浙江海洋预报网设有“台风路径”板块，属于海洋预报服务内容[资料1]；而气象灾害预警信号是由各级气象主管机构所属气象台站向社会公众发布的预警信息，台风预警信号是其中一类[资料5]。因此，台风路径信息与气象台发布的台风预警是两类不同信息，前者不能替代后者。\n\n查询浙江海洋预报网台风路径：可访问浙江海洋预报网（www.zjocean.org.cn），在网站“台风路径”板块查看[资料1]。该资料为2019年历史公报，仅说明当时网站设有该板块，未说明当前页面布局或实时可用状态。\n\n查询气象台台风预警：可访问浙江天气网“天气预警”栏目（https://www.weather.com.cn/zhejiang/tqyj/index.shtml）[资料3]，或中央气象台“预警信号”页面（https://www.nmc.cn/f/alarm.html）[资料4]。台风来临时，气象部门会按台风距离和影响程度发布台风消息、台风警报或台风紧急警报，并通过电台、电视台等媒体滚动播报[资料2]。上述网页为节选，未核实当前预警发布状态；具体预警应以气象台最新发布为准。",
+  "model_label": "partial",
+  "missing_information": [
+    "浙江海洋预报网台风路径板块的当前页面布局和实时可用状态",
+    "气象台台风预警的当前实时发布状态"
+  ],
+  "engineering_readback": "已给出路径与预警不能互代的解释和查询入口，但仍额外列当前发布状态等未问缺项。",
+  "validation": {
+    "computed_table_fallback": false,
+    "details": null,
+    "error": null
+  },
+  "evidence_diagnostics": {
+    "answer_policy": "crag_always_local_and_official_web",
+    "blocked_evidence_count": 0,
+    "citation_format_repairs": 0,
+    "claim_attribution_recovery": null,
+    "combined_validation_error": null,
+    "corrective_new_sources": 5,
+    "corrective_retrieval_attempted": true,
+    "corrective_search_summary": null,
+    "coverage_review": {
+      "issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户问的是查询方法，并未要求当前页面布局或实时可用状态；回答已依据资料给出网站和板块的查询路径，把当前页面布局和实时可用状态列为缺项属于额外要求。",
+          "text": "浙江海洋预报网台风路径板块的当前页面布局和实时可用状态"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "用户问的是如何查询台风预警，并未要求当前实时发布状态；回答已给出查询渠道和发布机制，把当前实时发布状态列为缺项属于额外要求。",
+          "text": "气象台台风预警的当前实时发布状态"
+        }
+      ],
+      "verdict": "revise"
+    },
+    "crag_audit": {
+      "corrective_rounds": 1,
+      "evaluator": "deepseek_relevance_with_exact_passage_ids",
+      "excluded": [],
+      "facets": [
+        {
+          "correct_sources": [],
+          "id": 1,
+          "local_grade": "ambiguous",
+          "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+          "reference_sources": [
+            1,
+            2,
+            5
+          ],
+          "state": "partial"
+        },
+        {
+          "correct_sources": [
+            1
+          ],
+          "id": 2,
+          "local_grade": "correct",
+          "question": "应怎样查询浙江海洋预报网上的台风路径？",
+          "reference_sources": [],
+          "state": "supported"
+        },
+        {
+          "correct_sources": [
+            3
+          ],
+          "id": 3,
+          "local_grade": "incorrect",
+          "question": "应怎样查询气象台发布的台风预警？",
+          "reference_sources": [
+            3,
+            4,
+            5
+          ],
+          "state": "supported"
+        }
+      ],
+      "implementation": "marine-crag-v1",
+      "local": {
+        "candidates": 8,
+        "executed": true,
+        "selected": 1,
+        "state": "completed"
+      },
+      "rounds": [
+        {
+          "evaluator": "deepseek_relevance_with_exact_passage_ids",
+          "facets": [
+            {
+              "correct_sources": [],
+              "id": 1,
+              "local_grade": "ambiguous",
+              "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+              "reference_sources": [
+                1,
+                9
+              ],
+              "state": "partial"
+            },
+            {
+              "correct_sources": [
+                1
+              ],
+              "id": 2,
+              "local_grade": "correct",
+              "question": "应怎样查询浙江海洋预报网上的台风路径？",
+              "reference_sources": [],
+              "state": "supported"
+            },
+            {
+              "correct_sources": [
+                6
+              ],
+              "id": 3,
+              "local_grade": "incorrect",
+              "question": "应怎样查询气象台发布的台风预警？",
+              "reference_sources": [
+                7
+              ],
+              "state": "supported"
+            }
+          ],
+          "stage": "dual_retrieval_and_evaluation"
+        },
+        {
+          "evaluator": "deepseek_relevance_with_exact_passage_ids",
+          "new_sources": 5,
+          "queried_facets": [
+            1
+          ],
+          "stage": "targeted_correction"
+        }
+      ],
+      "selected_sources": [
+        {
+          "channel": "local",
+          "citation": 1,
+          "source_id": "a308708a3149dfa2a6c04b8d",
+          "text_sha256": "f05bf0a4e78bac49aaeb06a57d0bb12cb18e9b3c1ab11208c60fc0cc5aa559b7"
+        },
+        {
+          "channel": "web",
+          "citation": 2,
+          "source_id": "web:c9d9da74acab8d09c8599909a472f9aaf6a93e1419536e3fcc6b55963af4ff57",
+          "text_sha256": "ad5b8a4e40081bb4219b40fd32ecd034195eae69eac7cdcb51b9315e0ca19ba9"
+        },
+        {
+          "channel": "web",
+          "citation": 3,
+          "source_id": "web:2f8163927dbc19852d3fc3efbd99677ef036571a735589fbf0f5129ca1184e7a",
+          "text_sha256": "cc5f9140718c7950fc91fa0394638e094249afedbdd1201d6fcf9b0d37100b11"
+        },
+        {
+          "channel": "web",
+          "citation": 4,
+          "source_id": "web:96c730d7d1cde7b1159aa00f4f8fc01a1b9bb27151f98370430e4f711ba34af0",
+          "text_sha256": "eefb00ea1eb42dae969575d29e20ac4e61f32441efec90e4e1cb62190296ef4d"
+        },
+        {
+          "channel": "web",
+          "citation": 5,
+          "source_id": "web:bc281ffdef794d509d5fd40041648ef7f2c4eab69eb0a0d03fbe43c07c1dd4dc",
+          "text_sha256": "c2b9440d2da6cce64867ccca64039056321ba7c9c37a1281b60b8d1ed779babc"
+        }
+      ],
+      "tool_count": 0,
+      "upstream": "https://github.com/HuskyInSalt/CRAG/tree/de7c2961ae624a1483a138c5798e1f6d0c4fb0e0",
+      "used_local": 1,
+      "used_tool": 0,
+      "used_web": 4,
+      "web": {
+        "attempted": true,
+        "cache_hit": false,
+        "executed": true,
+        "selected": 4
+      }
+    },
+    "evidence_sent_count": 5,
+    "general_knowledge_used": null,
+    "grounded_answerability": null,
+    "local_evidence_count": 8,
+    "local_retrieval_executed": true,
+    "numeric_supported_partial_recovery": null,
+    "recovered_completeness_review": null,
+    "route": "hybrid_rag",
+    "web_body_candidate_count": 5,
+    "web_body_read_failures": [
+      {
+        "reason": "未提取到足够正文；页面可能需要脚本加载",
+        "state": "failed",
+        "url": "http://typhoon.nmc.cn/web.html"
+      },
+      {
+        "reason": "未提取到足够正文；页面可能需要脚本加载",
+        "state": "failed",
+        "url": "https://typhoon.slt.zj.gov.cn/"
+      }
+    ],
+    "web_excluded_sources": [
+      {
+        "reason": "index_page_not_article",
+        "url": "https://www.zj.gov.cn/"
+      }
+    ],
+    "web_search_executed": true,
+    "web_search_queries": [
+      "浙江 气象 台风 预警 发布平台 查询 site:weather.com.cn",
+      "浙江 海洋预报 台风路径 路径 登陆 数据 产品 查询 site:cma.gov.cn",
+      "浙江 气象 预警 官方 查询 渠道 site:cma.gov.cn",
+      "浙江 海洋预报网 灾害预警 官方 发布 渠道 site:gov.cn",
+      "浙江 台风 路径预报 预警信号 发布 定义 区别 site:cma.gov.cn",
+      "台风 路径预报 预警信号 发布 定义 区别 site:cma.gov.cn"
+    ],
+    "web_search_states": [
+      "success"
+    ]
+  },
+  "sources": [
+    {
+      "citation": "资料1",
+      "citation_id": 1,
+      "title": "2019浙江省海洋灾害公报正式发布稿.doc",
+      "filename": "2019浙江省海洋灾害公报正式发布稿.doc",
+      "source_id": "a308708a3149dfa2a6c04b8d",
+      "chunk_id": 24833,
+      "category": "灾害公报",
+      "locator": "paragraph:179",
+      "status": "indexed",
+      "quality_warning": "部分页面/图表或格式转换结果未核验，非全文结论。",
+      "support_validation_scope": "selected_passages",
+      "review_label": "历史资料，未审定",
+      "metadata": {
+        "source_type": "historical_archive",
+        "crag_channel": "local",
+        "crag_facets": [
+          {
+            "grade": "ambiguous",
+            "id": 1,
+            "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？"
+          },
+          {
+            "grade": "correct",
+            "id": 2,
+            "question": "应怎样查询浙江海洋预报网上的台风路径？"
+          }
+        ],
+        "crag_passage_ids": [
+          1
+        ],
+        "edition_status": "unverified"
+      },
+      "raw_local_excerpt_omitted": true
+    },
+    {
+      "citation": "资料2",
+      "citation_id": 2,
+      "title": "台风的预报与防御",
+      "filename": "台风的预报与防御",
+      "source_id": "web:c9d9da74acab8d09c8599909a472f9aaf6a93e1419536e3fcc6b55963af4ff57",
+      "chunk_id": "web:ad5b8a4e40081bb4219b40fd32ecd034195eae69eac7cdcb51b9315e0ca19ba9",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.cma.gov.cn/kppd/kppdqxsj/kppdqxgc/201212/t20121212_195831.html",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文已提取",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": "2000-07-27 20:43:00",
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:59:11.583208+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "ambiguous",
+            "id": 1,
+            "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？"
+          }
+        ],
+        "crag_passage_ids": [
+          4
+        ],
+        "primary_scope": "national_guidance",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "exact",
+              "kind": "forecast",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2000-07-27T20:43:00+08:00",
+              "query_as_of": "2026-10-19T16:59:14.895616+08:00",
+              "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+              "reasons": [
+                "未核实有效时段"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "validity_unknown",
+              "use": "reference",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "exact",
+              "kind": "forecast",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2000-07-27T20:43:00+08:00",
+              "query_as_of": "2026-10-19T16:59:14.896465+08:00",
+              "question": "应怎样查询浙江海洋预报网上的台风路径？",
+              "reasons": [
+                "未核实有效时段"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "validity_unknown",
+              "use": "reference",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "exact",
+              "kind": "forecast",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2000-07-27T20:43:00+08:00",
+              "query_as_of": "2026-10-19T16:59:14.897311+08:00",
+              "question": "应怎样查询气象台发布的台风预警？",
+              "reasons": [
+                "未核实有效时段"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "validity_unknown",
+              "use": "reference",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "exact",
+          "kind": "forecast",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": "2000-07-27T20:43:00+08:00",
+          "query_as_of": "2026-10-19T16:59:14.894365+08:00",
+          "reasons": [
+            "未核实有效时段"
+          ],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "validity_unknown",
+          "use": "reference",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "目前我国台风路径的24小时和48小时预报误差分别为170公里和340公里左右，但是对台风移向、移速和强度突变的预报还不尽如人意。 当台风将于24小时左右或之内严重影响预报区域或台风距海岸或预报区域500公里左右时，要发布台风紧急警报，除了报告上述内容之外，还要预报未来台风在什么地方登陆或紧靠海岸北上，登陆之后的路径趋向，对本地区严重影响的程度等等。",
+      "supporting_passages": [
+        {
+          "passage_id": 4,
+          "quote": "170公里和340公里左右，但是对台风移向、移速和强度突变的预报还不尽如人意。\n\n台风来临时，气象部门会发布各种预报。当台风离海岸或预报区域较远（1500公里或以上）时，要发布台风消息，报告台风目前的位置、强度、移向和移速，提请大家注意这个台风的动向。当台风未来两天内将严重影响预报区域或台风距沿海或预报区域1000公里左右时，要发布台风警报，除报告消息的内容外，还预报台风影响的时间和风雨强度等。当台风将于24小时左右或之内严重影响预报区域或台风距海岸或预报区域500公里左右时，要发布台风紧急警报，除了报告上述内容之外，还要预报未来台风在什么地方登陆或紧靠海岸北上，登陆之后的路径趋向，对本地区严重影响的程度等等。电台、电视台等新闻媒体将滚动式地、有时一小时至少一次地广播台风紧急警报的内容，当地报纸也会刊登台风警报、紧急警报。与此同时，海洋、水利部门等还要发布海洋预报、风暴潮预报等。\n\n强台风",
+          "sha256": "5e4a2b8cc57906828e1a489edbc637bdb759138439fe5dac22478a9274631429"
+        }
+      ]
+    },
+    {
+      "citation": "资料3",
+      "citation_id": 3,
+      "title": "天气预警 - 浙江天气网",
+      "filename": "天气预警 - 浙江天气网",
+      "source_id": "web:2f8163927dbc19852d3fc3efbd99677ef036571a735589fbf0f5129ca1184e7a",
+      "chunk_id": "web:cc5f9140718c7950fc91fa0394638e094249afedbdd1201d6fcf9b0d37100b11",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.weather.com.cn/zhejiang/tqyj/index.shtml",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文节选",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": null,
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:59:11.583866+00:00",
+        "read_status": "partial",
+        "crag_facets": [
+          {
+            "grade": "ambiguous",
+            "id": 3,
+            "question": "应怎样查询气象台发布的台风预警？"
+          },
+          {
+            "grade": "correct",
+            "id": 3,
+            "question": "应怎样查询气象台发布的台风预警？"
+          }
+        ],
+        "crag_passage_ids": [
+          1
+        ],
+        "primary_scope": "service_directory",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "exact",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.909170+08:00",
+              "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [
+                "scenic"
+              ],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "exact",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.909465+08:00",
+              "question": "应怎样查询浙江海洋预报网上的台风路径？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [
+                "scenic"
+              ],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "exact",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.909751+08:00",
+              "question": "应怎样查询气象台发布的台风预警？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [
+                "scenic"
+              ],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "exact",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": null,
+          "query_as_of": "2026-10-19T16:59:14.908875+08:00",
+          "reasons": [],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [
+            "scenic"
+          ],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "已读取页面标题：天气预警 - 浙江天气网 浙江省气象灾害预警发布平台",
+      "supporting_passages": [
+        {
+          "passage_id": 1,
+          "quote": "已读取页面标题：天气预警 - 浙江天气网\n访问地址：https://www.weather.com.cn/zhejiang/tqyj/index.shtml\n页面文字：\n今天是\n\n设为首页 加入收藏 打印 中国天气首页 生活 旅游\n\n繁體中文\n\n首页\n\n浙江首页\n\n天气预报\n\n天气预警\n\n台风发布\n\n天气视频\n\n杭州|湖州|嘉兴|绍兴|宁波|舟山|金华|台州|衢州|丽水|温州\n\n全国> 浙江>天气警报\n\n国内\n\n本地\n\n国际\n\n热门城市\n\n北京\n\n上海\n\n成都\n\n杭州\n\n南京\n\n天津\n\n深圳\n\n重庆\n\n西安\n\n广州\n\n青岛\n\n武汉\n\n热门景点\n\n故宫\n\n阳朔漓江\n\n龙门石窟\n\n野三坡\n\n颐和园\n\n九寨沟\n\n东方明珠\n\n凤凰古城\n\n秦始皇陵\n\n桃花源\n\n选择省市\n\n<<返回\n\n全国\n\n河北下辖区域\n\n周边城市\n\n周边景点\n\n本地乡镇\n\n热门城市\n\n曼谷\n\n东京\n\n首尔\n\n吉隆坡\n\n新加坡\n\n",
+          "sha256": "8445fe9741cbebcd8c3e371148e6b3c6812d8f045c1aaeb74b4782103d9fb5ad"
+        }
+      ]
+    },
+    {
+      "citation": "资料4",
+      "citation_id": 4,
+      "title": "中央气象台官方网站-预警信号",
+      "filename": "中央气象台官方网站-预警信号",
+      "source_id": "web:96c730d7d1cde7b1159aa00f4f8fc01a1b9bb27151f98370430e4f711ba34af0",
+      "chunk_id": "web:eefb00ea1eb42dae969575d29e20ac4e61f32441efec90e4e1cb62190296ef4d",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.nmc.cn/f/alarm.html",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文节选",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": null,
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:59:11.906105+00:00",
+        "read_status": "partial",
+        "crag_facets": [
+          {
+            "grade": "ambiguous",
+            "id": 3,
+            "question": "应怎样查询气象台发布的台风预警？"
+          }
+        ],
+        "crag_passage_ids": [
+          1
+        ],
+        "primary_scope": "service_directory",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.910260+08:00",
+              "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.910435+08:00",
+              "question": "应怎样查询浙江海洋预报网上的台风路径？",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.910607+08:00",
+              "question": "应怎样查询气象台发布的台风预警？",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "general",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": null,
+          "query_as_of": "2026-10-19T16:59:14.910093+08:00",
+          "reasons": [
+            "来源未明确覆盖所问地点"
+          ],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "已读取页面标题：中央气象台官方网站-预警信号访问地址：https://www.nmc.cn/f/alarm.html页面文字：English天气预报天气公报每日天气提示春运气象服务专报气象灾害预警重要天气提示重要天气盘点降水量预报气温预报大风预报强对流天气预报中期天气全球天气预报全球灾害性天气监测月报环境气象公报山洪灾害气象预警地质灾害气象风险预警中小河流洪水气象风险预警渍涝风险气象预警交通气象预报森林火险预报草原火险预报天气实况天气图卫星云图雷达图降水量气温风能见度强对流土壤水分数值预报CMA全球天气模式CMA全球集合模式CMA区域模式CMA区域集合模式CMA台风模式海浪模式推荐服务 “妈祖（MAZU）”早期预警云端公共版世界气象…（原文节选）",
+      "supporting_passages": [
+        {
+          "passage_id": 1,
+          "quote": "已读取页面标题：中央气象台官方网站-预警信号\n访问地址：https://www.nmc.cn/f/alarm.html\n页面文字：\nEnglish\n\n天气预报\n\n天气公报\n\n每日天气提示\n\n春运气象服务专报\n\n气象灾害预警\n\n重要天气提示\n\n重要天气盘点\n\n降水量预报\n\n气温预报\n\n大风预报\n\n强对流天气预报\n\n中期天气\n\n全球天气预报\n\n全球灾害性天气监测月报\n\n环境气象公报\n\n山洪灾害气象预警\n\n地质灾害气象风险预警\n\n中小河流洪水气象风险预警\n\n渍涝风险气象预警\n\n交通气象预报\n\n森林火险预报\n\n草原火险预报\n\n天气实况\n\n天气图\n\n卫星云图\n\n雷达图\n\n降水量\n\n气温\n\n风\n\n能见度\n\n强对流\n\n土壤水分\n\n数值预报\n\nCMA全球天气模式\n\nCMA全球集合模式\n\nCMA区域模式\n\nCMA区域集合模式\n\nCMA台风模式\n\n海浪模式\n\n推荐服务\n\n“妈祖（MAZU）”早期预警云端公共版",
+          "sha256": "fbbf0f05b22de5f2946445aac12ac547735a868614587654086005784e75ccb9"
+        }
+      ]
+    },
+    {
+      "citation": "资料5",
+      "citation_id": 5,
+      "title": "气象灾害预警信号发布与传播管理办法 中国气象局公开版本",
+      "filename": "气象灾害预警信号发布与传播管理办法 中国气象局公开版本",
+      "source_id": "web:bc281ffdef794d509d5fd40041648ef7f2c4eab69eb0a0d03fbe43c07c1dd4dc",
+      "chunk_id": "web:c2b9440d2da6cce64867ccca64039056321ba7c9c37a1281b60b8d1ed779babc",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.cma.gov.cn/zfxxgk/gknr/flfgbz/gz/202005/P020220628619411458474.pdf",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文节选",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": null,
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:59:11.583560+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "ambiguous",
+            "id": 1,
+            "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？"
+          },
+          {
+            "grade": "ambiguous",
+            "id": 3,
+            "question": "应怎样查询气象台发布的台风预警？"
+          }
+        ],
+        "crag_passage_ids": [
+          2
+        ],
+        "primary_scope": "national_framework",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "national_framework",
+              "kind": "policy",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.900304+08:00",
+              "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+              "reasons": [
+                "尚未核实文件生效及修订废止关系"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [
+                "bridge",
+                "scenic"
+              ],
+              "temporal": "version_unverified",
+              "use": "reference",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "national_framework",
+              "kind": "policy",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.902424+08:00",
+              "question": "应怎样查询浙江海洋预报网上的台风路径？",
+              "reasons": [
+                "尚未核实文件生效及修订废止关系"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [
+                "bridge",
+                "scenic"
+              ],
+              "temporal": "version_unverified",
+              "use": "reference",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "national_framework",
+              "kind": "policy",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:14.904588+08:00",
+              "question": "应怎样查询气象台发布的台风预警？",
+              "reasons": [
+                "尚未核实文件生效及修订废止关系"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [
+                "bridge",
+                "scenic"
+              ],
+              "temporal": "version_unverified",
+              "use": "reference",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "national_framework",
+          "kind": "policy",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": null,
+          "query_as_of": "2026-10-19T16:59:14.898198+08:00",
+          "reasons": [
+            "尚未核实文件生效及修订废止关系"
+          ],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [
+            "bridge",
+            "scenic"
+          ],
+          "temporal": "version_unverified",
+          "use": "reference",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "第十六条 地方各级气象主管机构所属的气象台站发布预警信号，适用本办法所附《气象灾害预警信号及防御指南》中的各类预警信号标准。 本办法所称气象灾害预警信号（以下简称预警信号），是指各级气象主管机构所属的气象台站向社会公众发布的预警信息。",
+      "supporting_passages": [
+        {
+          "passage_id": 2,
+          "quote": "之日起施行。\n气象灾害预警信号及防御指南\n一、台风预警信号\n\n\n章\nX\n中国气象局发布\n- 1 -\n气象灾害预警信号发布与传播管理办法\n（2007 年 6 月 12 日中国气象局第 16 号令公布 自发布之\n日起施行）\n第一条 为了规范气象灾害预警信号发布与传播，防御和减\n轻气象灾害，保护国家和人民生命财产安全，依据《中华人民共\n和国气象法》、《国家突发公共事件总体应急预案》，制定本办\n法。\n第二条 在中华人民共和国领域和中华人民共和国管辖的\n其他海域发布与传播气象灾害预警信号，必须遵守本办法。\n本办法所称气象灾害预警信号（以下简称预警信号），是指\n各级气象主管机构所属的气象台站向社会公众发布的预警信息。\n预警信号由名称、图标、标准和防御指南组成，分为台风、\n暴雨、暴雪、寒潮、大风、沙尘暴、高温、干旱、雷电、冰雹、\n霜冻、大雾、霾、道路结冰等。\n第三条 预警信号的级别依据气象灾害可能造成的",
+          "sha256": "8c37999e3a8b2a3fa01449eb7f496ec7dc6c51951566f5731be9d21a7e4ccd44"
+        }
+      ]
+    }
+  ],
+  "exported_answer_sha256": "c65438125e0a119be241de5d89b0fbeeb4a728458380499432bcc50352fda314"
+}

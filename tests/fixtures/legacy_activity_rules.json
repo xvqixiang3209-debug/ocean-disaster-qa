@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "version": "legacy-explicit-test-fixture",
+  "status": "provisional",
+  "location_key": null,
+  "site_id": null,
+  "applicable_activities": ["tidal_flat", "swimming", "shore_fishing", "boat_fishing"],
+  "limits": {"WAV": {"maximum": 0.5, "unit": "m"}, "SSW": {"maximum": 8.0, "unit": "m/s"}, "OCU": {"maximum": 0.3, "unit": "m/s"}},
+  "low_tide_reference_minutes": 60,
+  "purpose": "Historical explicit-override compatibility tests only; never the deployed default.",
+  "assumption": "Synthetic engineering configuration, not an official safety rule."
+}

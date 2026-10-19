@@ -1,0 +1,470 @@
+{
+  "id": "G3",
+  "family": "relief",
+  "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+  "baseline_id": null,
+  "http_status": 200,
+  "started_at": "2026-10-19T08:59:58.998486+00:00",
+  "completed_at": "2026-10-19T09:00:46.574884+00:00",
+  "answer_sha256": "8e08d1873d347f98f6a416b9be30253a2e1b553c8fa1346b9a22faf3ed97d8a3",
+  "answer": "该方案自2024年4月30日起施行[资料4]。\n\n部分子项的依据尚未核对完整，以上仅保留本次来源能够支持的内容。",
+  "model_label": "partial",
+  "missing_information": [
+    "已完成现有陈述的来源核对，各子问是否全部答完仍待核对。"
+  ],
+  "engineering_readback": "本次最终输出严重退化，仅保留一个生效日期，未回答三类制度比较。已经取得相关官方资料，属于生成、校验后恢复与覆盖问题，不能归为单纯缺数据；不得算作完整回答。",
+  "validation": {
+    "computed_table_fallback": false,
+    "details": null,
+    "error": "semantic_evidence_support_failed"
+  },
+  "evidence_diagnostics": {
+    "answer_policy": "crag_always_local_and_official_web",
+    "blocked_evidence_count": 0,
+    "citation_format_repairs": null,
+    "claim_attribution_recovery": {
+      "claim_count": 11,
+      "decisions": [
+        {
+          "claim_text": "过渡期生活救助和冬春救助属于政府灾害救助制度，巨灾保险赔付属于保险理赔，三者依据、办理主体和程序不同。",
+          "deterministic_error": null,
+          "id": 1,
+          "reason": "原文分别提到冬春救助是制度性安排、巨灾保险按合同理赔，以及过渡期生活救助的资金下达，但未直接概括三者依据、办理主体和程序不同。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "1. 是否一回事：不是。",
+          "deterministic_error": null,
+          "id": 2,
+          "reason": "原文未直接表述三者不是一回事。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "过渡期生活救助资金由财政部会同应急管理部按相关政策规定下达，应急管理部指导人员核定、资金发放等工作[资料3]；冬春救助是受灾群众安全温暖过冬的制度性安排，由应急管理部会同财政部印发工作通知并组织申报[资料1]；巨灾保险赔付则由承保机构按保险合同查勘定损、公示后支付理赔款[资料2]。",
+          "deterministic_error": null,
+          "id": 3,
+          "reason": "该句混合三项制度，其中冬春救助由应急管理部会同财政部印发工作通知并组织申报、巨灾保险查勘定损公示后支付理赔款有原文支持，但过渡期生活救助资金由财政部会同应急管理部下达及应急管理部指导人员核定、资金发放等内容不在所给资料3原段中，整句不能全部支持。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "2. 过渡期生活救助依据：依据《国家自然灾害救助应急预案》办理。",
+          "deterministic_error": null,
+          "id": 4,
+          "reason": "资料3原段未出现《国家自然灾害救助应急预案》这一名称，无法直接支持该句。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "该预案规定，根据省级财政、应急管理部门的资金申请及需救助人员规模，财政部会同应急管理部按相关政策规定下达过渡期生活救助资金；应急管理部指导做好人员核定、资金发放等工作[资料3]。",
+          "deterministic_error": null,
+          "id": 5,
+          "reason": "资料3原段有资金下达和人员核定、资金发放的表述，但未出现《国家自然灾害救助应急预案》名称，不能支持该句全部内容。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "该资料为2024年修订版，但当前是否仍现行有效尚未核实[资料3]。",
+          "deterministic_error": null,
+          "id": 6,
+          "reason": "仅说明该资料版本及现行有效性尚未核实，属于检索或核实范围说明。",
+          "reference_error": null,
+          "status": "limitation",
+          "table_header": ""
+        },
+        {
+          "claim_text": "3. 冬春救助依据：依据应急管理部会同财政部印发的冬春救助工作通知办理，通过国家自然灾害救助资金管理系统申报审批，程序为“户报、村评、乡审、县定”[资料1]。",
+          "deterministic_error": null,
+          "id": 7,
+          "reason": "资料1原段支持冬春救助工作通知、申报系统和“户报、村评、乡审、县定”程序，但未明确“应急管理部会同财政部印发”及“国家自然灾害救助资金管理系统”的完整表述，整句不能全部支持。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "4. 巨灾保险赔付依据：依据保险合同及地方公共巨灾保险实施方案办理。",
+          "deterministic_error": null,
+          "id": 8,
+          "reason": "资料2、4涉及宁波巨灾保险方案和合同理赔，但未直接概括巨灾保险赔付依据为保险合同及地方公共巨灾保险实施方案。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "以宁波市为例，依据《宁波市公共巨灾保险工作实施方案（2024—2026年）》，受灾居民向村（社区）报损，由联络员登记汇总并向承保机构报案，承保机构查勘定损、公示后按合同支付理赔款[资料2][资料4]。",
+          "deterministic_error": null,
+          "id": 9,
+          "reason": "资料2、4支持宁波报损、登记汇总、报案、查勘定损、公示及按合同支付理赔款，但未出现《宁波市公共巨灾保险工作实施方案（2024—2026年）》这一完整名称，整句不能全部支持。",
+          "reference_error": null,
+          "status": "unsupported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "该方案自2024年4月30日起施行[资料4]。",
+          "deterministic_error": null,
+          "id": 10,
+          "reason": "资料4原段明确该方案自2024年4月30日起施行。",
+          "reference_error": null,
+          "status": "supported",
+          "table_header": ""
+        },
+        {
+          "claim_text": "其他地区的具体依据，现有资料未覆盖。",
+          "deterministic_error": null,
+          "id": 11,
+          "reason": "仅说明现有资料未覆盖其他地区具体依据，属于资料范围说明。",
+          "reference_error": null,
+          "status": "limitation",
+          "table_header": ""
+        }
+      ],
+      "method": "model_span_selection_then_exact_quote_and_quantity_checks",
+      "retained_claims": 1,
+      "skipped_table_rows": [],
+      "table_rows_considered": 0,
+      "table_rows_seen": 0,
+      "table_rows_skipped": 0
+    },
+    "combined_validation_error": null,
+    "corrective_new_sources": 6,
+    "corrective_retrieval_attempted": true,
+    "corrective_search_summary": null,
+    "coverage_review": null,
+    "crag_audit": {
+      "corrective_rounds": 1,
+      "evaluator": "deepseek_relevance_with_exact_passage_ids",
+      "excluded": [],
+      "facets": [
+        {
+          "correct_sources": [],
+          "id": 1,
+          "local_grade": "incorrect",
+          "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？",
+          "reference_sources": [
+            1,
+            2,
+            3
+          ],
+          "state": "partial"
+        },
+        {
+          "correct_sources": [],
+          "id": 2,
+          "local_grade": "incorrect",
+          "question": "台风后过渡期生活救助依据什么办理？",
+          "reference_sources": [
+            3
+          ],
+          "state": "partial"
+        },
+        {
+          "correct_sources": [
+            1
+          ],
+          "id": 3,
+          "local_grade": "incorrect",
+          "question": "台风后冬春救助依据什么办理？",
+          "reference_sources": [],
+          "state": "supported"
+        },
+        {
+          "correct_sources": [
+            2,
+            4
+          ],
+          "id": 4,
+          "local_grade": "incorrect",
+          "question": "台风后巨灾保险赔付依据什么办理？",
+          "reference_sources": [],
+          "state": "supported"
+        }
+      ],
+      "implementation": "marine-crag-v1",
+      "local": {
+        "candidates": 5,
+        "executed": true,
+        "selected": 0,
+        "state": "completed"
+      },
+      "rounds": [
+        {
+          "evaluator": "deepseek_relevance_with_exact_passage_ids",
+          "facets": [
+            {
+              "correct_sources": [],
+              "id": 1,
+              "local_grade": "incorrect",
+              "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？",
+              "reference_sources": [
+                3,
+                7,
+                5
+              ],
+              "state": "partial"
+            },
+            {
+              "correct_sources": [],
+              "id": 2,
+              "local_grade": "incorrect",
+              "question": "台风后过渡期生活救助依据什么办理？",
+              "reference_sources": [
+                7
+              ],
+              "state": "partial"
+            },
+            {
+              "correct_sources": [
+                3
+              ],
+              "id": 3,
+              "local_grade": "incorrect",
+              "question": "台风后冬春救助依据什么办理？",
+              "reference_sources": [
+                7
+              ],
+              "state": "supported"
+            },
+            {
+              "correct_sources": [
+                5,
+                6
+              ],
+              "id": 4,
+              "local_grade": "incorrect",
+              "question": "台风后巨灾保险赔付依据什么办理？",
+              "reference_sources": [
+                4
+              ],
+              "state": "supported"
+            }
+          ],
+          "stage": "dual_retrieval_and_evaluation"
+        },
+        {
+          "evaluator": "deepseek_relevance_with_exact_passage_ids",
+          "new_sources": 6,
+          "queried_facets": [
+            1,
+            2
+          ],
+          "stage": "targeted_correction"
+        }
+      ],
+      "selected_sources": [
+        {
+          "channel": "web",
+          "citation": 1,
+          "source_id": "web:8df6332e65fbf7624e1bafc9ded7cc737ba50953bf9c792bbe4b3a6bd72b53e7",
+          "text_sha256": "fe51a30df81fb3e32a41cdc26402600ad41bd2cda2bf951bce3ccaa96c391ecc"
+        },
+        {
+          "channel": "web",
+          "citation": 2,
+          "source_id": "web:71309599997c7464f1e4858fc6029f6f2327aaadfdbac107a23397c6177c58a5",
+          "text_sha256": "3edb6dffbc4d2d366b25aa2421bf266ec9fef7cb58babdc47c7b40653da8db78"
+        },
+        {
+          "channel": "web",
+          "citation": 3,
+          "source_id": "web:046b07ae9a1cbaff2887e124aa1753b0cf5e34e69cc551cf9b60ad5f3dda4007",
+          "text_sha256": "2ef02885f5db3b47165d87c369b99dd00244da2885d7262f5452126eda6af606"
+        },
+        {
+          "channel": "web",
+          "citation": 4,
+          "source_id": "web:d4ec039aa5f57083d3b6479029c54846341ed56df41ba8407284a71d8b0a93e5",
+          "text_sha256": "76bcc234a1a9558661191a063e543a056912f535b4ab148748e6afc218658915"
+        }
+      ],
+      "tool_count": 0,
+      "upstream": "https://github.com/HuskyInSalt/CRAG/tree/de7c2961ae624a1483a138c5798e1f6d0c4fb0e0",
+      "used_local": 0,
+      "used_tool": 0,
+      "used_web": 1,
+      "web": {
+        "attempted": true,
+        "cache_hit": false,
+        "executed": true,
+        "selected": 4
+      }
+    },
+    "evidence_sent_count": 4,
+    "general_knowledge_used": null,
+    "grounded_answerability": null,
+    "local_evidence_count": 5,
+    "local_retrieval_executed": true,
+    "numeric_supported_partial_recovery": null,
+    "recovered_completeness_review": {
+      "error_type": "ValueError",
+      "state": "unavailable"
+    },
+    "route": "web_fallback",
+    "web_body_candidate_count": 9,
+    "web_body_read_failures": [
+      {
+        "reason": "未提取到足够正文；页面可能需要脚本加载",
+        "state": "failed",
+        "url": "http://typhoon.nmc.cn/web.html"
+      },
+      {
+        "reason": "未提取到足够正文；页面可能需要脚本加载",
+        "state": "failed",
+        "url": "https://typhoon.slt.zj.gov.cn/"
+      }
+    ],
+    "web_excluded_sources": [],
+    "web_search_executed": true,
+    "web_search_queries": [
+      "自然灾害 受灾人员 应急生活 过渡期 冬春 住房重建 救助 site:mem.gov.cn",
+      "自然灾害 生活救助 申请 恢复重建 site:gov.cn",
+      "保险法 保险合同 保险事故 赔偿 请求 保险人 site:gov.cn",
+      "自然灾害 生活救助 申请 户报 村评 乡审 县定 site:mem.gov.cn",
+      "巨灾保险 政府救助 保险合同 理赔 site:gov.cn",
+      "台风 保险 理赔 site:gov.cn"
+    ],
+    "web_search_states": [
+      "success"
+    ]
+  },
+  "sources": [
+    {
+      "citation": "资料4",
+      "citation_id": 4,
+      "title": "宁波市人民政府办公厅关于印发宁波市公共巨灾保险工作实施方案（2024—2026年）的通知",
+      "filename": "宁波市人民政府办公厅关于印发宁波市公共巨灾保险工作实施方案（2024—2026年）的通知",
+      "source_id": "web:d4ec039aa5f57083d3b6479029c54846341ed56df41ba8407284a71d8b0a93e5",
+      "chunk_id": "web:76bcc234a1a9558661191a063e543a056912f535b4ab148748e6afc218658915",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://yjglj.ningbo.gov.cn/art/2024/4/12/art_1229075214_1786489.html",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文节选",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": "2024-04-12 17:04",
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T09:00:06.942899+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "correct",
+            "id": 4,
+            "question": "台风后巨灾保险赔付依据什么办理？"
+          }
+        ],
+        "crag_passage_ids": [
+          1,
+          2
+        ],
+        "primary_scope": null,
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2024-04-12T17:04:00+08:00",
+              "query_as_of": "2026-10-19T17:00:07.799172+08:00",
+              "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": "2024-01-01T00:00:00+08:00",
+              "valid_to": "2026-12-31T23:59:59+08:00"
+            },
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2024-04-12T17:04:00+08:00",
+              "query_as_of": "2026-10-19T17:00:07.801217+08:00",
+              "question": "台风后过渡期生活救助依据什么办理？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": "2024-01-01T00:00:00+08:00",
+              "valid_to": "2026-12-31T23:59:59+08:00"
+            },
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2024-04-12T17:04:00+08:00",
+              "query_as_of": "2026-10-19T17:00:07.803240+08:00",
+              "question": "台风后冬春救助依据什么办理？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": "2024-01-01T00:00:00+08:00",
+              "valid_to": "2026-12-31T23:59:59+08:00"
+            },
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2024-04-12T17:04:00+08:00",
+              "query_as_of": "2026-10-19T17:00:07.805277+08:00",
+              "question": "台风后巨灾保险赔付依据什么办理？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": "2024-01-01T00:00:00+08:00",
+              "valid_to": "2026-12-31T23:59:59+08:00"
+            }
+          ],
+          "geography": "unspecified",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": "2024-04-12T17:04:00+08:00",
+          "query_as_of": "2026-10-19T17:00:07.797084+08:00",
+          "reasons": [],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": "2024-01-01T00:00:00+08:00",
+          "valid_to": "2026-12-31T23:59:59+08:00"
+        }
+      },
+      "excerpt": "公共巨灾保险包括自然灾害救助保险、突发公共安全事件（事故）保险、突发公共卫生事件保险和见义勇为保险。 （一）自然灾害救助保险保障范围和责任加快推进“保险+服务”机制建设，发挥保险在社会治理中的积极作用，督促引导承保机构通过建立服务团队、建设理赔服务平台、简化理赔流程、优化查勘定损方式、全天候接报案等途径，切实承担保险服务责任，做到及时、公开、规范、透明，提供优质高效的公共巨灾保险理赔服务。",
+      "supporting_passages": [
+        {
+          "passage_id": null,
+          "quote": "本方案自2024年4月30日起施行。\n\n2.家庭财产损失救助保险理赔。受灾居民向当地村（社区）报告受灾情况，村（社区）巨灾保险联络员统一登记汇总，并向承保机构报案。承保机构接到报案后，派人进行查勘定损。当发生大面积住宅进水理赔时，已建立巨灾保险水灾远程定损管理系统的区域，承保机构应充分发挥管理系统作用，做好查勘定损工作；未建立管理系统的区域，当报案户数超过100户及以上时，承保机构可委托村（社区）协助开展损失查勘。承保机构还可委托村（社区）开展理赔资料收集、理赔对象公示等工作。\n\n因台风、龙卷风、强对流大风、雷击、暴雨、暴雪等自然灾害，以及其引发的洪水、泥石流、突发性滑坡及水库溃坝、漏电和化工装置爆炸、泄漏等次生或衍生灾害造成的保障对象人身伤亡抚恤赔付和常住居民家庭财产损失救助赔付（家庭财产损失救助赔付仅针对住房倒损、进水，下同）。\n\n3.理赔对象公示及赔付。赔付前，理赔对象应在当地乡镇（",
+          "sha256": "27f9e56957bcdef6bc39d3700cb881be9f01c43c9eaf7b8361975ea1bfa27c05"
+        }
+      ]
+    }
+  ],
+  "exported_answer_sha256": "8e08d1873d347f98f6a416b9be30253a2e1b553c8fa1346b9a22faf3ed97d8a3"
+}

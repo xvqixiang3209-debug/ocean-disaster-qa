@@ -1,0 +1,32 @@
+{
+  "repo": "https://github.com/HuskyInSalt/CRAG",
+  "commit": "de7c2961ae624a1483a138c5798e1f6d0c4fb0e0",
+  "license": null,
+  "files": [
+    "scripts/CRAG_Inference.py",
+    "scripts/combined_knowledge_preparation.py",
+    "scripts/data_process.py",
+    "scripts/eval.py",
+    "scripts/external_knowledge_preparation.py",
+    "scripts/internal_knowledge_preparation.py",
+    "scripts/metrics.py",
+    "scripts/train_evaluator.py",
+    "scripts/utils.py"
+  ],
+  "reviewed_at": "2026-10-19T11:18:23.552238+08:00",
+  "implementation": "marine_kb/crag.py",
+  "relationship": "Independent control-flow adaptation; upstream Python scripts and model weights are not executed or bundled as runtime dependencies.",
+  "changes": [
+    "Always retrieve both local corpus and official web, including when local evidence is relevant.",
+    "Evaluate each subquestion and exact original passage IDs with the configured DeepSeek service.",
+    "Run one CRAG corrective round on uncovered facets, preserving scope and permission checks.",
+    "Keep NC and historical case numerical tools separate and preserve source numbering."
+  ],
+  "source_files_sha256": {
+    "scripts__combined_knowledge_preparation.py": "2ae7fb0f5775cfc3d350a08628838d1010a8d5f4f2ba26933a361454f70de334",
+    "scripts__CRAG_Inference.py": "d33a43566c59f4c6fb3e9f642426fec2d204373c0bd7068dde4f21fcbe3758ab",
+    "scripts__external_knowledge_preparation.py": "7f000963d93b54a4b2dba50806899d1063a1d54e73ca65ac292382790b17b5f2",
+    "scripts__internal_knowledge_preparation.py": "403ba4c66e078277885cc7baf3fb8101d78305940e364b5992401274613e926f",
+    "scripts__utils.py": "8346f9b75ec22ed26a10ccf2b675845cfca933acc06897b41ce9c29769610b68"
+  }
+}

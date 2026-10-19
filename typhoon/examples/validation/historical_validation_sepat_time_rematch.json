@@ -1,0 +1,19 @@
+{
+  "sid": "2007223N19136",
+  "name": "SEPAT（时间匹配回放）",
+  "source": "IBTrACS历史时间匹配验证",
+  "issued_at": "2007-08-19T03:00:00Z",
+  "validation_purpose": "验证原风暴潮文件0709按时间和浙江路径关联到SEPAT",
+  "expected_storm_surge": {"severity": "一般", "max_surge_m": 1.07, "source_storm_code": "0709"},
+  "forecast_track": [
+    {"time": "2007-08-19T03:00:00Z", "lat": 25.4, "lon": 118.4, "wind_kt": 44, "pressure_hpa": 990},
+    {"time": "2007-08-19T06:00:00Z", "lat": 25.6, "lon": 118.2, "wind_kt": 44, "pressure_hpa": 990},
+    {"time": "2007-08-19T09:00:00Z", "lat": 25.8, "lon": 118.0, "wind_kt": 39, "pressure_hpa": 993},
+    {"time": "2007-08-19T12:00:00Z", "lat": 26.1, "lon": 117.8, "wind_kt": 33, "pressure_hpa": 995},
+    {"time": "2007-08-19T15:00:00Z", "lat": 26.6, "lon": 117.6, "wind_kt": 31, "pressure_hpa": 997},
+    {"time": "2007-08-19T18:00:00Z", "lat": 26.9, "lon": 117.4, "wind_kt": 29, "pressure_hpa": 998},
+    {"time": "2007-08-19T21:00:00Z", "lat": 27.1, "lon": 117.0, "wind_kt": 26, "pressure_hpa": 998},
+    {"time": "2007-08-20T00:00:00Z", "lat": 27.1, "lon": 116.8, "wind_kt": 23, "pressure_hpa": 998},
+    {"time": "2007-08-20T03:00:00Z", "lat": 27.2, "lon": 116.6, "wind_kt": 23, "pressure_hpa": 998}
+  ]
+}

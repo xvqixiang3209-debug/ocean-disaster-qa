@@ -1,0 +1,30 @@
+{
+  "version": "trial-20261016-v1",
+  "enabled": true,
+  "timezone": "+08:00",
+  "tide_datum": "raw_already_1985",
+  "station_tide_overrides": {},
+  "datafile_station_aliases": {"AOJIANG":"70610600", "JIANTIAO":"70705200", "DAJIAODAO":"jyz_XSG", "TONGZHAOYU":"jyz_TZY"},
+  "swl_kind": "surge",
+  "swl_datum": "1985",
+  "threshold_datum": "1985",
+  "threshold_unit": "cm",
+  "threshold_source": "provided_sql_20261016",
+  "formula_applies_to": "astronomical_tide",
+  "nearest_reference_enabled": true,
+  "max_reference_distance_km": 80,
+  "max_grid_distance_km": 20,
+  "max_batch_age_hours": 24,
+  "sync_enabled": true,
+  "sync_interval_seconds": 1800,
+  "download_products": ["SWL", "WAV", "SSW", "OCU", "SST"],
+  "max_file_bytes": 209715200,
+  "notes": [
+    "试算假设：天文潮原值已为1985基准，默认不再次订正；已发现逐站差异，结果不作为正式预警。",
+    "试算假设：SWL为纯增水，单位米；与同一时刻天文潮相加。可切换为total_water_level，避免重复叠加。",
+    "试算假设：新SQL阈值单位厘米、1985基准，作为本次试算版本。",
+    "试算假设：天文潮、NC和台风接口的无时区时间采用北京时间。",
+    "试算假设：岸段ax+b公式用于参考站天文潮；缺少直接关联时允许80公里内最近可用站近似，明确标注。",
+    "MWD描述与单位存在冲突，暂不解读波向；不假造缺测、阈值或发布信息。"
+  ]
+}

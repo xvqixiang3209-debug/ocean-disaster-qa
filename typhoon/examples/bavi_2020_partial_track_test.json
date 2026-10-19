@@ -1,0 +1,95 @@
+{
+  "sid": "DEMO_BAVI_PARTIAL_2020",
+  "name": "BAVI",
+  "source": "CMA_HISTORICAL_EXCERPT",
+  "issued_at": "2020-08-25T18:00:00Z",
+  "top_k": 10,
+  "request_id": "bavi-partial-track-demo-001",
+  "compact": false,
+  "forecast_track": [
+    {
+      "time": "2020-08-23T00:00:00Z",
+      "lat": 26.3,
+      "lon": 123.9,
+      "wind_kt": 54.0,
+      "pressure_hpa": 985.0
+    },
+    {
+      "time": "2020-08-23T06:00:00Z",
+      "lat": 26.7,
+      "lon": 124.4,
+      "wind_kt": 58.0,
+      "pressure_hpa": 980.0
+    },
+    {
+      "time": "2020-08-23T12:00:00Z",
+      "lat": 26.9,
+      "lon": 125.0,
+      "wind_kt": 58.0,
+      "pressure_hpa": 980.0
+    },
+    {
+      "time": "2020-08-23T18:00:00Z",
+      "lat": 27.1,
+      "lon": 125.5,
+      "wind_kt": 64.0,
+      "pressure_hpa": 975.0
+    },
+    {
+      "time": "2020-08-24T00:00:00Z",
+      "lat": 27.3,
+      "lon": 126.2,
+      "wind_kt": 68.0,
+      "pressure_hpa": 970.0
+    },
+    {
+      "time": "2020-08-24T06:00:00Z",
+      "lat": 27.9,
+      "lon": 126.5,
+      "wind_kt": 68.0,
+      "pressure_hpa": 970.0
+    },
+    {
+      "time": "2020-08-24T12:00:00Z",
+      "lat": 28.3,
+      "lon": 126.2,
+      "wind_kt": 73.0,
+      "pressure_hpa": 965.0
+    },
+    {
+      "time": "2020-08-24T18:00:00Z",
+      "lat": 28.6,
+      "lon": 126.0,
+      "wind_kt": 77.0,
+      "pressure_hpa": 960.0
+    },
+    {
+      "time": "2020-08-25T00:00:00Z",
+      "lat": 29.2,
+      "lon": 125.7,
+      "wind_kt": 77.0,
+      "pressure_hpa": 960.0
+    },
+    {
+      "time": "2020-08-25T06:00:00Z",
+      "lat": 29.8,
+      "lon": 125.4,
+      "wind_kt": 81.0,
+      "pressure_hpa": 955.0
+    },
+    {
+      "time": "2020-08-25T12:00:00Z",
+      "lat": 30.6,
+      "lon": 125.1,
+      "wind_kt": 81.0,
+      "pressure_hpa": 955.0
+    },
+    {
+      "time": "2020-08-25T18:00:00Z",
+      "lat": 31.4,
+      "lon": 124.7,
+      "wind_kt": 81.0,
+      "pressure_hpa": 955.0
+    }
+  ]
+}

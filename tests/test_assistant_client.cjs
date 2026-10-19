@@ -1,0 +1,32 @@
+const assert=require('node:assert/strict');
+const Client=require('../frontend/assistant_client.js');
+const response=(data,status=200)=>({ok:status===200,status,json:async()=>data});
+(async()=>{
+  const calls=[];
+  const client=new Client(async(path,options)=>{
+    calls.push({path,options});
+    if(path.endsWith('/session'))return response({token:'token'});
+    if(options.method==='DELETE')return response({cleared:true});
+    return response({conversation_id:'conversation-1',answer:'有据答案'});
+  });
+  await client.ask('风暴增水是什么？');
+  await client.ask('它与天文潮有什么关系？');
+  let bodies=calls.filter(row=>row.path.endsWith('/ask')).map(row=>JSON.parse(row.options.body));
+  assert.equal(bodies[0].conversation_id,null);
+  assert.equal(bodies[1].conversation_id,'conversation-1');
+  assert.equal(bodies[1].history,undefined);
+  client.reset({sid:'lekima',request_id:'match-1'});
+  await client.ask('最大增水呢？');
+  bodies=calls.filter(row=>row.path.endsWith('/ask')).map(row=>JSON.parse(row.options.body));
+  assert.equal(bodies[2].conversation_id,null);
+  assert.equal(bodies[2].selected_sid,'lekima');
+  assert.ok(calls.some(row=>row.options.method==='DELETE'));
+  let release;
+  const slow=new Client(async(path)=>path.endsWith('/session')?response({token:'token'}):new Promise(resolve=>{release=resolve;}));
+  const pending=slow.ask('旧问题').catch(error=>error.name);
+  await new Promise(resolve=>setImmediate(resolve));
+  slow.reset();release(response({conversation_id:'stale-id',answer:'旧回答'}));
+  assert.equal(await pending,'AbortError');
+  assert.equal(slow.conversationId,null);
+  console.log('PASS: server conversation IDs, no browser-supplied history, selection/reset and stale-response cancellation');
+})().catch(error=>{console.error(error);process.exitCode=1;});

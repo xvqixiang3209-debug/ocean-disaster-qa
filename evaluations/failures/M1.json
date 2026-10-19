@@ -1,0 +1,554 @@
+{
+  "id": "M1",
+  "family": "mosquito",
+  "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+  "baseline_id": "R-094",
+  "http_status": 200,
+  "started_at": "2026-10-19T08:58:34.653121+00:00",
+  "completed_at": "2026-10-19T08:58:49.245754+00:00",
+  "answer_sha256": "a242592f6c9f010e542ad6a81b32151aa7115a892217c4fd0ff61007bc1508c5",
+  "answer": "会存在虫媒传染病风险，但“蚊子特别多”不等于当地已经发生疫情。台风或洪涝过后，受灾地区老鼠、蚊蝇容易大量孳生，可能带来虫媒传染病，例如登革热[资料1]；洪水过后鼠类和蚊虫活动增加，可能传播出血热、钩体病、登革热、基孔肯雅热等疾病[资料2]。这些是风险提示，不能据此认定当地正在流行登革热或其他疾病。\n\n防护上可先做三步：\n1. 清除孳生地：将花坛、废旧轮胎里的积水除去，避免蚊子孳生[资料1]；翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空[资料2]；清理庭院积水，包括花盆托盘或废旧盆罐，水培植物每3—5天换一次水[资料3]。\n2. 防叮咬：黄昏和黎明前蚊子出没高峰期不要外出；夜间外出穿长袖和长裤，别穿凉鞋；驱避剂可喷洒在衣服、鞋、蚊帐和其他物品上；蚊虫可能进入住宅时，床上设置蚊帐；夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香[资料1]。也可让纱窗、蚊帐、蚊香、驱蚊液“全家上岗”，户外穿长袖长裤[资料2]；黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖[资料3]。\n3. 环境处理：垃圾堆、厕所墙面可用菊酯类滞留喷洒[资料2]；同时搞好家庭卫生，消灭苍蝇、蟑螂[资料1]。\n\n以上为通用灾后防蚊知识，不表示某一具体地点当前疫情或蚊媒密度状况；如出现不明原因发热、腹泻、皮疹等症状，应及时就医[资料3]。",
+  "model_label": "full",
+  "missing_information": [],
+  "engineering_readback": "风险与清积水、防叮咬已有实质回答。原文同时涉及鼠类和蚊虫，仍需核查回答是否将鼠传疾病与蚊媒疾病混写；模型full标签不代表医学验收。",
+  "validation": {
+    "computed_table_fallback": false,
+    "details": null,
+    "error": null
+  },
+  "evidence_diagnostics": {
+    "answer_policy": "crag_always_local_and_official_web",
+    "blocked_evidence_count": 0,
+    "citation_format_repairs": 0,
+    "claim_attribution_recovery": null,
+    "combined_validation_error": null,
+    "corrective_new_sources": 0,
+    "corrective_retrieval_attempted": false,
+    "corrective_search_summary": null,
+    "coverage_review": {
+      "issues": [],
+      "verdict": "pass"
+    },
+    "crag_audit": {
+      "corrective_rounds": 0,
+      "evaluator": "deepseek_relevance_with_exact_passage_ids",
+      "excluded": [],
+      "facets": [
+        {
+          "correct_sources": [
+            1,
+            2,
+            3
+          ],
+          "id": 1,
+          "local_grade": "incorrect",
+          "question": "灾后蚊子特别多，会不会传染病？",
+          "reference_sources": [],
+          "state": "supported"
+        },
+        {
+          "correct_sources": [
+            1,
+            2,
+            3
+          ],
+          "id": 2,
+          "local_grade": "incorrect",
+          "question": "灾后蚊子特别多，怎么防？",
+          "reference_sources": [],
+          "state": "supported"
+        }
+      ],
+      "implementation": "marine-crag-v1",
+      "local": {
+        "candidates": 6,
+        "executed": true,
+        "selected": 0,
+        "state": "completed"
+      },
+      "rounds": [
+        {
+          "evaluator": "deepseek_relevance_with_exact_passage_ids",
+          "facets": [
+            {
+              "correct_sources": [
+                6,
+                7,
+                8
+              ],
+              "id": 1,
+              "local_grade": "incorrect",
+              "question": "灾后蚊子特别多，会不会传染病？",
+              "reference_sources": [],
+              "state": "supported"
+            },
+            {
+              "correct_sources": [
+                6,
+                7,
+                8
+              ],
+              "id": 2,
+              "local_grade": "incorrect",
+              "question": "灾后蚊子特别多，怎么防？",
+              "reference_sources": [],
+              "state": "supported"
+            }
+          ],
+          "stage": "dual_retrieval_and_evaluation"
+        }
+      ],
+      "selected_sources": [
+        {
+          "channel": "web",
+          "citation": 1,
+          "source_id": "web:c048a34741c5afcf679d9285faeb686c654848d05ae72e492dd40141ee86e04e",
+          "text_sha256": "5ed910d08a63a12eea7747f09212d34d1a8b4bfb747b5b7dddd4f8f1c278cc2f"
+        },
+        {
+          "channel": "web",
+          "citation": 2,
+          "source_id": "web:4cd6b7794ca3779b7718c089e3a6727a43afaaf48a4cc973e7332374a78522f5",
+          "text_sha256": "8863823faf19e3dfbdb47bcb4b761c6f992a432d702b5b9904943e8c6f078a01"
+        },
+        {
+          "channel": "web",
+          "citation": 3,
+          "source_id": "web:b9a1b294c8c9c70527486d71e1418ca93b28c7a59fc29978bd4a877a94f3e92d",
+          "text_sha256": "d2060bfafd4a47d91c2eb25802dc7bfd59d51e6e216404bd7b090951ec48967e"
+        }
+      ],
+      "tool_count": 0,
+      "upstream": "https://github.com/HuskyInSalt/CRAG/tree/de7c2961ae624a1483a138c5798e1f6d0c4fb0e0",
+      "used_local": 0,
+      "used_tool": 0,
+      "used_web": 3,
+      "web": {
+        "attempted": true,
+        "cache_hit": false,
+        "executed": true,
+        "selected": 3
+      }
+    },
+    "evidence_sent_count": 3,
+    "general_knowledge_used": null,
+    "grounded_answerability": null,
+    "local_evidence_count": 6,
+    "local_retrieval_executed": true,
+    "numeric_supported_partial_recovery": null,
+    "recovered_completeness_review": null,
+    "route": "web_fallback",
+    "web_body_candidate_count": 3,
+    "web_body_read_failures": [
+      {
+        "reason": "网页返回错误或无可读取的正文",
+        "state": "failed",
+        "url": "https://www.nhc.gov.cn/jkj/c100062/201602/9c34a03ea1c24857a529da540cc5cfe6.shtml"
+      },
+      {
+        "reason": "网页返回错误或无可读取的正文",
+        "state": "failed",
+        "url": "https://www.nhc.gov.cn/xcs/c100122/202604/3945a950329a48d6abc5792dabe86fcb.shtml"
+      },
+      {
+        "reason": "无法确认站点访问规则或站点限制自动读取",
+        "state": "blocked",
+        "url": "https://www.suzhou.gov.cn/szsrmzf/mszx/202608/76553f59616b45219462812950f19324.shtml"
+      },
+      {
+        "reason": "无法确认站点访问规则或站点限制自动读取",
+        "state": "blocked",
+        "url": "https://www.cq.gov.cn/zt/2026cqsaqdx/aqkp/202606/t20260624_15772512.html"
+      },
+      {
+        "reason": "网页返回错误或无可读取的正文",
+        "state": "failed",
+        "url": "https://www.nhc.gov.cn/wjw/c100365/hdjl_xwfbh_detail.shtml?id=2bd164fe4d4d48549dd3c33795443f2d"
+      },
+      {
+        "reason": "网页返回错误或无可读取的正文",
+        "state": "failed",
+        "url": "https://www.nhc.gov.cn/xcs/c100122/202506/a731e5672ddc45cea7c85ecf90821889.shtml"
+      },
+      {
+        "reason": "网页返回错误或无可读取的正文",
+        "state": "failed",
+        "url": "https://www.nhc.gov.cn/ylyjs/gzdt/202507/c592a4f82dd7405e9be5302e4147c0c7.shtml"
+      }
+    ],
+    "web_excluded_sources": [],
+    "web_search_executed": true,
+    "web_search_queries": [
+      "洪涝 灾后 蚊虫 蚊媒传染病 风险 防蚊 site:nhc.gov.cn",
+      "防蚊灭蚊 清除积水 孳生地 长袖 蚊帐 site:nhc.gov.cn",
+      "灾后 蚊虫 传播 防蚊 长袖 积水 site:gov.cn"
+    ],
+    "web_search_states": [
+      "partial_failure",
+      "success"
+    ]
+  },
+  "sources": [
+    {
+      "citation": "资料1",
+      "citation_id": 1,
+      "title": "狂风暴雨即将平息 台风过后注意事项有哪些？_国家应急广播网",
+      "filename": "狂风暴雨即将平息 台风过后注意事项有哪些？_国家应急广播网",
+      "source_id": "web:c048a34741c5afcf679d9285faeb686c654848d05ae72e492dd40141ee86e04e",
+      "chunk_id": "web:5ed910d08a63a12eea7747f09212d34d1a8b4bfb747b5b7dddd4f8f1c278cc2f",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.cneb.gov.cn/2018/09/18/ARTI1537226470896187.shtml",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文已提取",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": "2018-09-18",
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:58:39.791139+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "correct",
+            "id": 1,
+            "question": "灾后蚊子特别多，会不会传染病？"
+          },
+          {
+            "grade": "correct",
+            "id": 2,
+            "question": "灾后蚊子特别多，怎么防？"
+          }
+        ],
+        "crag_passage_ids": [
+          2
+        ],
+        "primary_scope": "national_guidance",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2018-09-18T00:00:00+08:00",
+              "query_as_of": "2026-10-19T16:58:41.872410+08:00",
+              "question": "灾后蚊子特别多，会不会传染病？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": "2018-09-17T00:00:00+08:00",
+              "valid_to": null
+            },
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2018-09-18T00:00:00+08:00",
+              "query_as_of": "2026-10-19T16:58:41.872912+08:00",
+              "question": "灾后蚊子特别多，怎么防？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": "2018-09-17T00:00:00+08:00",
+              "valid_to": null
+            }
+          ],
+          "geography": "unspecified",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": "2018-09-18T00:00:00+08:00",
+          "query_as_of": "2026-10-19T16:58:41.871910+08:00",
+          "reasons": [],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": "2018-09-17T00:00:00+08:00",
+          "valid_to": null
+        }
+      },
+      "excerpt": "3、不要忘记灾后防疫台风过后，家里的饮用水如受到污染，要进行消毒，同时还要做好周围环境的打扫工作，被淹或者被雨水浸渍的地方清洗时最好喷洒些消毒药水。 4、预防虫媒传染病台风过后，受灾地区老鼠、蚊蝇容易大量孳生，也容易给人类带来虫媒传染病，比如登革热等。",
+      "supporting_passages": [
+        {
+          "passage_id": 2,
+          "quote": "垃圾进行清理。另外，家里如果有食物被水淹过，或者有用品在台风中受损，也要及时处理。\n\n3、不要忘记灾后防疫\n\n台风过后，家里的饮用水如受到污染，要进行消毒，同时还要做好周围环境的打扫工作，被淹或者被雨水浸渍的地方清洗时最好喷洒些消毒药水。\n\n4、预防虫媒传染病\n\n台风过后，受灾地区老鼠、蚊蝇容易大量孳生，也容易给人类带来虫媒传染病，比如登革热等。因此，台风过后一定要做好周围环境的清洁工作，将花坛、废旧轮胎里的积水除去，避免蚊子孳生，搞好家庭卫生，消灭苍蝇、蟑螂。\n\n在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。\n\n5、不吃被水淹过的食物\n\n台风水灾过后，医院里得急性肠胃炎的患者往往会增多，可能是由于吃到不洁的食物引起。",
+          "sha256": "c1d7a15af7b3f1662f85cbba2d57616fe875632981cde86795ca1b967d324e7c"
+        }
+      ]
+    },
+    {
+      "citation": "资料2",
+      "citation_id": 2,
+      "title": "台风天就医、防病、避险，一篇帮你码明白",
+      "filename": "台风天就医、防病、避险，一篇帮你码明白",
+      "source_id": "web:4cd6b7794ca3779b7718c089e3a6727a43afaaf48a4cc973e7332374a78522f5",
+      "chunk_id": "web:8863823faf19e3dfbdb47bcb4b761c6f992a432d702b5b9904943e8c6f078a01",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.shanghai.gov.cn/nw17239/20260811/5fa49594f56d4ea699331888e2db68e1.html",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文已提取",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": "2026-08-11 09∶08",
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:32:09.210753+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "correct",
+            "id": 1,
+            "question": "灾后蚊子特别多，会不会传染病？"
+          },
+          {
+            "grade": "correct",
+            "id": 2,
+            "question": "灾后蚊子特别多，怎么防？"
+          }
+        ],
+        "crag_passage_ids": [
+          4
+        ],
+        "primary_scope": "technical_reference",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2026-08-11T09:00:00+08:00",
+              "query_as_of": "2026-10-19T16:58:41.870487+08:00",
+              "question": "灾后蚊子特别多，会不会传染病？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2026-08-11T09:00:00+08:00",
+              "query_as_of": "2026-10-19T16:58:41.871191+08:00",
+              "question": "灾后蚊子特别多，怎么防？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "unspecified",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": "2026-08-11T09:00:00+08:00",
+          "query_as_of": "2026-10-19T16:58:41.869784+08:00",
+          "reasons": [],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "洪灾后天气湿热、水源易受污染，霍乱、痢疾、伤寒、手足口病、感染性腹泻等肠道传染病传播风险上升。 6.呼吸道传染病台风天气压低、湿度大，安置点人员密度高，呼吸道疾病传播风险增加。",
+      "supporting_passages": [
+        {
+          "passage_id": 4,
+          "quote": "：\n\n饮水：只喝烧开的水或正规瓶装水，生水、颜色异味水、龙头初放浑水一律别碰；水管被泡过，先放10分钟再烧开。\n\n食物：熟食煮熟透，生熟砧板分开，饭前便后洗手，碗筷煮沸15分钟或消毒柜伺候。\n\n处理：泡过水的面包罐头、淹死的鸡鸭鱼、发霉的米面——请直接丢弃。\n\n就医：拉肚子+发烧，别在家喝盐水硬扛，直奔就近医院肠道门诊。\n\n4.虫媒和自然疫源性疾病\n\n洪水过后，鼠类和蚊虫活动增加，可能传播出血热、钩体病、登革热、基孔肯雅热等疾病。\n\n请注意以下事项：\n\n清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。\n\n防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。\n\n消毒：垃圾堆、厕所墙面用菊酯类滞留喷洒。\n\n灭鼠：食物进柜断鼠粮，鼠夹鼠笼可用，灭鼠药放小孩宠物够不到处；老鼠突然暴增，立刻报社区。\n\n防护：地蹚水穿长筒靴，别给钩体病可乘之机。家禽家畜粪便和动物尸",
+          "sha256": "4141114085c9c22ace5361fd5e9aa7031f703ef43c05c100fc4cb37421ee697f"
+        }
+      ]
+    },
+    {
+      "citation": "资料3",
+      "citation_id": 3,
+      "title": "洪涝后，如何做好健康防护？__中国政府网",
+      "filename": "洪涝后，如何做好健康防护？__中国政府网",
+      "source_id": "web:b9a1b294c8c9c70527486d71e1418ca93b28c7a59fc29978bd4a877a94f3e92d",
+      "chunk_id": "web:d2060bfafd4a47d91c2eb25802dc7bfd59d51e6e216404bd7b090951ec48967e",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://www.gov.cn/yaowen/liebiao/202408/content_6966289.htm",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文已提取",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": "2024-08-03-17:12:00",
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:58:39.790664+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "correct",
+            "id": 1,
+            "question": "灾后蚊子特别多，会不会传染病？"
+          },
+          {
+            "grade": "correct",
+            "id": 2,
+            "question": "灾后蚊子特别多，怎么防？"
+          }
+        ],
+        "crag_passage_ids": [
+          1,
+          4
+        ],
+        "primary_scope": "national_guidance",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2024-08-03T17:12:00+08:00",
+              "query_as_of": "2026-10-19T16:58:41.868207+08:00",
+              "question": "灾后蚊子特别多，会不会传染病？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "unspecified",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": "2024-08-03T17:12:00+08:00",
+              "query_as_of": "2026-10-19T16:58:41.868839+08:00",
+              "question": "灾后蚊子特别多，怎么防？",
+              "reasons": [],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "unspecified",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": "2024-08-03T17:12:00+08:00",
+          "query_as_of": "2026-10-19T16:58:41.867526+08:00",
+          "reasons": [],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "“预防肠道传染病，首先要做的就是防止病从口入。 洪水还可能导致皮肤过敏，比如湿疹、皮炎、荨麻疹等，有过敏史或者家族中有过敏史的人群要特别小心，可以口服抗过敏药，比如氯雷他定、西替利嗪等，以及辨证使用湿毒清、防风通圣丸等中药。",
+      "supporting_passages": [
+        {
+          "passage_id": 4,
+          "quote": "被洪水浸泡过的食物，不吃淹死、病死的禽畜等动物。少吃或者不吃凉拌食品，若生吃瓜果蔬菜，要用洁净的水清洗干净。生熟食品要分开加工和存放。\n\n在血吸虫病流行的地区，要尽量避免直接接触洪水。如有不明原因的发热、腹泻、皮疹等相关症状，要及时就医。\n\n■如何防止蚊虫叮咬？\n\n中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。\n\n再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。\n\n此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长",
+          "sha256": "b679b3ab07d75dd59a8edee10d67f829220fa21278f54c91bbee26d46acaece3"
+        }
+      ]
+    }
+  ],
+  "before": {
+    "answer": "这些措施属于洪涝灾区环境卫生与个人防护要求，并非专门的蚊虫防控指引[资料1]。\n\n部分子项的依据尚未核对完整，以上仅保留本次来源能够支持的内容。",
+    "model_label": "partial",
+    "review": {
+      "required_points": [
+        "灾后蚊子增多是否可能传播传染病（蚊媒传染病风险）",
+        "可能涉及哪些蚊媒传染病或风险取决于当地疫情",
+        "防蚊措施：清除积水、消灭孳生地",
+        "防蚊措施：个人防叮咬（长袖衣裤、驱蚊剂、纱窗蚊帐等）",
+        "出现症状及时就医并说明暴露史/社区协同防蚊"
+      ],
+      "label": "未回答",
+      "answered_points": [],
+      "unresolved": [
+        {
+          "point": "灾后蚊子增多是否可能传播传染病",
+          "cause": "检索未取得相关正文",
+          "basis": "原答仅称“这些措施属于洪涝灾区环境卫生与个人防护要求，并非专门的蚊虫防控指引”，所引资料1正文为饮用水消毒、环境清理等，未涉及蚊媒传染病风险",
+          "confidence": "confirmed",
+          "next_action": "检索蚊媒传染病与洪涝灾后蚊虫孳生的专业防控资料"
+        },
+        {
+          "point": "可能涉及哪些蚊媒传染病及风险取决于当地疫情",
+          "cause": "检索未取得相关正文",
+          "basis": "原答未提及登革热、乙脑、疟疾等任何病种或风险条件",
+          "confidence": "confirmed",
+          "next_action": "补充蚊媒病种及地方疫情依赖性的有据解释"
+        },
+        {
+          "point": "防蚊措施：清除积水、消灭孳生地",
+          "cause": "检索未取得相关正文",
+          "basis": "原答未给出翻盆倒罐、疏通沟渠等任何清积水措施",
+          "confidence": "confirmed",
+          "next_action": "检索灾后蚊虫孳生地清理指引"
+        },
+        {
+          "point": "防蚊措施：个人防叮咬",
+          "cause": "检索未取得相关正文",
+          "basis": "原答未给出长袖衣裤、驱蚊剂、纱窗蚊帐等个人防护措施",
+          "confidence": "confirmed",
+          "next_action": "检索个人防蚊叮咬指引"
+        },
+        {
+          "point": "出现症状及时就医并说明暴露史/社区协同防蚊",
+          "cause": "检索未取得相关正文",
+          "basis": "原答未涉及就医提示或社区协同",
+          "confidence": "confirmed",
+          "next_action": "检索灾后健康教育中就医与社区防蚊内容"
+        }
+      ],
+      "scope_expansions": [],
+      "ledger_gaps": [],
+      "reason": "原答仅说明所引资料非专门蚊虫防控指引并声明依据不全，未回答是否会传染病、涉及病种及任何具体防蚊措施，属未回答。"
+    },
+    "answer_sha256": "a47110e251f6353214699575be73711163dbb64efe6df7e0a49fe6c8cae4e418"
+  },
+  "exported_answer_sha256": "a242592f6c9f010e542ad6a81b32151aa7115a892217c4fd0ff61007bc1508c5"
+}

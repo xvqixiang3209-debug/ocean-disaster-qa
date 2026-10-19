@@ -1,0 +1,39 @@
+.map-chat-heading { display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; padding:14px 18px; border-bottom:1px solid #1e3a5f; }
+.map-chat-heading strong { color:#8cdcf0; font-size:15px; }
+.map-chat-heading span { color:#8fa3b8; font-size:11px; }
+.header .model-select[hidden] { display:none; }
+.chat-input-area textarea { flex:1; min-width:0; resize:vertical; min-height:65px; max-height:160px; padding:10px 12px; background:#111d2e; color:#e0e0e0; border:1px solid #295375; border-radius:8px; font-size:14px; line-height:1.6; font-family:inherit; outline:none; }
+.chat-input-area textarea:focus { border-color:#4fc3f7; }
+.chat-input-area textarea::placeholder { color:#8fa3b8; }
+.conversation-status { color:#8fa3b8; padding:6px 16px; font-size:11px; line-height:1.5; }
+.conversation-note { margin:12px 0; padding:5px 8px; color:#8da9bc; font-size:12px; text-align:center; }
+.map-answer-pending { color:#91b7cc; }
+.map-answer-error { color:#ffc389; }
+.map-answer-sources { white-space:normal; margin-top:12px; border-top:1px solid #29445f; padding-top:10px; font-size:12px; }
+.map-answer-sources summary { color:#7ed7e2; cursor:pointer; }
+.map-answer-source { padding:10px 0; border-bottom:1px solid #20364a; }
+.map-answer-source strong { display:block; color:#cbdce9; }
+.map-answer-source p { margin:6px 0; overflow-wrap:anywhere; }
+.map-answer-source a { display:inline-block; color:#7ed7e2; margin:5px 14px 0 0; }
+.map-answer-copy { margin-top:10px; padding:4px 0; background:transparent; border:0; color:#8eb7c8; cursor:pointer; font-size:12px; }
+.assistant-answer { white-space:normal; }
+.assistant-answer p { margin:0 0 10px; }
+.assistant-answer h3 { margin:14px 0 8px; color:#d3e5f0; font-size:14px; }
+.assistant-answer ul,.assistant-answer ol { padding-left:22px; margin:8px 0 12px; }
+.assistant-answer li { margin:5px 0; }
+.debug-panel { height:30px; }
+@media (max-width:900px) {
+  body { height:100dvh; }
+  .header { flex-wrap:wrap; gap:8px; padding:10px 12px; }
+  .header h1 { font-size:15px; width:100%; }
+  .header .spacer { display:none; }
+  .top-section { flex-direction:column; overflow-y:auto; }
+  .map-panel { width:100%; min-width:0; min-height:36vh; height:36vh; flex:0 0 36vh; }
+  .chat-panel { width:100%; min-width:0; min-height:55vh; flex:1; }
+  .chat-messages { min-height:180px; }
+  .chat-input-area { padding:10px; gap:8px; }
+  .chat-input-area button { padding:8px 12px; }
+  .typhoon-controls { max-height:calc(36vh - 80px); }
+}
+.map-panel { flex:2 1 0; width:auto; min-width:0; }
+.chat-panel { flex:1 1 0; width:auto; min-width:360px; min-height:0; }

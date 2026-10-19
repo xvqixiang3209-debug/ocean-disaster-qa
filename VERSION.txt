@@ -1,0 +1,14 @@
+台风与海洋灾害专业问答 · 首期本地工作台
+Version: phase1.8.3-public-evidence
+Release date: 20261019
+Baseline: 1.4.10 (20260916), preserved in a separate directory
+Platform: Windows native (no Docker)
+API version: 1.5 (map-integrated multi-turn QA, forecast data, explicit assumption-based calculations)
+QA pipeline: always-on local and official web retrieval, per-facet CRAG evaluation and bounded corrective retrieval, protected numerical tools, original-passage citation and quantity checks
+Activity pipeline: scoped official policy catalog, per-activity source/date/site validation, current matched bathing observation evaluation, latest effective notice precedence; no arbitrary default wind/wave/current limits or fixed tidal access windows
+Zhejiang scope: registered coastal reference points and seven named bathing monitors; broad or ambiguous places require clarification, not an invented point
+Spatial pipeline: 24 ASTER GDEM tiles, source-grid 2020 population subset, point elevation and bounded population counts; no inundation or evacuation model
+
+QA maintenance 20261018: valid-time interval and as-of isolation, domain routing, map analogue bridge, typed calculation delivery, explicit subquestion coverage and quantity-unit/passage checks.
+
+

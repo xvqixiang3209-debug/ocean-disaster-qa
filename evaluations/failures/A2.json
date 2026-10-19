@@ -1,0 +1,362 @@
+{
+  "id": "A2",
+  "family": "aquaculture",
+  "question": "温州海上重力式网箱台风前要检查哪些缆绳、框架和网衣部位？请给有出处的技术步骤。",
+  "baseline_id": null,
+  "http_status": 200,
+  "started_at": "2026-10-19T08:59:10.924755+00:00",
+  "completed_at": "2026-10-19T08:59:35.210054+00:00",
+  "answer_sha256": "423a670a24019251e944ebeba25f6c82d17cae17e94c5eeb27d7fb3f5e8a392e",
+  "answer": "可确认的是：国家海水鱼产业技术体系《台风灾害下海水鱼养殖防灾减灾技术手册》（2024年9月）对重力式网箱台风前检查给出了缆绳、框架和网衣方面的通用技术要点[资料1]。现有资料未明确针对“温州”这一地点，以下按该手册的通用做法回答，不能视为温州地方专用规程。\n\n**1. 缆绳部位**\n检查缆绳是否有断股或磨损，以及附着物是否已影响缆绳正常使用；必要时可在可能的迎风面增加相对较长的锚固[资料1]。检查缆绳缓冲沉子或浮桶是否完好、绑系是否牢固，并根据极端海况的波高情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”[资料1]。还应连接贯通不同方向的缆绳，使箱体与缆绳成为一个整体，限制箱体形变[资料1]。\n\n**2. 框架部位**\n查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼[资料1]。对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓冲装置进行检查固定[资料1]。\n\n**3. 网衣部位**\n清洗附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡[资料1]；检查网衣沉子数量且均匀分布完好，并加装、系紧盖网[资料1]。\n\n**4. 技术步骤（按手册顺序归纳）**\n1. 检查并加固网箱框架各部位，清除框架附着物[资料1]；\n2. 加固框架锚泊系缚受力点，检查固定单体框架间缓冲装置[资料1]；\n3. 检查缆绳断股、磨损和附着物，检查缓冲沉子或浮桶并绑系牢固，按波高等距离加固加长固定锚绳，连接贯通不同方向缆绳[资料1]；\n4. 清洗网衣附着生物，检查破损和绑系受力均衡，检查沉子分布并加装系紧盖网[资料1]。\n\n以上为通用技术手册要点，不替代温州当地主管部门的现场检查要求或预警指令。",
+  "model_label": "partial",
+  "missing_information": [
+    "现有资料未明确针对温州海上重力式网箱的专用检查规程或地方技术要求"
+  ],
+  "engineering_readback": "已给出缆绳、框架、网衣检查步骤；仍把温州专用规程作为缺项，属于未消除的范围问题。",
+  "validation": {
+    "computed_table_fallback": false,
+    "details": null,
+    "error": null
+  },
+  "evidence_diagnostics": {
+    "answer_policy": "crag_always_local_and_official_web",
+    "blocked_evidence_count": 0,
+    "citation_format_repairs": 0,
+    "claim_attribution_recovery": null,
+    "combined_validation_error": null,
+    "corrective_new_sources": 0,
+    "corrective_retrieval_attempted": false,
+    "corrective_search_summary": null,
+    "coverage_review": {
+      "issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只要求台风前检查缆绳、框架和网衣部位并给出有出处的技术步骤，未要求温州地方专用规程或地方技术要求；回答已按通用手册给出模块和步骤，把地方专用规程列为缺项属于额外增加未要求的当前实况或地方专用标准。",
+          "text": "现有资料未明确针对温州海上重力式网箱的专用检查规程或地方技术要求"
+        }
+      ],
+      "verdict": "revise"
+    },
+    "crag_audit": {
+      "corrective_rounds": 0,
+      "evaluator": "deepseek_relevance_with_exact_passage_ids",
+      "excluded": [],
+      "facets": [
+        {
+          "correct_sources": [
+            1
+          ],
+          "id": 1,
+          "local_grade": "incorrect",
+          "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+          "reference_sources": [],
+          "state": "supported"
+        },
+        {
+          "correct_sources": [
+            1
+          ],
+          "id": 2,
+          "local_grade": "incorrect",
+          "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+          "reference_sources": [],
+          "state": "supported"
+        },
+        {
+          "correct_sources": [
+            1
+          ],
+          "id": 3,
+          "local_grade": "incorrect",
+          "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+          "reference_sources": [],
+          "state": "supported"
+        },
+        {
+          "correct_sources": [
+            1
+          ],
+          "id": 4,
+          "local_grade": "incorrect",
+          "question": "请给有出处的技术步骤。",
+          "reference_sources": [],
+          "state": "supported"
+        }
+      ],
+      "implementation": "marine-crag-v1",
+      "local": {
+        "candidates": 8,
+        "executed": true,
+        "selected": 0,
+        "state": "completed"
+      },
+      "rounds": [
+        {
+          "evaluator": "deepseek_relevance_with_exact_passage_ids",
+          "facets": [
+            {
+              "correct_sources": [
+                6
+              ],
+              "id": 1,
+              "local_grade": "incorrect",
+              "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+              "reference_sources": [],
+              "state": "supported"
+            },
+            {
+              "correct_sources": [
+                6
+              ],
+              "id": 2,
+              "local_grade": "incorrect",
+              "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+              "reference_sources": [],
+              "state": "supported"
+            },
+            {
+              "correct_sources": [
+                6
+              ],
+              "id": 3,
+              "local_grade": "incorrect",
+              "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+              "reference_sources": [],
+              "state": "supported"
+            },
+            {
+              "correct_sources": [
+                6
+              ],
+              "id": 4,
+              "local_grade": "incorrect",
+              "question": "请给有出处的技术步骤。",
+              "reference_sources": [],
+              "state": "supported"
+            }
+          ],
+          "stage": "dual_retrieval_and_evaluation"
+        }
+      ],
+      "selected_sources": [
+        {
+          "channel": "web",
+          "citation": 1,
+          "source_id": "web:618baf15aef49d0093316ee7326f299072e4caa1bf83d79931ab7271087bee80",
+          "text_sha256": "9bbfc2c98a36ad35b2140eef147a1aac4d45ea08646d5021cf313b68791a23c0"
+        }
+      ],
+      "tool_count": 0,
+      "upstream": "https://github.com/HuskyInSalt/CRAG/tree/de7c2961ae624a1483a138c5798e1f6d0c4fb0e0",
+      "used_local": 0,
+      "used_tool": 0,
+      "used_web": 1,
+      "web": {
+        "attempted": true,
+        "cache_hit": false,
+        "executed": true,
+        "selected": 1
+      }
+    },
+    "evidence_sent_count": 1,
+    "general_knowledge_used": null,
+    "grounded_answerability": null,
+    "local_evidence_count": 8,
+    "local_retrieval_executed": true,
+    "numeric_supported_partial_recovery": null,
+    "recovered_completeness_review": null,
+    "route": "web_fallback",
+    "web_body_candidate_count": 2,
+    "web_body_read_failures": [
+      {
+        "reason": "未提取到足够正文；页面可能需要脚本加载",
+        "state": "failed",
+        "url": "http://typhoon.nmc.cn/web.html"
+      },
+      {
+        "reason": "未提取到足够正文；页面可能需要脚本加载",
+        "state": "failed",
+        "url": "https://typhoon.slt.zj.gov.cn/"
+      }
+    ],
+    "web_excluded_sources": [
+      {
+        "reason": "index_page_not_article",
+        "url": "https://www.wenzhou.gov.cn/"
+      }
+    ],
+    "web_search_executed": true,
+    "web_search_queries": [
+      "台风 海水鱼 网箱 锚泊 缆绳 框架 加固 技术手册 site:moa.gov.cn",
+      "温州 台风 知识 解答 site:cma.gov.cn"
+    ],
+    "web_search_states": [
+      "success"
+    ]
+  },
+  "sources": [
+    {
+      "citation": "资料1",
+      "citation_id": 1,
+      "title": "台风灾害下海水鱼养殖防灾减灾技术手册 国家海水鱼产业技术体系",
+      "filename": "台风灾害下海水鱼养殖防灾减灾技术手册 国家海水鱼产业技术体系",
+      "source_id": "web:618baf15aef49d0093316ee7326f299072e4caa1bf83d79931ab7271087bee80",
+      "chunk_id": "web:9bbfc2c98a36ad35b2140eef147a1aac4d45ea08646d5021cf313b68791a23c0",
+      "source_type": "public_web",
+      "category": "公开业务与知识资料",
+      "locator": "联网网页正文相关段落",
+      "url": "https://yyj.moa.gov.cn/gzdt/202409/P020250219610458020453.pdf",
+      "status": "public_web",
+      "quality_warning": "",
+      "support_validation_scope": "selected_passages",
+      "review_label": "权威机构公开网页 · 正文节选",
+      "metadata": {
+        "source_type": "public_web",
+        "crag_channel": "web",
+        "publication_date": null,
+        "document_issued_at": null,
+        "retrieved_at": "2026-10-19T08:59:15.305262+00:00",
+        "read_status": "success",
+        "crag_facets": [
+          {
+            "grade": "correct",
+            "id": 1,
+            "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？"
+          },
+          {
+            "grade": "correct",
+            "id": 2,
+            "question": "温州海上重力式网箱台风前要检查哪些框架部位？"
+          },
+          {
+            "grade": "correct",
+            "id": 3,
+            "question": "温州海上重力式网箱台风前要检查哪些网衣部位？"
+          },
+          {
+            "grade": "correct",
+            "id": 4,
+            "question": "请给有出处的技术步骤。"
+          }
+        ],
+        "crag_passage_ids": [
+          1,
+          2,
+          5
+        ],
+        "primary_scope": "national_guidance",
+        "evidence_scope": "source_document",
+        "applicability": {
+          "facets": [
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:18.369387+08:00",
+              "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:18.371320+08:00",
+              "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:18.373244+08:00",
+              "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            },
+            {
+              "geography": "general",
+              "kind": "knowledge",
+              "named_object_match": "matched",
+              "object_match": "matched",
+              "published_at": null,
+              "query_as_of": "2026-10-19T16:59:18.375293+08:00",
+              "question": "请给有出处的技术步骤。",
+              "reasons": [
+                "来源未明确覆盖所问地点"
+              ],
+              "requested_objects": [],
+              "source_named_objects": [],
+              "source_objects": [],
+              "temporal": "not_time_sensitive",
+              "use": "direct",
+              "valid_from": null,
+              "valid_to": null
+            }
+          ],
+          "geography": "general",
+          "kind": "knowledge",
+          "named_object_match": "matched",
+          "object_match": "matched",
+          "published_at": null,
+          "query_as_of": "2026-10-19T16:59:18.367343+08:00",
+          "reasons": [
+            "来源未明确覆盖所问地点"
+          ],
+          "requested_objects": [],
+          "source_named_objects": [],
+          "source_objects": [],
+          "temporal": "not_time_sensitive",
+          "use": "direct",
+          "valid_from": null,
+          "valid_to": null
+        }
+      },
+      "excerpt": "② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。 （1）进行网箱养殖现场安全检查，及时排除第1页台风灾害下海水鱼养殖防灾减灾技 术 手 册国家海水鱼产业技术体系第2页前  言我国是世界上登陆台风较多的国家之一，特别是我国的东南沿海，平均每年登陆的台风达 9.2 个，台风对海上养殖设施的破坏力极强，对养殖生产安全威胁极大。",
+      "supporting_passages": [
+        {
+          "passage_id": 1,
+          "quote": "警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮",
+          "sha256": "582ca71805bf6876ab5ce73be0dbd9a59f17c33286328b2241f8817d2eb5c4ae"
+        },
+        {
+          "passage_id": 2,
+          "quote": "绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮\n\n第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 ",
+          "sha256": "c7e10571851b369034293f09f4e85eb2c7aa7cb93d1da9afb9ec867cfa497e07"
+        }
+      ]
+    }
+  ],
+  "exported_answer_sha256": "423a670a24019251e944ebeba25f6c82d17cae17e94c5eeb27d7fb3f5e8a392e"
+}
