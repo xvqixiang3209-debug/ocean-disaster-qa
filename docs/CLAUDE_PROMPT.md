@@ -1,13 +1,1 @@
-请只读评审这个项目当前 main 分支，先记录实际提交 SHA：
-
-https://github.com/xvqixiang3209-debug/ocean-disaster-qa
-
-先读 `docs/CLAUDE_FOLLOWUP_20261020.md`，再读原 `docs/NEXT_PHASE_PLAN_FOR_CODEX.md`、`docs/SNAPSHOT_VALIDATION.md` 和 `evaluations/p1_p6_followup_20261020/README.md`。
-
-这是对你基于 a6113ee 制定的 P0–P6 方案继续实现后的复审。当前版本 phase1.8.4-grounded-recovery，完整本机测试1485项、102项子测试通过；公开快照1433项通过、52项因无私有录制跳过、102项子测试通过。本轮只有旧24次录制的离线阶段复核，没有新24/160问答。
-
-请优先追踪 `answer_pipeline.py`、`recovery.py`、`typed_grounding.py`、`facet_delivery.py`、`scope_gate.py`，分析跨阶段审查分歧如何保住有据内容，有据归纳如何提供可验证证明，完整交付如何避免关键词误判。22个旧归纳缺证明、1个G1审查边界变化、17次正文哈希未匹配仍未解决。不要把它们笼统归为缺业务数据。
-
-请按复审文档要求写 `NEXT_PHASE_REVIEW_FOR_CODEX.md`，给出最小修改文件、接口、正反例测试和成功判据；区分代码可确证、需原录制、需新模型输出和需数据方核定。目标是这些题代表的问题类型，不写题号特例。
-
-本轮不要改代码，不调用DeepSeek、不访问生产服务、不获取凭据。能运行测试就记录实际命令和输出，不能运行则明确未重跑。公开仓库没有业务数据库、NC或原始cassette；不要用旧输出冒充新提示词的实际结果。
+请只读复审最新代码，先记录当前提交SHA：https://github.com/xvqixiang3209-debug/ocean-disaster-qa 。当前版本为phase1.8.5-typhoon-time-delivery。先读 docs/CLAUDE_TYPHOON_DELIVERY_REVIEW_20261020.md、evaluations/typhoon_time_delivery_20261020/README.md 和 actual_answers.json，再结合 docs/CLAUDE_FOLLOWUP_20261020.md、原P0–P6方案。我们修复了今日查询误入历史快照、数量及中心动态字段漏答、计数套物理数值模板的问题；9次真实问答中最后3次源码稳定，今日和多子问交付完整，历史题因只有早于目标时点的记录保留partial。之后仅修改最终展示，使用同一真实模型输入离线重放去掉重复风速表，没有把它冒充为补丁后新端到端模型回答。本机1694项测试和102项子测试通过，公开快照1642项通过、52项因私有录制未公开跳过。请优先追踪父级“风速”对象为何让同一表格行绑定所有子问，工具字段保护与普通模型原子归属如何统一，跨阶段审查意见冲突如何落到局部事实和关系，以及这条交付链如何按业务类型扩展到预警、NC和历史比较；检查保护机制能否被错日期、错对象、部分列表、未来时点或伪造标记绕过。原有归纳缺证明、正文哈希问题没有宣称解决，变量口径仍需数据方确认。请区分代码已确证、需要原始录制、需要新增模型输出和业务数据核定，给出最小修改文件、接口、正反例及成功判据，生成 NEXT_TYPHOON_DELIVERY_REVIEW_FOR_CODEX.md。本轮不要改代码，不调用DeepSeek，不访问生产服务或获取凭据；能重跑测试就记录实际结果，不能则明确未重跑。目标是同类问题的机制修复，不写固定题号特例。

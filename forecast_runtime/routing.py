@@ -18,7 +18,23 @@ def coastal_request(question):
 
 
 def grid_request(question):
-    return bool(re.search(r'浪高|波高|风力|风速|风浪|海温|水温|流速|谱峰周期|波向|流向', question))
+    if re.search(r'浪高|波高|风浪|海温|水温|流速|谱峰周期|波向|流向', question):
+        return True
+    if not re.search(r'风力|风速', question):
+        return False
+    if not re.search(r'台风|热带气旋|气旋中心', question):
+        return True
+    # Centre intensity belongs to the typhoon API, not to the regional NC
+    # wind field. An explicit local wind subquestion still requests a grid.
+    local=r'海域|海面|近海|沿海|岸段|海岸|局地|当地|地面|网格|格点|附近|所在地|'
+    local+=r'经纬|东经|北纬|\blon\b|\blat\b|(?:浙江|嘉兴|宁波|舟山|台州|温州)(?:市|省)?(?:的)?(?:风力|风速)'
+    for part in re.split(r'[，,。；;？！!?、]|以及|同时|另外|并且|与|和',question):
+        if not re.search(r'风力|风速',part):continue
+        city_wind=(re.search(r'浙江|嘉兴|宁波|舟山|台州|温州',part)
+                   and not re.search(r'中心.{0,12}(?:风力|风速)',part))
+        if re.search(local,part,re.I) or city_wind:
+            return True
+    return False
 
 
 def tide_request(question):

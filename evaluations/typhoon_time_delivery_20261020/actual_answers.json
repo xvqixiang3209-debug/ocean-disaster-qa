@@ -1,0 +1,3039 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "version": "phase1.8.5-typhoon-time-delivery",
+    "baseline_commit": "6777f925fd2d4d2c747f3b65e4055ca4ce2eded0",
+    "created_at": "2026-10-20T19:30:13.435437+08:00",
+    "real_qa_transactions": 9,
+    "model_calls": 57,
+    "tokens": 507105,
+    "runs": [
+      {
+        "round": 1,
+        "run_id": "time_delivery_20261020_190006_41541fa2",
+        "attempted": 3,
+        "source_stability": {
+          "stable": true,
+          "added": [],
+          "removed": [],
+          "changed": [],
+          "before_files": 258,
+          "after_files": 258
+        },
+        "automatic_retries": 0,
+        "role": "diagnostic_intermediate",
+        "model_calls": 19,
+        "total_tokens": 167148
+      },
+      {
+        "round": 2,
+        "run_id": "time_delivery_20261020_190814_f12e4bc2",
+        "attempted": 3,
+        "source_stability": {
+          "stable": false,
+          "added": [],
+          "removed": [],
+          "changed": [
+            "forecast_runtime/answer_facts.py",
+            "marine_kb/facet_delivery.py",
+            "tests/test_protected_tool_scope.py"
+          ],
+          "before_files": 259,
+          "after_files": 259
+        },
+        "automatic_retries": 0,
+        "role": "diagnostic_intermediate",
+        "model_calls": 19,
+        "total_tokens": 174230
+      },
+      {
+        "round": 3,
+        "run_id": "time_delivery_20261020_191942_63a05cba",
+        "attempted": 3,
+        "source_stability": {
+          "stable": true,
+          "added": [],
+          "removed": [],
+          "changed": [],
+          "before_files": 259,
+          "after_files": 259
+        },
+        "automatic_retries": 0,
+        "role": "final_live_before_display_patch",
+        "model_calls": 19,
+        "total_tokens": 165727
+      }
+    ],
+    "tests": {
+      "local": {
+        "tests": 1694,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 1694,
+        "subtests_passed": 102,
+        "junit_sha256": "c4b87d4fd4bfcf3452ef8c1c2d719624d362fdfc1e557fc7f69bbc18bf4975e8",
+        "pytest_terminal_passed": 1694
+      },
+      "public": {
+        "tests": 1694,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 52,
+        "passed": 1642,
+        "subtests_passed": 102,
+        "junit_sha256": "60849c040cd3c82f3030ea84ad124b53123e9753bf4421d85a7706539afaf6b9",
+        "pytest_terminal_passed": 1642
+      }
+    },
+    "final_live_statuses": {
+      "TODAY": "full",
+      "HISTORY": "partial",
+      "MULTI": "full"
+    },
+    "post_recording_patch": "final display only, actual MULTI display input replayed offline; no new real model output",
+    "display_stage_replay": {
+      "case_id": "MULTI",
+      "input_run": "time_delivery_20261020_191942_63a05cba",
+      "method": "deterministic_final_display_stage_replay",
+      "baseline_reproduction": "same final text after whitespace normalization",
+      "model_calls": 0,
+      "network_calls": 0,
+      "new_end_to_end_model_run": false,
+      "original_answer_sha256": "a936a60555f2c5cc42ccc5d05438970242cd92d8ff598e6e8c66594b1d86aed1",
+      "audit": [
+        {
+          "aid": "c3a1",
+          "facet_ids": [
+            "f1",
+            "f3",
+            "f4",
+            "f5",
+            "f6"
+          ],
+          "replacement_aids": [
+            "tool_07739dd825c797268325"
+          ],
+          "rule": "exact_tool_row_already_in_data_card"
+        },
+        {
+          "aid": "c9a2",
+          "facet_ids": [
+            "f4",
+            "f6"
+          ],
+          "rule": "shared_explanation_display_once"
+        }
+      ],
+      "business_validation_error": null,
+      "grounding_and_completeness_changed": false,
+      "limitation": "Only the final display stage was rerun. The three stable real transactions precede this display-only patch."
+    },
+    "preview": {
+      "url": "http://127.0.0.1:8772/",
+      "home_http": 200,
+      "status_http": 200,
+      "runtime_hashes_match": true,
+      "runtime_source_sha256": {
+        "data/domain/relation_lexicon.json": "f9746895a33bcaee4960b0ddb7a1fa4a9f2debc325d987b517026b0e73c2a9c8",
+        "data/public_references/manifest.json": "629c761eb50e28e744e1643e7d2645be288070a1c8063cbad865fb7b15aa4c94",
+        "data/public_references/ningbo_public_catastrophe_2024_2026.pdf": "f7f498c13d4dcd5819fc5a520be56b76a8f147f4a06a08eb8688a26bcb60d05e",
+        "data/public_references/ningbo_public_catastrophe_2024_2026_excerpt.txt": "4e5285620c4ee48d8d1c5ca39454757eae6a2f425ec9ee05766cf2de454660d1",
+        "forecast_runtime/activity_locations.py": "2f314c0bea810de49b06a76c851db402fc955e5afc16c9367ff37d94899171c8",
+        "forecast_runtime/activity_sources.py": "5c4394ec98f04d42d4fb15e6675bcdac36524b53afab4be711c2d7db11bc9de3",
+        "forecast_runtime/analogue.py": "ca26fde8c49436263d3bf0e85b78ad2dbb1004d3f86476596a2bdea49265fcba",
+        "forecast_runtime/answer_facts.py": "ce9a662d6104875649119d7902ff0a70508498a7c09aebf3708383226e3a6e8e",
+        "forecast_runtime/api.py": "da3886a32865e5cd8ffbd1f41911e20350b9a318d851b6868f2db9e86e080db2",
+        "forecast_runtime/historical_comparison.py": "8872584770f93ddce9e50c78e3e208139628535d1796d2c1a7d424d0394ffbff",
+        "forecast_runtime/impact_inputs.py": "8afd47f91c8ae39c7e37b0af48f360c4310297a714a09ed0c02a639785863c67",
+        "forecast_runtime/official_warnings.py": "df5d90debd4c6e7b7297483067e9dbf822d6d3029fb33812191e4e31fb976461",
+        "forecast_runtime/recreation.py": "9a33d3aed3793e63b44623840bcda4c9d513b1552944d64e614c2942423ced87",
+        "forecast_runtime/routing.py": "9d970cdd4ed1062121e3cf689bd19abe28a51a4bacee4ddfe1836dea910be627",
+        "forecast_runtime/service.py": "2fcb4a3edc4929b1d0797793b6a45758426e0f7e54f4a750cbfa9e77552f6054",
+        "forecast_runtime/storage.py": "dd16136da2b85fbdb52f4fc959e23120f40a0fb0b88bde80ef30cfa5de8e2c28",
+        "forecast_runtime/sync.py": "23a3fef8e28b852aa55e2ef5fb5e01b5bb98b0fc95ea6d0c8a9bc838fa6958e1",
+        "forecast_runtime/task_plan.py": "1eeff484cae4889020adbed01708b39530099a682ba8eee93f5343b51652d722",
+        "marine_kb/answer_completeness.py": "7a74e46e212652c4e4eb74c453958837020d05aae701344c06e30e223d6e3f27",
+        "marine_kb/answer_pipeline.py": "9e46577c41f767f611ceb1e8f11178879852f4ee69e1a1a1b2d96cbbe4fb169a",
+        "marine_kb/answer_trace.py": "a29a7147261d773990110b9043f899441d3b8ef9abd8fe0922668b5e3a155500",
+        "marine_kb/bootstrap.py": "f0bc89d84f0e35b0d2f56c8e2519d7f78dd54e47c4983ff5dbec2bab5ec90841",
+        "marine_kb/business_validation.py": "119080be6e972cec59828e3afbea6ea6644a1155e4f11275ca36a84661f72f88",
+        "marine_kb/chat_api.py": "3fb2313aa36ab2dead03dccf5ab5c97cc0e40c4796ff4e30b78bcca6241531c2",
+        "marine_kb/citation_repair.py": "a5b13c0255c7c55fa616326546f92f03f4219ae5e820827f729bd62ce738078c",
+        "marine_kb/claim_grounding.py": "b8c96cce018e0982e0c4a4a4621ed69b1bf569c1533246500612185cf01f4c1b",
+        "marine_kb/conversation.py": "e953d2843357305ef025898738059fd3b3c5c17970517a9759a8269a7b1e6da3",
+        "marine_kb/coverage_review.py": "d73eedf03e1cc9ca786509d90d86fb9b5f1fe30656d17acb41fa1c5041d05c96",
+        "marine_kb/crag.py": "68f8b3c4222089304a06b74e976d4a12c6bfc5b8099c86c8f43cd717c5e1fddd",
+        "marine_kb/evidence_applicability.py": "6b1643d09d0031645b89f8dffce0b5b08b172f518b9ced783fc9ff37846273e6",
+        "marine_kb/evidence_selection.py": "d90f42872c94b041738780b1e5feb8b6b246669f4edc481d07d79c78d9024251",
+        "marine_kb/evidence_units.py": "639e445dc648b36aacd48d72fdceda7523b0b30160d454d036127e174fde43ac",
+        "marine_kb/facet_contract.py": "1e5d3ac8dccf45b77251c13fbcde98341a2c2798afc2e80b4dace81a3bc8d7c9",
+        "marine_kb/facet_delivery.py": "1f3e0376c8720dc34a257d9620a4d23da44304cdc558f4705008445d005bc075",
+        "marine_kb/governance.py": "91e6734ea828d9380a1c7c14cb443e315267c3643dbd76c3193023026fec961c",
+        "marine_kb/grounded_calculations.py": "c68cd27a02ccb17bf15e916eead6079b27697d9df4e3de7f8694ae9070f8cd66",
+        "marine_kb/guidance.py": "43c735d84fccd5c8d88ed4612fafe9d9e4175eb91ead8cf178ddb73f64733567",
+        "marine_kb/history_statistics.py": "659cf05006a2057c8fd17e65071037b1801c4f650895a586ec24be6ed681a061",
+        "marine_kb/intent_lenses.py": "e9246b070b5bae3afd65b444b65ac8e981a3e9c1ca871ed48bbebf9a5b05a9b9",
+        "marine_kb/model_json.py": "b3d5521cf26702adfdcb4c620f5f1c1e736f3eca45994282c23af101163618e5",
+        "marine_kb/phase2.py": "86056c56eb9dd52dcce7cbde2b09b4b706ba490e4fd2847228851e76e37b81cc",
+        "marine_kb/protected_tool_delivery.py": "93480729163a23d1f48861c5b77b37af7cec5ae1cfcd26bc4469efddc85e6f71",
+        "marine_kb/public_cache.py": "af7f22875ed71c9b175eeac442d2ae855a6cd3af50c407f807a46780ad19b33a",
+        "marine_kb/public_service_intents.py": "c06c2c796861c771c437f5dc10bcd6a6e93c1598b4b7a3328230580327539c56",
+        "marine_kb/public_sources.py": "81af439f7909e0c9ea0cc3ad01530a2fc9462c684bc82ab24e2e7607a3bea103",
+        "marine_kb/qa.py": "4e491f0587693f3250bfcb8fb2751965dd2f0c6bf57f1ca5584718b98e3e8577",
+        "marine_kb/qa_observability.py": "6959eddbbc8e215f4a3bad5bc041a978af8ae1e2a2c4ba9eb67630d69007ce3d",
+        "marine_kb/quantities.py": "672016a0b4587d848e287725bd5335143f4e30bade99441734609aaede05cb7f",
+        "marine_kb/query_intents.py": "dcb21334047097f325fa26546420129144890307280a5d26c607ed301ba6ebaa",
+        "marine_kb/question_contract.py": "61f4b7ad96ae69bfbe097111f111a25d79a74be3fa7c581fd6b4e625944ee1b4",
+        "marine_kb/recovery.py": "05eb697243dfa063deb0cda73b95ef8b0e857bec38285571e5520435d1150839",
+        "marine_kb/relation_guard.py": "2f01c58d9f504f4666c7ada2076ea1b77a44d01c6a911522f76b79e7aa21f1bd",
+        "marine_kb/replay.py": "6670e781d4b5f83faae2589b7186a0ae00135c4ec3b15521c3c3be74669fd9b4",
+        "marine_kb/research_excerpt.py": "d4f78f5f8284b57deec42d41f5ae2874e18a2a2fdbdf2c5bbd6110d4bb66ac2f",
+        "marine_kb/retrieval.py": "7a63587b5eddba869bdd86c1a6f39a73e39c88e99e6c62cd1d69552037fde75b",
+        "marine_kb/scope_gate.py": "439c8fa58cacced7c5637966c67698d850325c874b202310104eb561c685b80f",
+        "marine_kb/typed_grounding.py": "a80ed8e8df94c41a648963783860c3d4b31a4dcebb4b8b11c1958c59e9698f98",
+        "marine_kb/version_claims.py": "fdcb3bfd2a611a8e9b44a158bd44e7b086e0d332007c4e4668906b1ecabd3947",
+        "marine_kb/web_supplement.py": "b79679be54986dd3ca42b11e527d87eab35fd07f80c296824f0a76912727add9",
+        "model_layer.py": "c4b36626bfbb4fca8d9af87107083db932d50e9ee10abbe15e51bf1096a38221",
+        "server.py": "b95daea34918d5a266a3633b8ee046e5750c3919c27d4ff16cf83b29caa43e3a",
+        "typhoon/web_reader.py": "fa1cee324a704cb42d4439de250859af57ac5f1f5fecc9c312edbc3ec80675f2",
+        "typhoon/web_search.py": "baf002eaf048fca0e4c5d92228972b002e2fea9e4b97777800ba75a315d645c1"
+      }
+    },
+    "private_raw_recordings_published": false,
+    "new_160_run": false,
+    "expert_acceptance": false,
+    "after_stable_live_source_changes": [
+      {
+        "path": "marine_kb/answer_pipeline.py",
+        "recorded_sha256": "3843d286c54cd4012cea1c2f48b8a55912190eaa0280e9bc7e714d265a5efafb",
+        "final_sha256": "9e46577c41f767f611ceb1e8f11178879852f4ee69e1a1a1b2d96cbbe4fb169a"
+      },
+      {
+        "path": "marine_kb/protected_tool_delivery.py",
+        "recorded_sha256": "0c694cb46eaef146f5cd9bd743b7ab5e73e71887fd3493c1c4fe462a57f8c693",
+        "final_sha256": "93480729163a23d1f48861c5b77b37af7cec5ae1cfcd26bc4469efddc85e6f71"
+      },
+      {
+        "path": "tests/test_protected_typhoon_pipeline.py",
+        "recorded_sha256": "4a960e1808529635588104b50687c1c666a2a9b69916825c01b7401bde4d7a8a",
+        "final_sha256": "b3e84720b85aff38da0c45f6c35fe63614f9eb9635297a58179a18a3ef66ae2c"
+      }
+    ]
+  },
+  "items": [
+    {
+      "round": 1,
+      "run_id": "time_delivery_20261020_190006_41541fa2",
+      "id": "TODAY",
+      "question": "截至2026年10月20日，现在有几个台风在活动？最新的位置、强度和移动方向是什么？",
+      "started_at": "2026-10-20T11:00:14.593471+00:00",
+      "completed_at": "2026-10-20T11:00:36.513004+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 21.92,
+      "answer": "**台风接口查询结果**\n\n**截至2026年10月20日，现在有几个台风在活动**\n\n接口完整活动列表有1个台风（活动台风数量）；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00；这是接口列表数量，不是未来台风数量预测。[资料1]\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n**最新的位置、强度和移动方向是什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心位置：东经133.8度，北纬16.7度；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最大风速：62 m/s（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），风力等级：17 级；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），接口强度标记：SuperTY；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最低气压：915 hPa（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），移动方向：WNW（西偏西北）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:00:16.410415+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]",
+      "answerability": "full",
+      "missing_information": [],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "current",
+          "requested_as_of": "2026-10-20T19:00:16.410415+08:00",
+          "as_of": "2026-10-20T19:00:16.410415+08:00",
+          "retrieved_at": "2026-10-20T19:00:16.770770+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.4,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.1,
+                      "lon": 129.1,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 127.2,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 21.2,
+                      "lon": 126,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.4,
+                      "lon": 124.9,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 24,
+                      "lon": 123.9,
+                      "maxSpeed": 42,
+                      "pressure": 955,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 27,
+                      "lon": 123.5,
+                      "maxSpeed": 35,
+                      "pressure": 970,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 12
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.2,
+                      "lon": 124.9,
+                      "maxSpeed": 30,
+                      "pressure": 980,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-25 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.1,
+                      "maxSpeed": 57,
+                      "pressure": 925,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.2,
+                      "lon": 128.7,
+                      "maxSpeed": 54,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 125.9,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 23.2,
+                      "lon": 123.8,
+                      "maxSpeed": 46,
+                      "pressure": 940,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 26.2,
+                      "lon": 122.3,
+                      "maxSpeed": 39,
+                      "pressure": 965,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.7,
+                      "lon": 124.2,
+                      "maxSpeed": 28,
+                      "pressure": 985,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-25 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 10
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 16.7,
+                "lon": 133.8,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 24,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 140,
+                  "nw": 130,
+                  "se": 130,
+                  "sw": 120
+                },
+                "radius12_quad": {
+                  "ne": 70,
+                  "nw": 70,
+                  "se": 70,
+                  "sw": 70
+                },
+                "radius7_quad": {
+                  "ne": 450,
+                  "nw": 320,
+                  "se": 320,
+                  "sw": 280
+                },
+                "time": "2026-10-20 17:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1786,
+          "prompt_tokens": 452,
+          "completion_tokens": 142,
+          "total_tokens": 594,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 2565,
+          "prompt_tokens": 10737,
+          "completion_tokens": 181,
+          "total_tokens": 10918,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 2374,
+          "prompt_tokens": 9653,
+          "completion_tokens": 258,
+          "total_tokens": 9911,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1512,
+          "prompt_tokens": 3559,
+          "completion_tokens": 10,
+          "total_tokens": 3569,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 3819,
+          "prompt_tokens": 4040,
+          "completion_tokens": 833,
+          "total_tokens": 4873,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:00:16.410415+08:00至2026-10-20T19:00:16.410415+08:00"
+        }
+      ],
+      "original_local_result_sha256": "ffe8604a197e698bb6bc99d70ce723cec6c3c5ca304e35a62eea1fb0eab86969"
+    },
+    {
+      "round": 1,
+      "run_id": "time_delivery_20261020_190006_41541fa2",
+      "id": "HISTORY",
+      "question": "截至2026年10月19日18时，活动台风接口记录中有几个台风？各台风最新的位置、强度和移动方向是什么？请注明快照取得时间和位置记录时间。",
+      "started_at": "2026-10-20T11:00:36.513922+00:00",
+      "completed_at": "2026-10-20T11:01:16.480320+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 39.966,
+      "answer": "**台风接口查询结果**\n\n**截至2026年10月19日18时，活动台风接口记录中有几个台风**\n\n截至2026年10月19日18时，接口完整活动列表记录有1个台风，即“蔷琵”（接口标识202630）[资料1]。\n\n该记录为历史原始接口快照，只代表当时已保存的接口记录，不能认定为查询时刻的实时状态[资料1]。\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 强度 | 中心最大风速62 m/s（单位按现有接口解释，尚未核定）；风力等级17级；接口强度标记SuperTY；中心最低气压915 hPa（单位按现有接口解释，尚未核定） | 2026-10-19 11:00:00 | 记录或缓存可能滞后[资料1] |\n\n**各台风最新的位置是什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），中心位置：东经139度，北纬14.3度；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n**各台风最新的强度是什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），中心最大风速：62 m/s（单位按现有接口解释，尚未核定）；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），风力等级：17 级；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），接口强度标记：SuperTY；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），中心最低气压：915 hPa（单位按现有接口解释，尚未核定）；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n中心最低气压915 hPa（单位按现有接口解释，尚未核定）[资料1]。\n\n**各台风最新的移动方向是什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），移动方向：WNW（西偏西北）；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n**快照取得时间是什么**\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 台风数量 | 1个（接口活动列表数量，非未来数量预测） | 查询截至2026-10-19T18:00:00+08:00 | 快照取得时间2026-10-19T12:40:12.039460+08:00[资料1] |\n\n快照取得时间为2026-10-19T12:40:12.039460+08:00[资料1]。\n\n- 快照取得时间：2026-10-19T12:40:12.039460+08:00[资料1]。\n\n**位置记录时间是什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n蔷琵（接口标识202630），中心位置：东经139度，北纬14.3度；记录时刻：2026-10-19 11:00:00；查询截至时刻：2026-10-19T18:00:00+08:00；接口取得时间：2026-10-19T12:40:12.039460+08:00；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态。[资料1]\n\n位置记录时间为2026-10-19 11:00:00，距查询截至时刻约7小时，记录可能滞后[资料1]。\n\n- 位置记录时间：2026-10-19 11:00:00[资料1]。\n\n**待补齐：各台风最新的位置是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的台风名称或编号、台风中心经纬度、有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：各台风最新的强度是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的台风强度或最大风速、台风名称或编号、有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：各台风最新的移动方向是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的移动方向、台风名称或编号、有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：快照取得时间是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的概念定义，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：位置记录时间是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的台风名称或编号、台风中心经纬度，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。",
+      "answerability": "partial",
+      "missing_information": [
+        "各台风最新的位置是什么？：仍缺少台风名称或编号、台风中心经纬度、有效时段",
+        "各台风最新的强度是什么？：仍缺少台风强度或最大风速、台风名称或编号、有效时段",
+        "各台风最新的移动方向是什么？：仍缺少移动方向、台风名称或编号、有效时段",
+        "快照取得时间是什么？：仍缺少概念定义",
+        "位置记录时间是什么？：仍缺少台风名称或编号、台风中心经纬度"
+      ],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "historical",
+          "requested_as_of": "2026-10-19T18:00:00+08:00",
+          "as_of": "2026-10-20T19:00:38.248405+08:00",
+          "retrieved_at": "2026-10-19T12:40:12.039460+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 15.4,
+                      "lon": 136.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-19 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 16.4,
+                      "lon": 134.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-20 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.5,
+                      "lon": 132.2,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-20 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 18.6,
+                      "lon": 129.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.9,
+                      "lon": 127.9,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 126.5,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.9,
+                      "lon": 124.5,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 25.8,
+                      "lon": 122.1,
+                      "maxSpeed": 40,
+                      "pressure": 960,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 15.7,
+                      "lon": 137,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-19 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 16.7,
+                      "lon": 134.7,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-20 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 18.6,
+                      "lon": 130.2,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 126.7,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22,
+                      "lon": 124.3,
+                      "maxSpeed": 49,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 24.2,
+                      "lon": 120.8,
+                      "maxSpeed": 31,
+                      "pressure": 980,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 14.3,
+                "lon": 139,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 22,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 120,
+                  "nw": 110,
+                  "se": 100,
+                  "sw": 100
+                },
+                "radius12_quad": {
+                  "ne": 60,
+                  "nw": 60,
+                  "se": 60,
+                  "sw": 60
+                },
+                "radius7_quad": {
+                  "ne": 350,
+                  "nw": 320,
+                  "se": 280,
+                  "sw": 280
+                },
+                "time": "2026-10-19 11:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1722,
+          "prompt_tokens": 468,
+          "completion_tokens": 188,
+          "total_tokens": 656,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 3045,
+          "prompt_tokens": 12270,
+          "completion_tokens": 384,
+          "total_tokens": 12654,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 2702,
+          "prompt_tokens": 13430,
+          "completion_tokens": 552,
+          "total_tokens": 13982,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1402,
+          "prompt_tokens": 5162,
+          "completion_tokens": 10,
+          "total_tokens": 5172,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 5086,
+          "prompt_tokens": 5536,
+          "completion_tokens": 1326,
+          "total_tokens": 6862,
+          "error_code": null
+        },
+        {
+          "stage": "facet_regenerate",
+          "latency_ms": 2653,
+          "prompt_tokens": 18792,
+          "completion_tokens": 395,
+          "total_tokens": 19187,
+          "error_code": null
+        },
+        {
+          "stage": "unknown",
+          "latency_ms": 1411,
+          "prompt_tokens": 11157,
+          "completion_tokens": 10,
+          "total_tokens": 11167,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 4272,
+          "prompt_tokens": 11864,
+          "completion_tokens": 1018,
+          "total_tokens": 12882,
+          "error_code": null
+        },
+        {
+          "stage": "unknown",
+          "latency_ms": 2959,
+          "prompt_tokens": 16839,
+          "completion_tokens": 393,
+          "total_tokens": 17232,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:00:38.248405+08:00至2026-10-20T19:00:38.248405+08:00"
+        },
+        {
+          "citation_id": 2,
+          "title": "历史总结-2015-CHAN-HOM.txt",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "历史切片 0"
+        },
+        {
+          "citation_id": 3,
+          "title": "090608警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:9"
+        },
+        {
+          "citation_id": 4,
+          "title": "090614警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:9"
+        },
+        {
+          "citation_id": 5,
+          "title": "091005警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:8"
+        }
+      ],
+      "original_local_result_sha256": "3589cd4737aeaaff5c5fda89f641d07c78fd2cb22ffa55d6ff7bd07d62dd92a3"
+    },
+    {
+      "round": 1,
+      "run_id": "time_delivery_20261020_190006_41541fa2",
+      "id": "MULTI",
+      "question": "今天活动台风有几个、分别叫什么？各台风最新中心最大风速、最低气压、移动方向和移动速度分别是多少？请同时写明查询时间与记录时间。",
+      "started_at": "2026-10-20T11:01:16.481479+00:00",
+      "completed_at": "2026-10-20T11:01:39.738410+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 23.257,
+      "answer": "**试算结果（假设口径）**\n\n**今天活动台风有几个、分别叫什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最大风速：62 m/s（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），风力等级：17 级；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），接口强度标记：SuperTY；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最低气压：915 hPa（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），移动方向：WNW（西偏西北）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），移动速度：24 km/h（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n截至查询时刻2026-10-20T19:01:18.063446+08:00，接口活动列表显示今天活动台风为1个，名为蔷琵（接口标识202630）[资料1]。\n\n说明：活动台风数量是接口活动列表数量，不是未来24小时台风数量预测[资料1]。\n\n以上为业务数据查询与假设试算结果，不是正式预警或响应决定[资料1]。\n\n**各台风最新中心最大风速是多少**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最大风速：62 m/s（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），风力等级：17 级；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），接口强度标记：SuperTY；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最低气压：915 hPa（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n以上为业务数据查询与假设试算结果，不是正式预警或响应决定[资料1]。\n\n**各台风最低气压是多少**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），中心最低气压：915 hPa（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n以上为业务数据查询与假设试算结果，不是正式预警或响应决定[资料1]。\n\n**各台风移动方向是什么**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），移动方向：WNW（西偏西北）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），移动速度：24 km/h（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n以上为业务数据查询与假设试算结果，不是正式预警或响应决定[资料1]。\n\n**各台风移动速度是多少**\n\n蔷琵（接口标识202630）；台风身份来自接口记录；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n蔷琵（接口标识202630），移动速度：24 km/h（单位按现有接口解释，尚未核定）；记录时刻：2026-10-20 17:00:00；查询截至时刻：2026-10-20T19:01:18.063446+08:00；接口取得时间：2026-10-20T19:00:16.770770+08:00。[资料1]\n\n以上为业务数据查询与假设试算结果，不是正式预警或响应决定[资料1]。\n\n**查询时间与记录时间分别是什么**\n\n其最新位置记录时刻为2026-10-20 17:00:00，接口取得时间为2026-10-20T19:00:16.770770+08:00[资料1]。\n\n查询时间与记录时间：查询截至时刻为2026-10-20T19:01:18.063446+08:00，接口取得时间为2026-10-20T19:00:16.770770+08:00[资料1]。\n\n各要素的记录时刻均为2026-10-20 17:00:00，距查询时刻约2.0小时[资料1]。\n\n记录滞后不代表此刻位置[资料1]。\n\n以上为业务数据查询与假设试算结果，不是正式预警或响应决定[资料1]。",
+      "answerability": "full",
+      "missing_information": [],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": true,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "current",
+          "requested_as_of": "2026-10-20T19:01:18.063446+08:00",
+          "as_of": "2026-10-20T19:01:18.063446+08:00",
+          "retrieved_at": "2026-10-20T19:00:16.770770+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.4,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.1,
+                      "lon": 129.1,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 127.2,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 21.2,
+                      "lon": 126,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.4,
+                      "lon": 124.9,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 24,
+                      "lon": 123.9,
+                      "maxSpeed": 42,
+                      "pressure": 955,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 27,
+                      "lon": 123.5,
+                      "maxSpeed": 35,
+                      "pressure": 970,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 12
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.2,
+                      "lon": 124.9,
+                      "maxSpeed": 30,
+                      "pressure": 980,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-25 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.1,
+                      "maxSpeed": 57,
+                      "pressure": 925,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.2,
+                      "lon": 128.7,
+                      "maxSpeed": 54,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 125.9,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 23.2,
+                      "lon": 123.8,
+                      "maxSpeed": 46,
+                      "pressure": 940,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 26.2,
+                      "lon": 122.3,
+                      "maxSpeed": 39,
+                      "pressure": 965,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.7,
+                      "lon": 124.2,
+                      "maxSpeed": 28,
+                      "pressure": 985,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-25 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 10
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 16.7,
+                "lon": 133.8,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 24,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 140,
+                  "nw": 130,
+                  "se": 130,
+                  "sw": 120
+                },
+                "radius12_quad": {
+                  "ne": 70,
+                  "nw": 70,
+                  "se": 70,
+                  "sw": 70
+                },
+                "radius7_quad": {
+                  "ne": 450,
+                  "nw": 320,
+                  "se": 320,
+                  "sw": 280
+                },
+                "time": "2026-10-20 17:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        },
+        {
+          "kind": "clarification",
+          "state": "needs_location",
+          "as_of": "2026-10-20T19:01:18.063446+08:00",
+          "storms": []
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1571,
+          "prompt_tokens": 463,
+          "completion_tokens": 146,
+          "total_tokens": 609,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 3600,
+          "prompt_tokens": 10881,
+          "completion_tokens": 377,
+          "total_tokens": 11258,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 3345,
+          "prompt_tokens": 13403,
+          "completion_tokens": 518,
+          "total_tokens": 13921,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1270,
+          "prompt_tokens": 5118,
+          "completion_tokens": 10,
+          "total_tokens": 5128,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 3981,
+          "prompt_tokens": 5535,
+          "completion_tokens": 1038,
+          "total_tokens": 6573,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "业务数据查询与假设试算结果",
+          "source_type": "business_forecast",
+          "review_label": "用户授权假设试算 · 非正式预警",
+          "locator": "2026-10-20T00:00:00+08:00至2026-10-20T23:00:00+08:00"
+        }
+      ],
+      "original_local_result_sha256": "e298b32b80da657fda6f99b6baba1fc6ad091e69bd04724bd3f187c184a83cd2"
+    },
+    {
+      "round": 2,
+      "run_id": "time_delivery_20261020_190814_f12e4bc2",
+      "id": "TODAY",
+      "question": "截至2026年10月20日，现在有几个台风在活动？最新的位置、强度和移动方向是什么？",
+      "started_at": "2026-10-20T11:08:23.761671+00:00",
+      "completed_at": "2026-10-20T11:08:41.579989+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 17.818,
+      "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-20 19:08:25；接口快照取得：2026-10-20 19:00:16（北京时间）。\n\n**截至2026-10-20 19:08:25，接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 蔷琵（接口标识202630） | 中心位置 | 东经133.8°，北纬16.7° [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最低气压 | 915 hPa（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW [资料1] | 2026-10-20 17:00:00 |\n单位说明：中心最低气压、中心最大风速按现有接口解释展示，单位尚待业务方核定。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。\n\n**最新的位置、强度和移动方向是什么**\n\n记录距查询时刻约2.1小时，接口标记记录可能滞后为否[资料1]。",
+      "answerability": "full",
+      "missing_information": [],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "current",
+          "requested_as_of": "2026-10-20T19:08:25.391429+08:00",
+          "as_of": "2026-10-20T19:08:25.391429+08:00",
+          "retrieved_at": "2026-10-20T19:00:16.770770+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.4,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.1,
+                      "lon": 129.1,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 127.2,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 21.2,
+                      "lon": 126,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.4,
+                      "lon": 124.9,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 24,
+                      "lon": 123.9,
+                      "maxSpeed": 42,
+                      "pressure": 955,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 27,
+                      "lon": 123.5,
+                      "maxSpeed": 35,
+                      "pressure": 970,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 12
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.2,
+                      "lon": 124.9,
+                      "maxSpeed": 30,
+                      "pressure": 980,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-25 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.1,
+                      "maxSpeed": 57,
+                      "pressure": 925,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.2,
+                      "lon": 128.7,
+                      "maxSpeed": 54,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 125.9,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 23.2,
+                      "lon": 123.8,
+                      "maxSpeed": 46,
+                      "pressure": 940,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 26.2,
+                      "lon": 122.3,
+                      "maxSpeed": 39,
+                      "pressure": 965,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.7,
+                      "lon": 124.2,
+                      "maxSpeed": 28,
+                      "pressure": 985,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-25 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 10
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 16.7,
+                "lon": 133.8,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 24,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 140,
+                  "nw": 130,
+                  "se": 130,
+                  "sw": 120
+                },
+                "radius12_quad": {
+                  "ne": 70,
+                  "nw": 70,
+                  "se": 70,
+                  "sw": 70
+                },
+                "radius7_quad": {
+                  "ne": 450,
+                  "nw": 320,
+                  "se": 320,
+                  "sw": 280
+                },
+                "time": "2026-10-20 17:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1599,
+          "prompt_tokens": 452,
+          "completion_tokens": 161,
+          "total_tokens": 613,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 1760,
+          "prompt_tokens": 10734,
+          "completion_tokens": 184,
+          "total_tokens": 10918,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 2048,
+          "prompt_tokens": 9645,
+          "completion_tokens": 276,
+          "total_tokens": 9921,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1191,
+          "prompt_tokens": 3596,
+          "completion_tokens": 10,
+          "total_tokens": 3606,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 3775,
+          "prompt_tokens": 4128,
+          "completion_tokens": 840,
+          "total_tokens": 4968,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:08:25.391429+08:00至2026-10-20T19:08:25.391429+08:00"
+        }
+      ],
+      "original_local_result_sha256": "d1dfc5af9a5254a80b60fa30af496ba7cf46305071c607920f388e3b8f5cdcd4"
+    },
+    {
+      "round": 2,
+      "run_id": "time_delivery_20261020_190814_f12e4bc2",
+      "id": "HISTORY",
+      "question": "截至2026年10月19日18时，活动台风接口记录中有几个台风？各台风最新的位置、强度和移动方向是什么？请注明快照取得时间和位置记录时间。",
+      "started_at": "2026-10-20T11:08:41.580821+00:00",
+      "completed_at": "2026-10-20T11:09:21.475692+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 39.895,
+      "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-19 18:00:00；接口快照取得：2026-10-19 12:40:12（北京时间）。\n\n**截至2026-10-19 18:00:00，历史快照的接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 本次接口查询 | 接口取得时刻 | 2026-10-19 12:40:12 [资料1] | — |\n| 蔷琵（接口标识202630） | 位置记录时刻 | 2026-10-19 11:00:00 [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定）（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 中心最低气压 | 915 hPa（单位尚未核定）（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n单位说明：中心最低气压、中心最大风速按现有接口解释展示，单位尚待业务方核定。\n这是截至所问时刻之前已保存的历史快照；没有用今天的接口数据回填。\n部分记录或缓存滞后；表中保留原记录时刻，不能据此认定为查询时点的实时状态。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。\n\n**截至2026年10月19日18时，活动台风接口记录中有几个台风**\n\n该记录是历史原始接口快照，只代表当时已保存的接口记录，不能认定为查询时刻的实时状态[资料1]。\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 强度 | 中心最大风速62 m/s（单位按现有接口解释，尚未核定）；风力等级17级；接口强度标记SuperTY；中心最低气压915 hPa（单位按现有接口解释，尚未核定） | 2026-10-19 11:00:00 | 各强度字段均来自同一记录时刻[资料1] |\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 移动方向 | WNW（西偏西北） | 2026-10-19 11:00:00 | 接口记录值[资料1] |\n\n**快照取得时间是什么**\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 快照取得时间 | 2026-10-19T12:40:12.039460+08:00 | — | 接口取得时刻[资料1] |\n\n**位置记录时间是什么**\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 位置 | 经度139、纬度14.3 | 2026-10-19 11:00:00 | 位置记录时刻即2026-10-19 11:00:00[资料1] |\n\n| 项目 | 接口记录值 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 强度 | 中心最大风速62 m/s（单位按现有接口解释，尚未核定）；风力等级17级；接口强度标记SuperTY；中心最低气压915 hPa（单位按现有接口解释，尚未核定） | 2026-10-19 11:00:00 | 各强度字段均来自同一记录时刻[资料1] |\n\n需要说明：位置记录时刻为2026-10-19 11:00:00，距查询截至时刻约7小时，记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态[资料1]。\n\n**待补齐：各台风最新的位置是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的台风中心经纬度、有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：各台风最新的强度是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：各台风最新的移动方向是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n部分内容的复核意见不一致，争议范围尚待核对，当前回答不作为完整结论。",
+      "answerability": "partial",
+      "missing_information": [
+        "各台风最新的位置是什么？：仍缺少台风中心经纬度、有效时段",
+        "各台风最新的强度是什么？：仍缺少有效时段",
+        "各台风最新的移动方向是什么？：仍缺少有效时段",
+        "部分内容的复核意见不一致，争议范围尚待核对，当前回答不作为完整结论。"
+      ],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "historical",
+          "requested_as_of": "2026-10-19T18:00:00+08:00",
+          "as_of": "2026-10-20T19:08:43.289991+08:00",
+          "retrieved_at": "2026-10-19T12:40:12.039460+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 15.4,
+                      "lon": 136.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-19 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 16.4,
+                      "lon": 134.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-20 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.5,
+                      "lon": 132.2,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-20 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 18.6,
+                      "lon": 129.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.9,
+                      "lon": 127.9,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 126.5,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.9,
+                      "lon": 124.5,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 25.8,
+                      "lon": 122.1,
+                      "maxSpeed": 40,
+                      "pressure": 960,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 15.7,
+                      "lon": 137,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-19 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 16.7,
+                      "lon": 134.7,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-20 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 18.6,
+                      "lon": 130.2,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 126.7,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22,
+                      "lon": 124.3,
+                      "maxSpeed": 49,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 24.2,
+                      "lon": 120.8,
+                      "maxSpeed": 31,
+                      "pressure": 980,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 14.3,
+                "lon": 139,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 22,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 120,
+                  "nw": 110,
+                  "se": 100,
+                  "sw": 100
+                },
+                "radius12_quad": {
+                  "ne": 60,
+                  "nw": 60,
+                  "se": 60,
+                  "sw": 60
+                },
+                "radius7_quad": {
+                  "ne": 350,
+                  "nw": 320,
+                  "se": 280,
+                  "sw": 280
+                },
+                "time": "2026-10-19 11:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1696,
+          "prompt_tokens": 468,
+          "completion_tokens": 188,
+          "total_tokens": 656,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 2387,
+          "prompt_tokens": 12438,
+          "completion_tokens": 347,
+          "total_tokens": 12785,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 3619,
+          "prompt_tokens": 13933,
+          "completion_tokens": 580,
+          "total_tokens": 14513,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1238,
+          "prompt_tokens": 5339,
+          "completion_tokens": 10,
+          "total_tokens": 5349,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 4999,
+          "prompt_tokens": 5716,
+          "completion_tokens": 1301,
+          "total_tokens": 7017,
+          "error_code": null
+        },
+        {
+          "stage": "facet_regenerate",
+          "latency_ms": 2818,
+          "prompt_tokens": 17443,
+          "completion_tokens": 366,
+          "total_tokens": 17809,
+          "error_code": null
+        },
+        {
+          "stage": "unknown",
+          "latency_ms": 1636,
+          "prompt_tokens": 10151,
+          "completion_tokens": 10,
+          "total_tokens": 10161,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 3980,
+          "prompt_tokens": 10583,
+          "completion_tokens": 956,
+          "total_tokens": 11539,
+          "error_code": null
+        },
+        {
+          "stage": "unknown",
+          "latency_ms": 2470,
+          "prompt_tokens": 15301,
+          "completion_tokens": 291,
+          "total_tokens": 15592,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:08:43.289991+08:00至2026-10-20T19:08:43.289991+08:00"
+        },
+        {
+          "citation_id": 2,
+          "title": "历史总结-2015-CHAN-HOM.txt",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "历史切片 0"
+        },
+        {
+          "citation_id": 3,
+          "title": "090608警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:9"
+        },
+        {
+          "citation_id": 4,
+          "title": "090614警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:9"
+        },
+        {
+          "citation_id": 5,
+          "title": "091005警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:8"
+        }
+      ],
+      "original_local_result_sha256": "59058620e4d90a202aeb3e1738f25f013209f40e9084eda950ced37364680fa0"
+    },
+    {
+      "round": 2,
+      "run_id": "time_delivery_20261020_190814_f12e4bc2",
+      "id": "MULTI",
+      "question": "今天活动台风有几个、分别叫什么？各台风最新中心最大风速、最低气压、移动方向和移动速度分别是多少？请同时写明查询时间与记录时间。",
+      "started_at": "2026-10-20T11:09:21.476865+00:00",
+      "completed_at": "2026-10-20T11:09:42.042043+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 20.565,
+      "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-20 19:09:23；接口快照取得：2026-10-20 19:00:16（北京时间）。\n\n**截至2026-10-20 19:09:23，接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 本次接口查询 | 本次查询截至时刻 | 2026-10-20 19:09:23 [资料1] | — |\n| 蔷琵（接口标识202630） | 位置记录时刻 | 2026-10-20 17:00:00 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动速度 | 24 km/h（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n单位说明：中心最大风速、移动速度按现有接口解释展示，单位尚待业务方核定。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。\n\n**今天活动台风有几个、分别叫什么**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 台风名称/标识 | 蔷琵（202630） | 2026-10-20 17:00:00 |[资料1] |\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n**各台风最低气压是多少**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最低气压 | 915 hPa（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n**各台风移动方向是什么**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n**各台风移动速度是多少**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n**查询时间与记录时间分别是什么**\n\n该台风各要素的记录时刻均为2026-10-20 17:00:00，距查询时刻约2.2小时[资料1]。\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n查询时间：本次查询截至时刻为2026-10-20T19:09:23.155122+08:00，接口取得时间为2026-10-20T19:00:16.770770+08:00[资料1]。\n\n记录时间：上述台风要素的记录时刻为2026-10-20 17:00:00[资料1]。\n\n本次回答尚未完整交付程序计算结果，数值结论暂不作为完整业务答复。",
+      "answerability": "partial",
+      "missing_information": [],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": "business_delivery_missing_typhoon_field:pressure",
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "current",
+          "requested_as_of": "2026-10-20T19:09:23.155122+08:00",
+          "as_of": "2026-10-20T19:09:23.155122+08:00",
+          "retrieved_at": "2026-10-20T19:00:16.770770+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.4,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.1,
+                      "lon": 129.1,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 127.2,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 21.2,
+                      "lon": 126,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.4,
+                      "lon": 124.9,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 24,
+                      "lon": 123.9,
+                      "maxSpeed": 42,
+                      "pressure": 955,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 27,
+                      "lon": 123.5,
+                      "maxSpeed": 35,
+                      "pressure": 970,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 12
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.2,
+                      "lon": 124.9,
+                      "maxSpeed": 30,
+                      "pressure": 980,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-25 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.1,
+                      "maxSpeed": 57,
+                      "pressure": 925,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.2,
+                      "lon": 128.7,
+                      "maxSpeed": 54,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 125.9,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 23.2,
+                      "lon": 123.8,
+                      "maxSpeed": 46,
+                      "pressure": 940,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 26.2,
+                      "lon": 122.3,
+                      "maxSpeed": 39,
+                      "pressure": 965,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.7,
+                      "lon": 124.2,
+                      "maxSpeed": 28,
+                      "pressure": 985,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-25 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 10
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 16.7,
+                "lon": 133.8,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 24,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 140,
+                  "nw": 130,
+                  "se": 130,
+                  "sw": 120
+                },
+                "radius12_quad": {
+                  "ne": 70,
+                  "nw": 70,
+                  "se": 70,
+                  "sw": 70
+                },
+                "radius7_quad": {
+                  "ne": 450,
+                  "nw": 320,
+                  "se": 320,
+                  "sw": 280
+                },
+                "time": "2026-10-20 17:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1666,
+          "prompt_tokens": 463,
+          "completion_tokens": 143,
+          "total_tokens": 606,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 2910,
+          "prompt_tokens": 19957,
+          "completion_tokens": 412,
+          "total_tokens": 20369,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 3428,
+          "prompt_tokens": 14246,
+          "completion_tokens": 631,
+          "total_tokens": 14877,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1016,
+          "prompt_tokens": 5371,
+          "completion_tokens": 10,
+          "total_tokens": 5381,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 5520,
+          "prompt_tokens": 6005,
+          "completion_tokens": 1545,
+          "total_tokens": 7550,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:09:23.155122+08:00至2026-10-20T19:09:23.155122+08:00"
+        }
+      ],
+      "original_local_result_sha256": "364c72bbe2159f023ff17c997939f4e921cbcec94639e5fe3a34c7313c575a18"
+    },
+    {
+      "round": 3,
+      "run_id": "time_delivery_20261020_191942_63a05cba",
+      "id": "TODAY",
+      "question": "截至2026年10月20日，现在有几个台风在活动？最新的位置、强度和移动方向是什么？",
+      "started_at": "2026-10-20T11:19:51.116335+00:00",
+      "completed_at": "2026-10-20T11:20:10.448165+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 19.332,
+      "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-20 19:19:52；接口快照取得：2026-10-20 19:19:54（北京时间）。\n\n**截至2026-10-20 19:19:52，接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 蔷琵（接口标识202630） | 中心位置 | 东经133.8°，北纬16.7° [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最低气压 | 915 hPa（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW [资料1] | 2026-10-20 17:00:00 |\n单位说明：中心最低气压、中心最大风速按现有接口解释展示，单位尚待业务方核定。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。",
+      "answerability": "full",
+      "missing_information": [],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "current",
+          "requested_as_of": "2026-10-20T19:19:52.915983+08:00",
+          "as_of": "2026-10-20T19:19:52.915983+08:00",
+          "retrieved_at": "2026-10-20T19:19:54.233680+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.4,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.1,
+                      "lon": 129.1,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 127.2,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 21.2,
+                      "lon": 126,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.4,
+                      "lon": 124.9,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 24,
+                      "lon": 123.9,
+                      "maxSpeed": 42,
+                      "pressure": 955,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 27,
+                      "lon": 123.5,
+                      "maxSpeed": 35,
+                      "pressure": 970,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 12
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.2,
+                      "lon": 124.9,
+                      "maxSpeed": 30,
+                      "pressure": 980,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-25 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.1,
+                      "maxSpeed": 57,
+                      "pressure": 925,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.2,
+                      "lon": 128.7,
+                      "maxSpeed": 54,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 125.9,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 23.2,
+                      "lon": 123.8,
+                      "maxSpeed": 46,
+                      "pressure": 940,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 26.2,
+                      "lon": 122.3,
+                      "maxSpeed": 39,
+                      "pressure": 965,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.7,
+                      "lon": 124.2,
+                      "maxSpeed": 28,
+                      "pressure": 985,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-25 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 10
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 16.7,
+                "lon": 133.8,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 24,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 140,
+                  "nw": 130,
+                  "se": 130,
+                  "sw": 120
+                },
+                "radius12_quad": {
+                  "ne": 70,
+                  "nw": 70,
+                  "se": 70,
+                  "sw": 70
+                },
+                "radius7_quad": {
+                  "ne": 450,
+                  "nw": 320,
+                  "se": 320,
+                  "sw": 280
+                },
+                "time": "2026-10-20 17:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1768,
+          "prompt_tokens": 452,
+          "completion_tokens": 170,
+          "total_tokens": 622,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 2423,
+          "prompt_tokens": 10737,
+          "completion_tokens": 180,
+          "total_tokens": 10917,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 1903,
+          "prompt_tokens": 9643,
+          "completion_tokens": 256,
+          "total_tokens": 9899,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1412,
+          "prompt_tokens": 3543,
+          "completion_tokens": 10,
+          "total_tokens": 3553,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 3455,
+          "prompt_tokens": 4025,
+          "completion_tokens": 735,
+          "total_tokens": 4760,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:19:52.915983+08:00至2026-10-20T19:19:52.915983+08:00"
+        }
+      ],
+      "original_local_result_sha256": "a9580420b082673cee7484237a367dcba977e36c824e53d178977f4fdf50eacd"
+    },
+    {
+      "round": 3,
+      "run_id": "time_delivery_20261020_191942_63a05cba",
+      "id": "HISTORY",
+      "question": "截至2026年10月19日18时，活动台风接口记录中有几个台风？各台风最新的位置、强度和移动方向是什么？请注明快照取得时间和位置记录时间。",
+      "started_at": "2026-10-20T11:20:10.448959+00:00",
+      "completed_at": "2026-10-20T11:20:48.914219+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 38.465,
+      "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-19 18:00:00；接口快照取得：2026-10-19 12:40:12（北京时间）。\n\n**截至2026-10-19 18:00:00，历史快照的接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 本次接口查询 | 接口取得时刻 | 2026-10-19 12:40:12 [资料1] | — |\n| 蔷琵（接口标识202630） | 位置记录时刻 | 2026-10-19 11:00:00 [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 中心位置 | 东经139°，北纬14.3°（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定）（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 中心最低气压 | 915 hPa（单位尚未核定）（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW（记录滞后，仅代表历史记录） [资料1] | 2026-10-19 11:00:00 |\n单位说明：中心最低气压、中心最大风速按现有接口解释展示，单位尚待业务方核定。\n这是截至所问时刻之前已保存的历史快照；没有用今天的接口数据回填。\n部分记录或缓存滞后；表中保留原记录时刻，不能据此认定为查询时点的实时状态。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。\n\n**截至2026年10月19日18时，活动台风接口记录中有几个台风**\n\n该记录为历史原始接口快照，只代表当时已保存的接口记录，不能认定为查询时刻的实时状态[资料1]。\n\n| 项目 | 记录内容 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 台风身份 | 蔷琵（接口标识202630） | 2026-10-19 11:00:00 | 记录或缓存可能滞后[资料1] |\n\n**快照取得时间是什么**\n\n快照取得时间（接口取得时间）为2026-10-19T12:40:12.039460+08:00[资料1]。\n\n**位置记录时间是什么**\n\n| 项目 | 记录内容 | 记录时刻 | 说明 |\n|---|---|---|---|\n| 中心位置 | 东经139度，北纬14.3度 | 2026-10-19 11:00:00 | 位置记录时刻即2026-10-19 11:00:00[资料1] |\n\n位置记录时间为2026-10-19 11:00:00，距查询截至时刻约7小时，记录可能滞后[资料1]。\n\n**待补齐：各台风最新的位置是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：各台风最新的强度是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。\n\n**待补齐：各台风最新的移动方向是什么**\n\n已取得：台风接口查询结果[资料1]；历史总结-2015-CHAN-HOM.txt[资料2]；090608警报.doc[资料3]；090614警报.doc[资料4]；091005警报.doc[资料5]\n\n还缺：2026-10-19T18:00:00+08:00的有效时段，尚未形成可核对的完整交付。\n\n补齐路径：补查对应主管部门正文、附件或带出处的原始记录。",
+      "answerability": "partial",
+      "missing_information": [
+        "各台风最新的位置是什么？：仍缺少有效时段",
+        "各台风最新的强度是什么？：仍缺少有效时段",
+        "各台风最新的移动方向是什么？：仍缺少有效时段"
+      ],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "historical",
+          "requested_as_of": "2026-10-19T18:00:00+08:00",
+          "as_of": "2026-10-20T19:20:12.157990+08:00",
+          "retrieved_at": "2026-10-19T12:40:12.039460+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 15.4,
+                      "lon": 136.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-19 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 16.4,
+                      "lon": 134.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-20 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.5,
+                      "lon": 132.2,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-20 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 18.6,
+                      "lon": 129.9,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.9,
+                      "lon": 127.9,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 126.5,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.9,
+                      "lon": 124.5,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 25.8,
+                      "lon": 122.1,
+                      "maxSpeed": 40,
+                      "pressure": 960,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 15.7,
+                      "lon": 137,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-19 23:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 16.7,
+                      "lon": 134.7,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-20 11:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 18.6,
+                      "lon": 130.2,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 126.7,
+                      "maxSpeed": 54,
+                      "pressure": 920,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22,
+                      "lon": 124.3,
+                      "maxSpeed": 49,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 24.2,
+                      "lon": 120.8,
+                      "maxSpeed": 31,
+                      "pressure": 980,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 08:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 14.3,
+                "lon": 139,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 22,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 120,
+                  "nw": 110,
+                  "se": 100,
+                  "sw": 100
+                },
+                "radius12_quad": {
+                  "ne": 60,
+                  "nw": 60,
+                  "se": 60,
+                  "sw": 60
+                },
+                "radius7_quad": {
+                  "ne": 350,
+                  "nw": 320,
+                  "se": 280,
+                  "sw": 280
+                },
+                "time": "2026-10-19 11:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1695,
+          "prompt_tokens": 468,
+          "completion_tokens": 188,
+          "total_tokens": 656,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 2718,
+          "prompt_tokens": 12547,
+          "completion_tokens": 354,
+          "total_tokens": 12901,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 3213,
+          "prompt_tokens": 14426,
+          "completion_tokens": 592,
+          "total_tokens": 15018,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1294,
+          "prompt_tokens": 5481,
+          "completion_tokens": 10,
+          "total_tokens": 5491,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 4695,
+          "prompt_tokens": 5918,
+          "completion_tokens": 1280,
+          "total_tokens": 7198,
+          "error_code": null
+        },
+        {
+          "stage": "facet_regenerate",
+          "latency_ms": 2295,
+          "prompt_tokens": 17967,
+          "completion_tokens": 381,
+          "total_tokens": 18348,
+          "error_code": null
+        },
+        {
+          "stage": "unknown",
+          "latency_ms": 2036,
+          "prompt_tokens": 10299,
+          "completion_tokens": 10,
+          "total_tokens": 10309,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 4471,
+          "prompt_tokens": 10722,
+          "completion_tokens": 1017,
+          "total_tokens": 11739,
+          "error_code": null
+        },
+        {
+          "stage": "unknown",
+          "latency_ms": 2616,
+          "prompt_tokens": 14882,
+          "completion_tokens": 214,
+          "total_tokens": 15096,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:20:12.157990+08:00至2026-10-20T19:20:12.157990+08:00"
+        },
+        {
+          "citation_id": 2,
+          "title": "历史总结-2015-CHAN-HOM.txt",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "历史切片 0"
+        },
+        {
+          "citation_id": 3,
+          "title": "090608警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:9"
+        },
+        {
+          "citation_id": 4,
+          "title": "090614警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:9"
+        },
+        {
+          "citation_id": 5,
+          "title": "091005警报.doc",
+          "source_type": null,
+          "review_label": "历史资料，未审定",
+          "locator": "paragraph:8"
+        }
+      ],
+      "original_local_result_sha256": "43e3b834ba492991ef1f6871cfd70b5469f609172929f30527b29db83de084f2"
+    },
+    {
+      "round": 3,
+      "run_id": "time_delivery_20261020_191942_63a05cba",
+      "id": "MULTI",
+      "question": "今天活动台风有几个、分别叫什么？各台风最新中心最大风速、最低气压、移动方向和移动速度分别是多少？请同时写明查询时间与记录时间。",
+      "started_at": "2026-10-20T11:20:48.915417+00:00",
+      "completed_at": "2026-10-20T11:21:13.782807+00:00",
+      "http_status": 200,
+      "elapsed_seconds": 24.867,
+      "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-20 19:20:50；接口快照取得：2026-10-20 19:20:16（北京时间）。\n\n**截至2026-10-20 19:20:50，接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 本次接口查询 | 本次查询截至时刻 | 2026-10-20 19:20:50 [资料1] | — |\n| 蔷琵（接口标识202630） | 位置记录时刻 | 2026-10-20 17:00:00 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最低气压 | 915 hPa（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动速度 | 24 km/h（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n单位说明：中心最低气压、中心最大风速、移动速度按现有接口解释展示，单位尚待业务方核定。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。\n\n**今天活动台风有几个、分别叫什么**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n上述风速、气压、移动速度的单位按现有接口解释，尚未核定[资料1]。\n\n**各台风最新最低气压是多少**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n**各台风最新移动方向是什么**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n上述风速、气压、移动速度的单位按现有接口解释，尚未核定[资料1]。\n\n**各台风最新移动速度是多少**\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n**查询时间与记录时间分别是什么**\n\n该台风各要素的记录时刻均为2026-10-20 17:00:00，距查询时刻约2.3小时，接口标记为未滞后[资料1]。\n\n| 项目 | 数值 | 记录时刻 | 来源 |\n|---|---|---|---|\n| 中心最大风速 | 62 m/s（单位按现有接口解释，尚未核定） | 2026-10-20 17:00:00 |[资料1] |\n\n查询时间：本次查询截至时刻为2026-10-20T19:20:50.519201+08:00，接口取得时间为2026-10-20T19:20:16.103896+08:00[资料1]。\n\n记录时间：台风身份、位置及各要素的记录时刻均为2026-10-20 17:00:00[资料1]。\n\n上述风速、气压、移动速度的单位按现有接口解释，尚未核定[资料1]。",
+      "answerability": "full",
+      "missing_information": [],
+      "validation": {
+        "computed_table_fallback": false,
+        "details": null,
+        "error": null
+      },
+      "business_validation_error": null,
+      "trial": false,
+      "business_state": "ready",
+      "tool_results": [
+        {
+          "kind": "typhoons",
+          "state": "ready",
+          "query_time_mode": "current",
+          "requested_as_of": "2026-10-20T19:20:50.519201+08:00",
+          "as_of": "2026-10-20T19:20:50.519201+08:00",
+          "retrieved_at": "2026-10-20T19:20:16.103896+08:00",
+          "snapshot_scope": "complete_api_response",
+          "selection_scope": "all_active",
+          "activity_list_count": 1,
+          "activity_list_count_verified": true,
+          "cache_stale": false,
+          "source_url": "https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons",
+          "storms": [
+            {
+              "nameCN": "蔷琵",
+              "typhoonID": 202630,
+              "latest_raw_point": {
+                "forecast": {
+                  "中国": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.4,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.1,
+                      "lon": 129.1,
+                      "maxSpeed": 65,
+                      "pressure": 910,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.4,
+                      "lon": 127.2,
+                      "maxSpeed": 62,
+                      "pressure": 915,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 21.2,
+                      "lon": 126,
+                      "maxSpeed": 58,
+                      "pressure": 925,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-22 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 22.4,
+                      "lon": 124.9,
+                      "maxSpeed": 50,
+                      "pressure": 940,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 15
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 24,
+                      "lon": 123.9,
+                      "maxSpeed": 42,
+                      "pressure": 955,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-23 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 27,
+                      "lon": 123.5,
+                      "maxSpeed": 35,
+                      "pressure": 970,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-24 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 12
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.2,
+                      "lon": 124.9,
+                      "maxSpeed": 30,
+                      "pressure": 980,
+                      "sourceID": "BABJ",
+                      "time": "2026-10-25 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 11
+                    }
+                  ],
+                  "日本": [
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 17.8,
+                      "lon": 131.1,
+                      "maxSpeed": 57,
+                      "pressure": 925,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 05:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 17
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 19.2,
+                      "lon": 128.7,
+                      "maxSpeed": 54,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-21 17:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "SuperTY",
+                      "lat": 20.9,
+                      "lon": 125.9,
+                      "maxSpeed": 51,
+                      "pressure": 935,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-22 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 16
+                    },
+                    {
+                      "intensity": "STY",
+                      "lat": 23.2,
+                      "lon": 123.8,
+                      "maxSpeed": 46,
+                      "pressure": 940,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-23 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 14
+                    },
+                    {
+                      "intensity": "TY",
+                      "lat": 26.2,
+                      "lon": 122.3,
+                      "maxSpeed": 39,
+                      "pressure": 965,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-24 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 13
+                    },
+                    {
+                      "intensity": "STS",
+                      "lat": 29.7,
+                      "lon": 124.2,
+                      "maxSpeed": 28,
+                      "pressure": 985,
+                      "sourceID": "RJTD",
+                      "time": "2026-10-25 14:00:00",
+                      "typhoonID": 202630,
+                      "windScale": 10
+                    }
+                  ]
+                },
+                "intensity": "SuperTY",
+                "isActive": 1,
+                "lat": 16.7,
+                "lon": 133.8,
+                "maxSpeed": 62,
+                "moveDirection": "WNW",
+                "moveSpeed": 24,
+                "pressure": 915,
+                "radius10_quad": {
+                  "ne": 140,
+                  "nw": 130,
+                  "se": 130,
+                  "sw": 120
+                },
+                "radius12_quad": {
+                  "ne": 70,
+                  "nw": 70,
+                  "se": 70,
+                  "sw": 70
+                },
+                "radius7_quad": {
+                  "ne": 450,
+                  "nw": 320,
+                  "se": 320,
+                  "sw": 280
+                },
+                "time": "2026-10-20 17:00:00",
+                "typhoonID": 202630,
+                "windScale": 17
+              }
+            }
+          ]
+        }
+      ],
+      "model_calls": [
+        {
+          "stage": "normalize",
+          "latency_ms": 1591,
+          "prompt_tokens": 463,
+          "completion_tokens": 149,
+          "total_tokens": 612,
+          "error_code": null
+        },
+        {
+          "stage": "crag_eval",
+          "latency_ms": 2871,
+          "prompt_tokens": 10775,
+          "completion_tokens": 401,
+          "total_tokens": 11176,
+          "error_code": null
+        },
+        {
+          "stage": "generate",
+          "latency_ms": 3302,
+          "prompt_tokens": 14296,
+          "completion_tokens": 566,
+          "total_tokens": 14862,
+          "error_code": null
+        },
+        {
+          "stage": "coverage_review",
+          "latency_ms": 1054,
+          "prompt_tokens": 5260,
+          "completion_tokens": 10,
+          "total_tokens": 5270,
+          "error_code": null
+        },
+        {
+          "stage": "typed_grounding",
+          "latency_ms": 5300,
+          "prompt_tokens": 5833,
+          "completion_tokens": 1467,
+          "total_tokens": 7300,
+          "error_code": null
+        }
+      ],
+      "sources": [
+        {
+          "citation_id": 1,
+          "title": "台风接口查询结果",
+          "source_type": "business_forecast",
+          "review_label": "官方台风接口记录 · 查询、快照与位置时刻分别列明",
+          "locator": "2026-10-20T19:20:50.519201+08:00至2026-10-20T19:20:50.519201+08:00"
+        }
+      ],
+      "original_local_result_sha256": "4c3331f2fc7b05b30a4c86e0b44d3b9c391ea7d5ce5ddab153eefa55eedd87ca"
+    }
+  ],
+  "offline_display_replay": {
+    "case_id": "MULTI",
+    "input_run": "time_delivery_20261020_191942_63a05cba",
+    "method": "deterministic_final_display_stage_replay",
+    "baseline_reproduction": "same final text after whitespace normalization",
+    "model_calls": 0,
+    "network_calls": 0,
+    "new_end_to_end_model_run": false,
+    "original_answer_sha256": "a936a60555f2c5cc42ccc5d05438970242cd92d8ff598e6e8c66594b1d86aed1",
+    "answer": "**台风接口查询结果**\n\n**接口数据**\n\n查询截至：2026-10-20 19:20:50；接口快照取得：2026-10-20 19:20:16（北京时间）。\n\n**截至2026-10-20 19:20:50，接口完整活动列表有1个台风。**[资料1]\n| 台风或查询对象 | 字段 | 接口记录值 | 记录时刻 |\n|---|---|---|---|\n| 本次接口查询 | 本次查询截至时刻 | 2026-10-20 19:20:50 [资料1] | — |\n| 蔷琵（接口标识202630） | 位置记录时刻 | 2026-10-20 17:00:00 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最大风速 | 62 m/s（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 风力等级 | 17 级 [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 接口强度标记 | SuperTY [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 中心最低气压 | 915 hPa（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动方向 | WNW [资料1] | 2026-10-20 17:00:00 |\n| 蔷琵（接口标识202630） | 移动速度 | 24 km/h（单位尚未核定） [资料1] | 2026-10-20 17:00:00 |\n单位说明：中心最低气压、中心最大风速、移动速度按现有接口解释展示，单位尚待业务方核定。\n数量仅指上述接口列表；中心记录与海况NC格网分别查询。\n\n**今天活动台风有几个、分别叫什么**\n\n上述风速、气压、移动速度的单位按现有接口解释，尚未核定[资料1]。\n\n**查询时间与记录时间分别是什么**\n\n该台风各要素的记录时刻均为2026-10-20 17:00:00，距查询时刻约2.3小时，接口标记为未滞后[资料1]。\n\n查询时间：本次查询截至时刻为2026-10-20T19:20:50.519201+08:00，接口取得时间为2026-10-20T19:20:16.103896+08:00[资料1]。\n\n记录时间：台风身份、位置及各要素的记录时刻均为2026-10-20 17:00:00[资料1]。",
+    "audit": [
+      {
+        "aid": "c3a1",
+        "facet_ids": [
+          "f1",
+          "f3",
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "replacement_aids": [
+          "tool_07739dd825c797268325"
+        ],
+        "rule": "exact_tool_row_already_in_data_card"
+      },
+      {
+        "aid": "c9a2",
+        "facet_ids": [
+          "f4",
+          "f6"
+        ],
+        "rule": "shared_explanation_display_once"
+      }
+    ],
+    "business_validation_error": null,
+    "grounding_and_completeness_changed": false,
+    "limitation": "Only the final display stage was rerun. The three stable real transactions precede this display-only patch."
+  }
+}

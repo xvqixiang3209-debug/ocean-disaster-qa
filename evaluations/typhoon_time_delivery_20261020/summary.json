@@ -1,0 +1,221 @@
+{
+  "version": "phase1.8.5-typhoon-time-delivery",
+  "baseline_commit": "6777f925fd2d4d2c747f3b65e4055ca4ce2eded0",
+  "created_at": "2026-10-20T19:30:13.435437+08:00",
+  "real_qa_transactions": 9,
+  "model_calls": 57,
+  "tokens": 507105,
+  "runs": [
+    {
+      "round": 1,
+      "run_id": "time_delivery_20261020_190006_41541fa2",
+      "attempted": 3,
+      "source_stability": {
+        "stable": true,
+        "added": [],
+        "removed": [],
+        "changed": [],
+        "before_files": 258,
+        "after_files": 258
+      },
+      "automatic_retries": 0,
+      "role": "diagnostic_intermediate",
+      "model_calls": 19,
+      "total_tokens": 167148
+    },
+    {
+      "round": 2,
+      "run_id": "time_delivery_20261020_190814_f12e4bc2",
+      "attempted": 3,
+      "source_stability": {
+        "stable": false,
+        "added": [],
+        "removed": [],
+        "changed": [
+          "forecast_runtime/answer_facts.py",
+          "marine_kb/facet_delivery.py",
+          "tests/test_protected_tool_scope.py"
+        ],
+        "before_files": 259,
+        "after_files": 259
+      },
+      "automatic_retries": 0,
+      "role": "diagnostic_intermediate",
+      "model_calls": 19,
+      "total_tokens": 174230
+    },
+    {
+      "round": 3,
+      "run_id": "time_delivery_20261020_191942_63a05cba",
+      "attempted": 3,
+      "source_stability": {
+        "stable": true,
+        "added": [],
+        "removed": [],
+        "changed": [],
+        "before_files": 259,
+        "after_files": 259
+      },
+      "automatic_retries": 0,
+      "role": "final_live_before_display_patch",
+      "model_calls": 19,
+      "total_tokens": 165727
+    }
+  ],
+  "tests": {
+    "local": {
+      "tests": 1694,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 1694,
+      "subtests_passed": 102,
+      "junit_sha256": "c4b87d4fd4bfcf3452ef8c1c2d719624d362fdfc1e557fc7f69bbc18bf4975e8",
+      "pytest_terminal_passed": 1694
+    },
+    "public": {
+      "tests": 1694,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 52,
+      "passed": 1642,
+      "subtests_passed": 102,
+      "junit_sha256": "60849c040cd3c82f3030ea84ad124b53123e9753bf4421d85a7706539afaf6b9",
+      "pytest_terminal_passed": 1642
+    }
+  },
+  "final_live_statuses": {
+    "TODAY": "full",
+    "HISTORY": "partial",
+    "MULTI": "full"
+  },
+  "post_recording_patch": "final display only, actual MULTI display input replayed offline; no new real model output",
+  "display_stage_replay": {
+    "case_id": "MULTI",
+    "input_run": "time_delivery_20261020_191942_63a05cba",
+    "method": "deterministic_final_display_stage_replay",
+    "baseline_reproduction": "same final text after whitespace normalization",
+    "model_calls": 0,
+    "network_calls": 0,
+    "new_end_to_end_model_run": false,
+    "original_answer_sha256": "a936a60555f2c5cc42ccc5d05438970242cd92d8ff598e6e8c66594b1d86aed1",
+    "audit": [
+      {
+        "aid": "c3a1",
+        "facet_ids": [
+          "f1",
+          "f3",
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "replacement_aids": [
+          "tool_07739dd825c797268325"
+        ],
+        "rule": "exact_tool_row_already_in_data_card"
+      },
+      {
+        "aid": "c9a2",
+        "facet_ids": [
+          "f4",
+          "f6"
+        ],
+        "rule": "shared_explanation_display_once"
+      }
+    ],
+    "business_validation_error": null,
+    "grounding_and_completeness_changed": false,
+    "limitation": "Only the final display stage was rerun. The three stable real transactions precede this display-only patch."
+  },
+  "preview": {
+    "url": "http://127.0.0.1:8772/",
+    "home_http": 200,
+    "status_http": 200,
+    "runtime_hashes_match": true,
+    "runtime_source_sha256": {
+      "data/domain/relation_lexicon.json": "f9746895a33bcaee4960b0ddb7a1fa4a9f2debc325d987b517026b0e73c2a9c8",
+      "data/public_references/manifest.json": "629c761eb50e28e744e1643e7d2645be288070a1c8063cbad865fb7b15aa4c94",
+      "data/public_references/ningbo_public_catastrophe_2024_2026.pdf": "f7f498c13d4dcd5819fc5a520be56b76a8f147f4a06a08eb8688a26bcb60d05e",
+      "data/public_references/ningbo_public_catastrophe_2024_2026_excerpt.txt": "4e5285620c4ee48d8d1c5ca39454757eae6a2f425ec9ee05766cf2de454660d1",
+      "forecast_runtime/activity_locations.py": "2f314c0bea810de49b06a76c851db402fc955e5afc16c9367ff37d94899171c8",
+      "forecast_runtime/activity_sources.py": "5c4394ec98f04d42d4fb15e6675bcdac36524b53afab4be711c2d7db11bc9de3",
+      "forecast_runtime/analogue.py": "ca26fde8c49436263d3bf0e85b78ad2dbb1004d3f86476596a2bdea49265fcba",
+      "forecast_runtime/answer_facts.py": "ce9a662d6104875649119d7902ff0a70508498a7c09aebf3708383226e3a6e8e",
+      "forecast_runtime/api.py": "da3886a32865e5cd8ffbd1f41911e20350b9a318d851b6868f2db9e86e080db2",
+      "forecast_runtime/historical_comparison.py": "8872584770f93ddce9e50c78e3e208139628535d1796d2c1a7d424d0394ffbff",
+      "forecast_runtime/impact_inputs.py": "8afd47f91c8ae39c7e37b0af48f360c4310297a714a09ed0c02a639785863c67",
+      "forecast_runtime/official_warnings.py": "df5d90debd4c6e7b7297483067e9dbf822d6d3029fb33812191e4e31fb976461",
+      "forecast_runtime/recreation.py": "9a33d3aed3793e63b44623840bcda4c9d513b1552944d64e614c2942423ced87",
+      "forecast_runtime/routing.py": "9d970cdd4ed1062121e3cf689bd19abe28a51a4bacee4ddfe1836dea910be627",
+      "forecast_runtime/service.py": "2fcb4a3edc4929b1d0797793b6a45758426e0f7e54f4a750cbfa9e77552f6054",
+      "forecast_runtime/storage.py": "dd16136da2b85fbdb52f4fc959e23120f40a0fb0b88bde80ef30cfa5de8e2c28",
+      "forecast_runtime/sync.py": "23a3fef8e28b852aa55e2ef5fb5e01b5bb98b0fc95ea6d0c8a9bc838fa6958e1",
+      "forecast_runtime/task_plan.py": "1eeff484cae4889020adbed01708b39530099a682ba8eee93f5343b51652d722",
+      "marine_kb/answer_completeness.py": "7a74e46e212652c4e4eb74c453958837020d05aae701344c06e30e223d6e3f27",
+      "marine_kb/answer_pipeline.py": "9e46577c41f767f611ceb1e8f11178879852f4ee69e1a1a1b2d96cbbe4fb169a",
+      "marine_kb/answer_trace.py": "a29a7147261d773990110b9043f899441d3b8ef9abd8fe0922668b5e3a155500",
+      "marine_kb/bootstrap.py": "f0bc89d84f0e35b0d2f56c8e2519d7f78dd54e47c4983ff5dbec2bab5ec90841",
+      "marine_kb/business_validation.py": "119080be6e972cec59828e3afbea6ea6644a1155e4f11275ca36a84661f72f88",
+      "marine_kb/chat_api.py": "3fb2313aa36ab2dead03dccf5ab5c97cc0e40c4796ff4e30b78bcca6241531c2",
+      "marine_kb/citation_repair.py": "a5b13c0255c7c55fa616326546f92f03f4219ae5e820827f729bd62ce738078c",
+      "marine_kb/claim_grounding.py": "b8c96cce018e0982e0c4a4a4621ed69b1bf569c1533246500612185cf01f4c1b",
+      "marine_kb/conversation.py": "e953d2843357305ef025898738059fd3b3c5c17970517a9759a8269a7b1e6da3",
+      "marine_kb/coverage_review.py": "d73eedf03e1cc9ca786509d90d86fb9b5f1fe30656d17acb41fa1c5041d05c96",
+      "marine_kb/crag.py": "68f8b3c4222089304a06b74e976d4a12c6bfc5b8099c86c8f43cd717c5e1fddd",
+      "marine_kb/evidence_applicability.py": "6b1643d09d0031645b89f8dffce0b5b08b172f518b9ced783fc9ff37846273e6",
+      "marine_kb/evidence_selection.py": "d90f42872c94b041738780b1e5feb8b6b246669f4edc481d07d79c78d9024251",
+      "marine_kb/evidence_units.py": "639e445dc648b36aacd48d72fdceda7523b0b30160d454d036127e174fde43ac",
+      "marine_kb/facet_contract.py": "1e5d3ac8dccf45b77251c13fbcde98341a2c2798afc2e80b4dace81a3bc8d7c9",
+      "marine_kb/facet_delivery.py": "1f3e0376c8720dc34a257d9620a4d23da44304cdc558f4705008445d005bc075",
+      "marine_kb/governance.py": "91e6734ea828d9380a1c7c14cb443e315267c3643dbd76c3193023026fec961c",
+      "marine_kb/grounded_calculations.py": "c68cd27a02ccb17bf15e916eead6079b27697d9df4e3de7f8694ae9070f8cd66",
+      "marine_kb/guidance.py": "43c735d84fccd5c8d88ed4612fafe9d9e4175eb91ead8cf178ddb73f64733567",
+      "marine_kb/history_statistics.py": "659cf05006a2057c8fd17e65071037b1801c4f650895a586ec24be6ed681a061",
+      "marine_kb/intent_lenses.py": "e9246b070b5bae3afd65b444b65ac8e981a3e9c1ca871ed48bbebf9a5b05a9b9",
+      "marine_kb/model_json.py": "b3d5521cf26702adfdcb4c620f5f1c1e736f3eca45994282c23af101163618e5",
+      "marine_kb/phase2.py": "86056c56eb9dd52dcce7cbde2b09b4b706ba490e4fd2847228851e76e37b81cc",
+      "marine_kb/protected_tool_delivery.py": "93480729163a23d1f48861c5b77b37af7cec5ae1cfcd26bc4469efddc85e6f71",
+      "marine_kb/public_cache.py": "af7f22875ed71c9b175eeac442d2ae855a6cd3af50c407f807a46780ad19b33a",
+      "marine_kb/public_service_intents.py": "c06c2c796861c771c437f5dc10bcd6a6e93c1598b4b7a3328230580327539c56",
+      "marine_kb/public_sources.py": "81af439f7909e0c9ea0cc3ad01530a2fc9462c684bc82ab24e2e7607a3bea103",
+      "marine_kb/qa.py": "4e491f0587693f3250bfcb8fb2751965dd2f0c6bf57f1ca5584718b98e3e8577",
+      "marine_kb/qa_observability.py": "6959eddbbc8e215f4a3bad5bc041a978af8ae1e2a2c4ba9eb67630d69007ce3d",
+      "marine_kb/quantities.py": "672016a0b4587d848e287725bd5335143f4e30bade99441734609aaede05cb7f",
+      "marine_kb/query_intents.py": "dcb21334047097f325fa26546420129144890307280a5d26c607ed301ba6ebaa",
+      "marine_kb/question_contract.py": "61f4b7ad96ae69bfbe097111f111a25d79a74be3fa7c581fd6b4e625944ee1b4",
+      "marine_kb/recovery.py": "05eb697243dfa063deb0cda73b95ef8b0e857bec38285571e5520435d1150839",
+      "marine_kb/relation_guard.py": "2f01c58d9f504f4666c7ada2076ea1b77a44d01c6a911522f76b79e7aa21f1bd",
+      "marine_kb/replay.py": "6670e781d4b5f83faae2589b7186a0ae00135c4ec3b15521c3c3be74669fd9b4",
+      "marine_kb/research_excerpt.py": "d4f78f5f8284b57deec42d41f5ae2874e18a2a2fdbdf2c5bbd6110d4bb66ac2f",
+      "marine_kb/retrieval.py": "7a63587b5eddba869bdd86c1a6f39a73e39c88e99e6c62cd1d69552037fde75b",
+      "marine_kb/scope_gate.py": "439c8fa58cacced7c5637966c67698d850325c874b202310104eb561c685b80f",
+      "marine_kb/typed_grounding.py": "a80ed8e8df94c41a648963783860c3d4b31a4dcebb4b8b11c1958c59e9698f98",
+      "marine_kb/version_claims.py": "fdcb3bfd2a611a8e9b44a158bd44e7b086e0d332007c4e4668906b1ecabd3947",
+      "marine_kb/web_supplement.py": "b79679be54986dd3ca42b11e527d87eab35fd07f80c296824f0a76912727add9",
+      "model_layer.py": "c4b36626bfbb4fca8d9af87107083db932d50e9ee10abbe15e51bf1096a38221",
+      "server.py": "b95daea34918d5a266a3633b8ee046e5750c3919c27d4ff16cf83b29caa43e3a",
+      "typhoon/web_reader.py": "fa1cee324a704cb42d4439de250859af57ac5f1f5fecc9c312edbc3ec80675f2",
+      "typhoon/web_search.py": "baf002eaf048fca0e4c5d92228972b002e2fea9e4b97777800ba75a315d645c1"
+    }
+  },
+  "private_raw_recordings_published": false,
+  "new_160_run": false,
+  "expert_acceptance": false,
+  "after_stable_live_source_changes": [
+    {
+      "path": "marine_kb/answer_pipeline.py",
+      "recorded_sha256": "3843d286c54cd4012cea1c2f48b8a55912190eaa0280e9bc7e714d265a5efafb",
+      "final_sha256": "9e46577c41f767f611ceb1e8f11178879852f4ee69e1a1a1b2d96cbbe4fb169a"
+    },
+    {
+      "path": "marine_kb/protected_tool_delivery.py",
+      "recorded_sha256": "0c694cb46eaef146f5cd9bd743b7ab5e73e71887fd3493c1c4fe462a57f8c693",
+      "final_sha256": "93480729163a23d1f48861c5b77b37af7cec5ae1cfcd26bc4469efddc85e6f71"
+    },
+    {
+      "path": "tests/test_protected_typhoon_pipeline.py",
+      "recorded_sha256": "4a960e1808529635588104b50687c1c666a2a9b69916825c01b7401bde4d7a8a",
+      "final_sha256": "b3e84720b85aff38da0c45f6c35fe63614f9eb9635297a58179a18a3ef66ae2c"
+    }
+  ]
+}

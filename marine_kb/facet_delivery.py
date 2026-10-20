@@ -3,6 +3,8 @@
 This is a publication floor, not a factual accuracy score.  It only consumes
 already grounded atoms and never promotes an unsupported source into a fact.
 """
+import hashlib
+import json
 import re
 
 
@@ -158,6 +160,189 @@ def _numeric_rows(facts, facet):
     return rows
 
 
+def _count_rows(facts, facet):
+    """A disclaimer about a count, speed or dated storm ID is not a count."""
+    rows = []
+    for atom in facts:
+        text = clean_text(atom.get('text', ''))
+        tool = _verified_tool_fact(atom)
+        if tool:
+            if (tool.get('kind') == 'typhoon_count' and tool.get('field') == 'count'
+                    and type(tool.get('value')) is int and tool['value'] >= 0
+                    and tool.get('count_scope') == 'complete_api_response'):
+                rows.append({'count': True, 'statistical_scope': not facet.get('places'),
+                             'as_of': bool(tool.get('as_of')), 'provenance': True})
+            # A scoped partial snapshot cannot masquerade as a complete list
+            # even though its sentence contains a small integer and a name.
+            continue
+        if atom.get('origin') == 'verified_tool_record':
+            continue
+        if re.search(r'完整.{0,12}(?:数量|名单|列表).{0,10}(?:未知|未取得|不全)|'
+                     r'(?:仅有|仅为|仅取得|仅保存|所选|部分).{0,12}(?:记录|列表|数量)|'
+                     r'不能.{0,10}(?:全部|总数|完整|当作)|数量.{0,8}(?:未知|缺测|未提供)', text):
+            continue
+        # An explicit counter and its list/object are required in this same
+        # grounded atom. Neither a scope_note nor '该数量...' can fill value.
+        match = re.search(r'(?<![\d.])(?:\d+|零|一|二|两|三|四|五|六|七|八|九|十|百)\s*(?:个|条|艘|家|处|座|人)(?!月)', text)
+        if not match or re.search(r'假如|假设有|例如有|举例', text):
+            continue
+        if facet.get('domain') == 'typhoon_dynamics':
+            obj = bool(re.search(r'台风|热带气旋|活动列表', text))
+            scope = bool(re.search(r'活动|列表|统计|范围|全球|西北太平洋|接口', text))
+        else:
+            objects = facet.get('objects') or []
+            obj = any(str(value) in text for value in objects) if objects else bool(re.search(
+                r'名单|清单|数量|统计|总数|记录|条目|预警|航次|船舶|渔船|人员|居民|人口|站点|岸段', text))
+            scope = obj
+        region = not facet.get('places') or _place_present(text, facet)
+        if obj:
+            rows.append({'count': True, 'statistical_scope': scope and region,
+                         'as_of': bool(_TIME.search(text)), 'provenance': _has_refs(atom)})
+    return rows
+
+
+def _verified_tool_fact(atom, *, allow_stale=False):
+    """Recognize only caller-injected, hash-bound tool facts, never model tags.
+
+    answer_pipeline strips model-origin trust fields before adding these
+    records from verified tool evidence. The digest detects later mutation;
+    it is not a replacement for that caller trust boundary.
+    """
+    fact = atom.get('tool_fact')
+    if (atom.get('origin') != 'verified_tool_record' or atom.get('type') != 'calculation'
+            or not _has_refs(atom) or not isinstance(fact, dict)):
+        return None
+    digest = hashlib.sha256(json.dumps(fact, ensure_ascii=False, sort_keys=True,
+                                       separators=(',', ':')).encode('utf8')).hexdigest()
+    if atom.get('tool_fact_hash') != digest or fact.get('status') not in ({'ready', 'stale'} if allow_stale else {'ready'}):
+        return None
+    return fact
+
+
+def _record_clock_fields(facts):
+    """Keep retrieval, query cutoff and observation timestamps independent."""
+    from .evidence_applicability import parse_date
+    fields = set()
+    for atom in facts:
+        tool = _verified_tool_fact(atom, allow_stale=True)
+        if tool:
+            for name, keys in (('snapshot_time', ('retrieved_at',)),
+                               ('query_time', ('requested_as_of', 'as_of')),
+                               ('record_time', ('record_time', 'observed_at', 'time'))):
+                if any(parse_date(tool.get(key)) is not None for key in keys):
+                    fields.add(name)
+            continue
+        if atom.get('origin') == 'verified_tool_record':
+            continue
+        text = clean_text(atom.get('text', ''))
+        # Match the time in the same named-clock clause; a different labelled
+        # clock elsewhere in the paragraph cannot satisfy this field.
+        for name, expression in (
+                ('snapshot_time', r'(?:快照|接口|数据)(?:的)?(?:取得|获取|抓取|下载)(?:的)?(?:时间|时刻)|快照(?:时间|时刻)'),
+                ('query_time', r'(?:查询|统计)(?:的)?(?:截至|截止)?(?:时间|时刻)|(?:截至|截止)(?:的)?(?:时间|时刻)'),
+                ('record_time', r'(?:记录|观测|更新)(?:的)?(?:时间|时刻)')):
+            for match in re.finditer(expression, text):
+                clause = re.split(r'[；;。\n]', text[match.end():], maxsplit=1)[0]
+                # Do not let the next named clock donate its value.
+                clause = re.split(r'(?:快照|接口)(?:取得|获取)|查询(?:截至|截止)?|(?:位置)?记录(?:时间|时刻)', clause, maxsplit=1)[0]
+                if parse_date(clause) is not None and _has_refs(atom):
+                    fields.add(name)
+    return fields
+
+
+def _storm_fields(facts, facet):
+    """Storm coordinates identify an object; an administrative city cannot.
+
+    Only substantive, grounded body atoms enter this floor. The caller binds
+    verified tool records to the same immutable facet before this stage.
+    Stale observations remain useful history but never certify today's state.
+    """
+    fields = set()
+    for atom in facts:
+        text = clean_text(atom.get('text', ''))
+        tool = _verified_tool_fact(atom, allow_stale=True)
+        if tool:
+            if (tool.get('kind') == 'typhoon_availability' and tool.get('field') == 'availability'
+                    and tool.get('value') == 'no_active_typhoons' and tool.get('count') == 0
+                    and tool.get('count_scope') == 'complete_api_response' and tool.get('as_of')
+                    and tool.get('status') == 'ready' and not tool.get('stale') and not tool.get('cache_stale')):
+                # An explicitly verified empty activity list has no storm
+                # centre or intensity to report. This is a complete negative
+                # result, unlike an unavailable list or a partial archive.
+                fields.update({'object_identity', 'position', 'intensity', 'max_wind_speed',
+                               'wind_scale', 'pressure', 'motion_direction', 'motion_speed',
+                               'valid_time', 'provenance'})
+                continue
+            # Each populated field is independently required; a pressure
+            # alone does not fill maxSpeed, windScale or general intensity.
+            if tool.get('kind') == 'typhoon_identity' and tool.get('field') == 'identity':
+                if tool.get('storm_id') or tool.get('storm_name'):
+                    fields.add('object_identity')
+            if tool.get('kind') == 'typhoon_field':
+                field = tool.get('source_field') or tool.get('field')
+                value = tool.get('value')
+                if field == 'position' and isinstance(value, dict) and all(
+                        isinstance(value.get(key), (int, float)) and not isinstance(value.get(key), bool)
+                        for key in ('lon', 'lat')):
+                    if -180 <= value['lon'] <= 180 and -90 <= value['lat'] <= 90:
+                        fields.add('position')
+                if field in {'maxSpeed', 'windScale', 'intensity'} and value is not None:
+                    fields.add('intensity')
+                if field == 'maxSpeed' and isinstance(value, (int, float)) and not isinstance(value, bool):
+                    fields.add('max_wind_speed')
+                if field == 'windScale' and isinstance(value, (int, float)) and not isinstance(value, bool):
+                    fields.add('wind_scale')
+                if field == 'pressure' and isinstance(value, (int, float)) and not isinstance(value, bool):
+                    fields.add('pressure')
+                if field in {'moveDirection', 'direction'} and value not in (None, ''):
+                    fields.add('motion_direction')
+                if field in {'moveSpeed', 'speed'} and value is not None:
+                    fields.add('motion_speed')
+            if tool.get('storm_id') or tool.get('storm_name'):
+                fields.add('object_identity')
+            current = bool(re.search(r'当前|现在|今天|今日|实时|最新|截至', _question(facet)))
+            recorded = bool(re.search(r'快照(?:中|内|里|所)|已保存.{0,6}(?:记录|快照)|记录的(?:位置|风速|强度)|当时记录', _question(facet)))
+            fresh = tool.get('status') == 'ready' and not tool.get('stale') and not tool.get('cache_stale')
+            if (tool.get('record_time') or tool.get('time')) and (fresh or recorded or not current):
+                fields.add('valid_time')
+            fields.add('provenance')
+            continue
+        # An injected non-ready tool record may be displayed as an older
+        # observation but cannot satisfy a requested current-status slot.
+        if atom.get('origin') == 'verified_tool_record':
+            continue
+        identity = bool(re.search(r'(?:台风|热带气旋)\s*[“「"][\u4e00-\u9fffA-Za-z]{2,16}[”」"]|'
+                                  r'(?:台风|接口|风暴|编号|标识).{0,12}(?<!\d)\d{4,6}(?!\d)|'
+                                  r'[“「"][^”」"]{2,20}[”」"]', text))
+        if identity:
+            fields.add('object_identity')
+        stale = bool(re.search(r'滞后|陈旧|不能.{0,15}(?:认定|确认|代表).{0,15}(?:当前|此刻|实况|实际位置)', text))
+        current = bool(re.search(r'当前|现在|今天|今日|实时|最新', _question(facet)))
+        # Historical queries may ask what the archived position was. A stale
+        # current query must expose its gap rather than marking current full.
+        if re.search(r'(?:东经|西经|经度).{0,12}[-+]?\d+(?:\.\d+)?', text) and re.search(
+                r'(?:北纬|南纬|纬度).{0,12}[-+]?\d+(?:\.\d+)?', text):
+            fields.add('position')
+        if re.search(r'(?:最大风速|中心风速|最大风力|风力).{0,15}\d+(?:\.\d+)?\s*(?:m/s|米/秒|级|kt|节)|'
+                     r'(?:强度|等级|intensity).{0,12}(?:热带低压|热带风暴|强热带风暴|超强台风|强台风|台风|SuperTY|TY|STS|TS|TD)', text, re.I):
+            fields.add('intensity')
+        if re.search(r'(?:最大风速|中心风速).{0,15}\d+(?:\.\d+)?\s*(?:m/s|米/秒|kt|节)', text, re.I):
+            fields.add('max_wind_speed')
+        if re.search(r'(?:最大风力|风力).{0,15}\d+(?:\.\d+)?\s*级', text):
+            fields.add('wind_scale')
+        if re.search(r'(?:中心)?气压.{0,12}\d+(?:\.\d+)?\s*(?:hPa|百帕)', text, re.I):
+            fields.add('pressure')
+        if re.search(r'(?:移动方向|移向|向|往).{0,10}(?:[东西南北]{1,4}(?:偏[东西南北])?|[NEWS]{1,3})', text, re.I):
+            fields.add('motion_direction')
+        if re.search(r'(?:移动速度|移速|速度).{0,12}\d+(?:\.\d+)?\s*(?:km/h|公里/小时|千米/小时|m/s|米/秒)', text, re.I):
+            fields.add('motion_speed')
+        if _TIME.search(text) and not (current and stale):
+            fields.add('valid_time')
+        if _has_refs(atom):
+            fields.add('provenance')
+    return fields
+
+
 def _facet(row):
     if hasattr(row, 'to_dict'):
         return row.to_dict()
@@ -194,8 +379,10 @@ def covered_outputs(facet, own, *, registry=None):
     body_identity = bool(_IDENTITY.search(text))
     steps = _action_count(facts)
     numeric = _numeric_rows(facts, facet)
+    counts = _count_rows(facts, facet)
+    storm_fields = _storm_fields(facts, facet) if facet.get('domain') == 'typhoon_dynamics' else set()
+    clock_fields = _record_clock_fields(facts)
     refs = any(_has_refs(atom) for atom in facts)
-    complete_tuple_required = all(field in required for field in ('value', 'unit', 'place', 'time', 'provenance'))
     channel_name, access_path = _channel_parts(facet, facts)
     for name in required:
         if name in {'verdict', 'distinction', 'comparison'}:
@@ -221,13 +408,27 @@ def covered_outputs(facet, own, *, registry=None):
                 ok = bool(_CONDITIONS.search(text))
         elif name in {'steps', 'method_steps', 'procedure'}:
             ok = steps >= 2
+        elif name in {'count', 'statistical_scope', 'as_of'}:
+            row = max(counts, key=lambda item: sum(item.values()), default={})
+            ok = bool(row.get(name))
+        elif name in {'object_identity', 'position', 'intensity', 'max_wind_speed', 'wind_scale', 'pressure', 'motion_direction', 'motion_speed'}:
+            ok = name in storm_fields
+        elif name in {'snapshot_time', 'record_time', 'query_time'}:
+            ok = name in clock_fields
         elif name in {'value', 'numeric_value', 'calculation', 'number'}:
             ok = bool(numeric)
         elif name in {'unit', 'place', 'time', 'valid_time', 'provenance'}:
             if kind in {'numeric_value', 'calculation'} and numeric:
-                ok = any(row.get('time' if name == 'valid_time' else name) for row in numeric)
-                if complete_tuple_required:
-                    ok = any(all(row.values()) for row in numeric)
+                # Select one value tuple; never borrow time or place from a
+                # different station's value. Keep the cells that are present
+                # when just one required cell (e.g. place) is missing.
+                row = max(numeric, key=lambda item: sum(item.values()))
+                ok = bool(row.get('time' if name == 'valid_time' else name))
+            elif name == 'valid_time' and facet.get('domain') == 'typhoon_dynamics':
+                ok = name in storm_fields
+            elif name == 'provenance' and facet.get('quantity_type') == 'count':
+                row = max(counts, key=lambda item: sum(item.values()), default={})
+                ok = bool(row.get(name))
             elif name == 'unit':
                 ok = False
             elif name == 'place':
@@ -349,6 +550,11 @@ _OUTPUT_LABELS = {
     'responsible_actor': '责任主体', 'conditions': '适用条件或判断边界', 'condition': '适用条件',
     'steps': '针对本对象的具体操作步骤', 'method_steps': '具体操作步骤', 'procedure': '办理程序',
     'value': '具体数值', 'numeric_value': '具体数值', 'calculation': '计算结果', 'number': '数量',
+    'count': '明确的数量', 'statistical_scope': '统计对象与范围', 'as_of': '数量的统计截止时刻',
+    'object_identity': '台风名称或编号', 'position': '台风中心经纬度', 'intensity': '台风强度或最大风速',
+    'max_wind_speed': '中心最大风速及单位', 'wind_scale': '中心最大风力级别', 'pressure': '中心气压及单位',
+    'snapshot_time': '接口快照取得时间', 'record_time': '位置或业务记录时间', 'query_time': '查询截止时间',
+    'motion_direction': '移动方向', 'motion_speed': '移动速度',
     'unit': '计量单位', 'place': '适用地点或海域', 'time': '对应日期和时刻', 'valid_time': '有效时段',
     'provenance': '原始出处', 'application_path': '申请或办理渠道', 'channel_name': '对应业务的具体渠道名称',
     'channel': '具体查询渠道', 'access_path': '可操作的访问入口', 'relation': '对象与风险之间的关系',

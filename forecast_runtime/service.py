@@ -1,5 +1,5 @@
 from __future__ import annotations
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta,timezone
 from pathlib import Path
 from threading import Thread,Event,local
 from functools import wraps
@@ -33,7 +33,7 @@ def contains_result(result,kind):
 
 def live_typhoon_question(question):
     if re.search(r'系统|智能体|你能|你的|数据来源|更新频率|多久更新',question):return False
-    dated=bool(re.search(r'截至|当前|现在|目前|本次|这次|未来|20\d{2}年\d{1,2}月',question))
+    dated=bool(re.search(r'截至|截止|当前|现在|目前|今天|今日|昨天|昨日|明天|明日|本次|这次|未来|20\d{2}年\d{1,2}月',question))
     if dated and re.search(r'(?:几个|多少个).{0,8}台风|台风.{0,8}(?:活动|几个|多少个)',question):return True
     if dated and '台风' in question and re.search(r'加强|增强|最强|峰值|各机构|影响|登陆|有依据|最坏|位置|强度|移动|路径',question):return True
     return bool(re.search(r'活动台风|台风.*(?:位置|移动方向|移动速度|几个|最新路径|预报路径|强度|中心|登陆|实况|动态)|(?:当前|现在|实时).*台风',question))
@@ -43,13 +43,24 @@ def snapshot_query(function):
     @wraps(function)
     def run(self,*args,**kwargs):
         clock_owner=function.__name__=='query' and not hasattr(self._local,'request_cutoff')
-        if clock_owner:self._local.request_cutoff=as_of_cutoff(args[0] if args else kwargs.get('question',''))
-        config_owner=getattr(self._local,'config',None) is None
-        if config_owner:self._local.config=self.config()
-        try:return function(self,*args,**kwargs)
+        config_owner=False
+        try:
+            if clock_owner:
+                # One clock belongs to the whole request, including recursive
+                # bundles. Cutoff parsing itself can fail; clean that context
+                # too, so a pooled worker cannot retain a previous request.
+                self._local.request_now=local_now()
+                self._local.request_time=query_time_context(
+                    args[0] if args else kwargs.get('question',''),now=self._local.request_now)
+                self._local.request_cutoff=self._local.request_time['cutoff']
+            config_owner=getattr(self._local,'config',None) is None
+            if config_owner:self._local.config=self.config()
+            return function(self,*args,**kwargs)
         finally:
             if config_owner:self._local.config=None
-            if clock_owner:del self._local.request_cutoff
+            if clock_owner:
+                for name in ('request_cutoff','request_time','request_now'):
+                    if hasattr(self._local,name):delattr(self._local,name)
     return run
 
 
@@ -125,12 +136,96 @@ def period(question='',date=None,hours=24,now=None):
     return start,start+timedelta(hours=int(hours)-1)
 
 
-def as_of_cutoff(question):
-    match=re.search(r'截至\s*((?:20\d{2})[-年/]\d{1,2}[-月/]\d{1,2}日?(?:\s*\d{1,2}(?:[:时点]\d{1,2}分?)?)?)',question)
-    if not match:return None
-    value=period(match[1])[0]
-    if not re.search(r'(?:日\s*|[T\s])\d{1,2}[:时点]',match[1]):value=value.replace(hour=23,minute=59,second=59)
-    return min(value,local_now())
+def _cutoff_clock(day,tail):
+    """Parse an explicit clock without dropping unsupported precision/zones."""
+    error='截至时刻格式不支持，请使用年月日时分秒或ISO时间；时区可写北京时间、Z、UTC或±HH:MM。'
+    remaining=tail.lstrip()
+    iso_marker=remaining.startswith(('T','t'))
+    if iso_marker:remaining=remaining[1:].lstrip()
+    token=re.match(r'(?P<h>\d{1,2})(?:(?:[:：](?P<m>\d{1,2})(?:[:：](?P<s>\d{1,2})(?:\.(?P<f>\d{1,6}))?)?)|'
+                   r'(?:[时点](?:(?P<cm>\d{1,2})(?:分|(?![\d秒])))?(?:(?P<cs>\d{1,2})(?:\.(?P<cf>\d{1,6}))?秒)?))?',remaining)
+    if not token:
+        if iso_marker or re.match(r'[:：时点分秒]|上午|下午|凌晨|UTC|GMT|Z\b|[+-]\d',remaining,re.I):raise ValueError(error)
+        return day,False
+    values=token.groupdict()
+    remaining=remaining[token.end():].lstrip()
+    zone=BEIJING
+    named_local=re.match(r'北京时间',remaining)
+    if named_local:
+        remaining=remaining[named_local.end():].lstrip()
+    else:
+        explicit_zone=re.match(r'(Z|(?:UTC|GMT)(?:[+-]\d{1,2}(?::?\d{2})?)?|[+-]\d{2}:?\d{2})(?![A-Za-z0-9])',remaining,re.I)
+        if explicit_zone:
+            raw=explicit_zone[1].upper();remaining=remaining[explicit_zone.end():].lstrip()
+            if raw in {'Z','UTC','GMT'}:zone=timezone.utc
+            else:
+                raw=re.sub(r'^(?:UTC|GMT)','',raw)
+                sign=-1 if raw.startswith('-') else 1
+                digits=raw[1:].replace(':','')
+                hours=int(digits) if len(digits)<=2 else int(digits[:-2])
+                minutes=0 if len(digits)<=2 else int(digits[-2:])
+                if minutes>59 or hours>23:raise ValueError(error)
+                zone=timezone(sign*timedelta(hours=hours,minutes=minutes))
+    # A partially consumed clock is an error, never a date-only live query.
+    if re.match(r'[\d:：.时点分秒+\-]|(?:UTC|GMT)|Z\b|[A-Za-z]{1,10}\b',remaining,re.I):raise ValueError(error)
+    try:
+        fraction=values['f'] or values['cf'] or ''
+        value=day.replace(hour=int(values['h']),minute=int(values['m'] or values['cm'] or 0),
+                          second=int(values['s'] or values['cs'] or 0),
+                          microsecond=int(fraction.ljust(6,'0') or 0),tzinfo=zone)
+    except ValueError as exc:
+        raise ValueError(error) from exc
+    return value.astimezone(BEIJING),True
+
+
+def query_time_context(question,now=None):
+    """Separate a current request from a genuinely historical/future cutoff.
+
+    A date without a time means end-of-day for an archive query. Today's
+    date, however, means the request instant; it must refresh the live source.
+    Keep the *requested* future instant separately from the effective cutoff
+    used to choose already-issued forecast products.
+    """
+    reference=now or local_now()
+    reference=reference.astimezone(BEIJING) if reference.tzinfo else reference.replace(tzinfo=BEIJING)
+    date_pattern=r'((?:20\d{2})[-年/]\d{1,2}[-月/]\d{1,2}日?)'
+    match=re.search(r'(?:截至|截止)\s*'+date_pattern,question)
+    if not match:
+        match=re.search(r'(?:截至|截止)\s*(\d{1,2}月\d{1,2}日)',question)
+    if not match and re.search(r'(?:截至|截止)\s*\d',question):
+        raise ValueError('截至日期格式不支持，请使用YYYY年MM月DD日、YYYY-MM-DD或MM月DD日。')
+    # A standalone dated activity/centre observation can omit "as of".
+    # Do not steal the valid date of a forecast or another marine subtask.
+    implicit_observation=(live_typhoon_question(question)
+            and not re.search(r'预报|预计|未来|登陆|增强|加强|影响|最坏|有依据',question)
+            and not any((wants_coastal(question),wants_grids(question),wants_tide(question))))
+    if not match and implicit_observation:
+        match=re.search(date_pattern,question)
+    relative=None
+    if match:
+        parts=list(map(int,re.findall(r'\d+',match[1])))
+        if len(parts)==2:parts.insert(0,reference.year)
+        day=datetime(*parts,tzinfo=BEIJING)
+        tail=question[match.end():]
+    else:
+        relative=re.search(r'(?:截至|截止)\s*(今天|今日|昨天|昨日|明天|明日)',question)
+        if not relative and implicit_observation:
+            relative=re.search(r'(今天|今日|昨天|昨日|明天|明日)',question)
+        if not relative:
+            return {'mode':'current','cutoff':None,'requested_at':None,'now':reference}
+        offset={'今天':0,'今日':0,'昨天':-1,'昨日':-1,'明天':1,'明日':1}[relative[1]]
+        day=(reference+timedelta(days=offset)).replace(hour=0,minute=0,second=0,microsecond=0)
+        tail=question[relative.end():]
+    value,explicit_clock=_cutoff_clock(day,tail)
+    if not explicit_clock:
+        value=(reference if value.date()==reference.date()
+               else value.replace(hour=23,minute=59,second=59))
+    mode='future' if value>reference else 'historical' if value<reference else 'current'
+    return {'mode':mode,'cutoff':min(value,reference),'requested_at':value,'now':reference}
+
+
+def as_of_cutoff(question,now=None):
+    return query_time_context(question,now=now)['cutoff']
 
 
 class ForecastRuntime:
@@ -176,6 +271,9 @@ class ForecastRuntime:
             '岸段公式作用于天文潮；缺少直接关联时'+('允许80公里内最近可用站近似（站点坐标精度有限）' if config['nearest_reference_enabled'] else '保留缺数，不替代站点')+'。',
             'MWD描述冲突，未解读为波向；缺测和无效阈值不补造；试算不构成正式预警。']
         return config
+
+    def request_now(self):
+        return getattr(self._local,'request_now',None) or local_now()
 
     def config_id(self):
         return hashlib.sha256(json.dumps(self.config(),sort_keys=True,ensure_ascii=False).encode()).hexdigest()[:16]
@@ -228,7 +326,7 @@ class ForecastRuntime:
     def base_result(self,start,end):
         return {'trial':True,'label':'试算结果（假设口径）','assumption_id':self.config_id(),
                 'swl_kind':self.config()['swl_kind'],
-                'assumptions':self.config()['notes'],'as_of':local_now().isoformat(),
+                'assumptions':self.config()['notes'],'as_of':self.request_now().isoformat(),
                 'start':start.isoformat(),'end':end.isoformat(),'timezone':'Asia/Shanghai'}
 
     def corrected(self,profile,value):
@@ -280,7 +378,7 @@ class ForecastRuntime:
         # Select one batch for the whole requested interval; do not splice runs.
         # Files can arrive before their named issue time. Use the latest issued
         # run, never let a future filename hide an already usable forecast.
-        cutoffs=[local_now()]+[t for t in (as_of,getattr(self._local,'request_cutoff',None)) if t is not None]
+        cutoffs=[self.request_now()]+[t for t in (as_of,getattr(self._local,'request_cutoff',None)) if t is not None]
         cutoff=min(cutoffs)
         issued=[r for r in records if datetime.fromisoformat(r['batch'])<=cutoff]
         records=sorted(issued,key=lambda r:(r['batch'],r['level']=='L5'),reverse=True)
@@ -343,12 +441,12 @@ class ForecastRuntime:
         zj_cities={'杭州市','嘉兴市','宁波市','舟山市','台州市','温州市'}
         selected=[c for c in self.coasts() if (not region or province and c.get('Prefecture') in zj_cities or any(region in str(c.get(k) or '') for k in ('name','Prefecture','County')))
                   and (coast_id is None or str(c['Id'])==str(coast_id))]
-        now=local_now();cutoff=min(now,getattr(self._local,'request_cutoff',None) or now)
+        now=self.request_now();cutoff=min(now,getattr(self._local,'request_cutoff',None) or now)
         acquisition=None
         if self.coastal_acquisition and self.config().get('sync_enabled'):
             acquisition=self.acquisition.ensure(start,end,products=['SWL'],as_of=getattr(self._local,'request_cutoff',None))
         available=[r for r in self.store.grids() if r['product']=='SWL' and r['valid_from']<=end.isoformat() and r['valid_to']>=start.isoformat()
-                   and datetime.fromisoformat(r['batch'])<=(getattr(self._local,'request_cutoff',None) or local_now())]
+                   and datetime.fromisoformat(r['batch'])<=cutoff]
         complete=[r for r in available if r['valid_from']<=start.isoformat() and r['valid_to']>=end.isoformat()]
         selected_batch=max((r['batch'] for r in (complete or available)),default=None)
         results=[]
@@ -439,7 +537,7 @@ class ForecastRuntime:
     def query(self,question,_only=None,_point=None):
         if _only=='warnings' or (_only is None and warning_question(question)):
             return self.warnings.query(question)
-        start,end=period(question)
+        start,end=period(question,now=getattr(self,'request_now',local_now)())
         if _only is None and re.search(r'影响研判报告|影响研判专报|台风影响报告',question) and re.search(r'浙江|舟山|宁波|台州|温州|嘉兴',question):
             cutoff=getattr(self._local,'request_cutoff',None)
             if cutoff and not re.search(r'未来|(?<!截)至|到|小时|日[0-9零一二三四五六七八九十]*时',question):
@@ -546,7 +644,22 @@ class ForecastRuntime:
         if (_only=='typhoons') or (_only is None and live):
             identities=re.findall(r'(?:接口标识|typhoonID|台风编号)\s*[:：]?\s*(\d{4,6})',question,re.I)
             cutoff=getattr(self._local,'request_cutoff',None)
-            past_cutoff=cutoff is not None and cutoff<local_now()
+            instant=self.request_now()
+            timing=getattr(self._local,'request_time',None) or query_time_context(question,now=instant)
+            mode=timing['mode']
+            if mode=='future':
+                return {**self.base_result(instant,instant),'trial':False,'label':'台风接口查询结果','kind':'typhoons','list':[],
+                        'state':'future_observation_unavailable','source':'浙江海洋预报网活动台风接口',
+                        'source_url':'https://zjocean.org.cn/mapi_web/index.php/typhoon/index/activetyphoons',
+                        'snapshot_scope':'missing','historical_snapshot':False,'cache_stale':False,
+                        'activity_count_verified':False,'activity_scope_warning_required':True,
+                        'activity_list_count':None,'activity_list_count_verified':False,
+                        'selection_scope':'named_subset' if identities else 'all_active',
+                        'request_question':question,'query_time_mode':mode,
+                        'requested_as_of':timing['requested_at'].isoformat(),
+                        'effective_as_of':instant.isoformat(),'requested_forecast':False,
+                        'missing_inputs':['所问时刻尚未到达，当前活动列表不能证明未来的台风数量、中心实况或移动状态；预报路径须另行查询并标明预报属性。']}
+            past_cutoff=mode=='historical'
             data=self.store.typhoon_snapshot(cutoff,identities,question,allow_partial=True) if past_cutoff else None
             if data is None and past_cutoff:
                 data={'list':[],'state':'historical_snapshot_unavailable','cache_stale':False,
@@ -556,26 +669,34 @@ class ForecastRuntime:
             elif data is None:
                 data=self.sync.typhoons()
                 data={**data,'snapshot_scope':'complete_api_response' if data.get('state')!='unavailable' else 'missing'}
+            activity_list_count=len(data.get('list',[]))
             named=[storm for storm in data.get('list',[]) if str(storm.get('nameCN') or '\0') in question
                    or str(storm.get('nameEN') or '\0').lower() in question.lower()]
             if identities:data={**data,'list':[storm for storm in data.get('list',[]) if str(storm.get('typhoonID')) in identities]}
             elif named:data={**data,'list':named}
-            incomplete=bool(cutoff and data.get('snapshot_scope')!='complete_api_response')
+            incomplete=data.get('snapshot_scope')!='complete_api_response'
             data={**data,'activity_count_verified':not incomplete,
-                  'activity_scope_warning_required':incomplete and not identities and not named}
-            cutoff=getattr(self._local,'request_cutoff',None)
-            if cutoff:
+                  'activity_scope_warning_required':incomplete and not identities and not named,
+                  'activity_list_count':activity_list_count if not incomplete else None,
+                  'activity_list_count_verified':not incomplete,
+                  'selection_scope':'named_subset' if identities or named else 'all_active',
+                  'request_question':question,'query_time_mode':mode}
+            point_cutoff=cutoff or instant
+            if point_cutoff:
                 selected=[]
                 for storm in data.get('list',[]):
                     points=[]
                     for p in storm.get('points') or []:
                         t=datetime.fromisoformat(p['time']);t=t.astimezone(BEIJING) if t.tzinfo else t.replace(tzinfo=BEIJING)
-                        if t<=cutoff:points.append(p)
-                    if points:selected.append({**storm,'points':points})
-                data={**data,'list':selected,'requested_as_of':cutoff.isoformat()}
+                        if t<=point_cutoff:points.append(p)
+                    # Membership of the API's activity list is independent of
+                    # whether a storm has a usable centre observation.
+                    selected.append({**storm,'points':points})
+                data={**data,'list':selected,'requested_as_of':point_cutoff.isoformat(),
+                      'effective_as_of':point_cutoff.isoformat()}
             state=data.get('state') or ('ready' if data['list'] else 'no_active_typhoons')
-            instant=local_now()
-            return {**self.base_result(instant,instant),'kind':'typhoons',**data,'state':state,'requested_forecast':bool(re.search(r'预报|路径|未来|预计|登陆|增强|加强|影响|最坏|有依据',question))}
+            return {**self.base_result(instant,instant),'trial':False,'label':'台风接口查询结果',
+                    'kind':'typhoons',**data,'state':state,'requested_forecast':bool(re.search(r'预报|路径|未来|预计|登陆|增强|加强|影响|最坏|有依据',question))}
         coast=next((c for c in sorted(self.coasts(),key=lambda c:len(c['name']),reverse=True) if c['name'] in question),None)
         named_location=resolve_location(self,question)
         if coast is None and named_location and named_location.get('coast_id'):
@@ -678,7 +799,7 @@ class ForecastRuntime:
                 ('查询对象：'+item['task_object']+'\n' if item.get('task_object') else '')+
                 (activity_summary(item,compact=True) if item.get('kind')=='activity' else self.summary(item)) for item in result['items'])
         if kind=='typhoons':
-            header='台风活动列表的接口查询结果。时间和单位按用户授权假设解释，不是未来24小时台风数量预测。\n'
+            header='台风活动列表的接口查询结果；数量对应接口活动列表，不是未来24小时台风数量预测。未核定的字段单位分别注明。\n'
             if result.get('historical_snapshot'):
                 header='截至查询时刻之前已保存的原始台风接口快照；仅代表快照中最新的记录，不能证明该时刻没有后续更新。'+header
             rows=[]
@@ -689,7 +810,7 @@ class ForecastRuntime:
                 latest_time=datetime.fromisoformat(latest['time'])
                 latest_time=latest_time.astimezone(BEIJING) if latest_time.tzinfo else latest_time.replace(tzinfo=BEIJING)
                 cutoff=result.get('requested_as_of')
-                reference=datetime.fromisoformat(cutoff) if cutoff else local_now()
+                reference=datetime.fromisoformat(cutoff or result['as_of'])
                 if not reference.tzinfo:reference=reference.replace(tzinfo=BEIJING)
                 age=max(0,(reference-latest_time).total_seconds()/3600)
                 rows.append({'name':storm.get('nameCN'),'id':storm.get('typhoonID'),'记录距查询时刻小时':round(age,1),'记录可能滞后':age>6,
@@ -697,12 +818,17 @@ class ForecastRuntime:
                 if result.get('requested_forecast'):
                     rows[-1]['预报路径按机构分别展示']={name:[{k:p.get(k) for k in ['time','lon','lat','maxSpeed','pressure']} for p in points[:8]]
                         for name,points in (latest.get('forecast') or {}).items() if isinstance(points,list)}
-            data={'活动台风数':len(result['list']) if result['state'] not in {'unavailable','historical_snapshot_unavailable'} and result.get('activity_count_verified',True) else None,
+            count_verified=result.get('activity_list_count_verified',result.get('activity_count_verified',True))
+            count=result.get('activity_list_count',len(result['list'])) if count_verified else None
+            data={'活动台风数':count,
+                  '已选对象数':len(result['list']),'查询对象范围':result.get('selection_scope','all_active'),
                   '已取得记录的台风数':len(rows),'活动列表完整性':'完整活动台风数量未知；仅保存部分历史记录或未保存历史列表' if result.get('activity_scope_warning_required') else '仅限请求对象' if result.get('activity_count_verified') is False else '接口活动列表',
                   '台风':rows,'风速假设单位':'m/s','移动速度假设单位':'km/h',
                   '取得时间':result.get('retrieved_at'),'历史原始接口快照':result.get('historical_snapshot',False),
                   '查询截至时刻':result.get('requested_as_of'),'快照范围':result.get('snapshot_scope'),
-                  '缓存过期':result['cache_stale'],'状态':result.get('state','ready')}
+                  '查询时间模式':result.get('query_time_mode'),
+                  '缓存过期':result['cache_stale'],'状态':result.get('state','ready'),
+                  '缺项说明':result.get('missing_inputs',[])}
         elif kind=='tide':
             datum_mode=self.config().get('station_tide_overrides',{}).get(result['site']['code'],self.config()['tide_datum'])
             datum_text={'raw_already_1985':'原值按1985基准使用，尚未核定','subtract_base85':'原值减站点偏移量，转换方向为假设','add_base85':'原值加站点偏移量，转换方向为假设'}[datum_mode]
@@ -742,6 +868,10 @@ class ForecastRuntime:
         return header+json.dumps(data,ensure_ascii=False,separators=(',',':'))
 
     def evidence_allowed(self,source):
+        if (source.get('metadata') or {}).get('official_typhoon_records') is True:
+            key=str(source.get('source_id') or '').removeprefix('forecast:')
+            record=self.store.state('evidence:'+key) if re.fullmatch('[a-f0-9]{24}',key) else None
+            return bool(record and record.get('kind')=='typhoons' and record.get('trial') is False)
         if (source.get('metadata') or {}).get('historical_statistics_records') is True:
             key=str(source.get('source_id') or '').removeprefix('forecast:')
             record=self.store.state('evidence:'+key) if re.fullmatch('[a-f0-9]{24}',key) else None
@@ -764,9 +894,10 @@ class ForecastRuntime:
         except (ValueError,KeyError,OSError) as exc:
             reason='数据文件暂不可读取，请查看数据同步状态。' if isinstance(exc,OSError) else '业务变量缺项，请查看数据状态。' if isinstance(exc,KeyError) else str(exc)[:300]
             result={**self.base_result(*period()),'kind':'clarification','state':'unavailable','reason':reason}
+        typhoon_only=result.get('kind')=='typhoons'
         text=self.summary(result)
         historical_only=result.get('kind')=='historical_comparison' and result.get('comparison_mode')=='historical_events'
-        if result.get('start') and result.get('end') and not historical_only:
+        if result.get('start') and result.get('end') and not historical_only and not typhoon_only:
             span=(datetime.fromisoformat(result['end'])-datetime.fromisoformat(result['start'])).total_seconds()/3600
             text+='\n查询起止时刻相差'+str(round(span,2))+'小时；若按逐时含首尾采样，目标为'+str(int(span)+1)+'个时刻；不据此声称缺测已补齐。'
         facts=delivery_facts(result)
@@ -787,11 +918,12 @@ class ForecastRuntime:
         static_only=result.get('kind')=='spatial'
         policy_only=result.get('kind')=='activity_rules'
         activity=contains_result(result,'activity')
-        hit={'source_id':'forecast:'+evidence_id,'chunk_id':evidence_id,'title':'历史海洋灾害分项指标比较' if historical_only else '涉海活动官方规则查询' if policy_only else '本地空间栅格查询结果' if static_only else '海洋活动预报与官方规则分析' if activity else '业务数据查询与假设试算结果',
+        hit={'source_id':'forecast:'+evidence_id,'chunk_id':evidence_id,'title':'台风接口查询结果' if typhoon_only else '历史海洋灾害分项指标比较' if historical_only else '涉海活动官方规则查询' if policy_only else '本地空间栅格查询结果' if static_only else '海洋活动预报与官方规则分析' if activity else '业务数据查询与假设试算结果',
              'filename':'空间栅格查询结果' if static_only else '业务数据查询结果',
              'locator':'；'.join(row['event'] for row in result.get('historical_periods',[])) if historical_only else result['start']+'至'+result['end'],
-             'category':'历史事件数据' if historical_only else '活动规则' if policy_only else '空间栅格数据' if static_only else '业务预报数据','status':'indexed' if static_only or policy_only or historical_only else 'provisional',
-             'text':text,'metadata':{'source_type':'business_forecast','external_allowed':True,'trial':not(static_only or policy_only or historical_only),
+              'category':'台风接口记录' if typhoon_only else '历史事件数据' if historical_only else '活动规则' if policy_only else '空间栅格数据' if static_only else '业务预报数据','status':'indexed' if static_only or policy_only or historical_only or typhoon_only else 'provisional',
+              'text':text,'metadata':{'source_type':'business_forecast','external_allowed':True,'trial':not(static_only or policy_only or historical_only or typhoon_only),
+                                    'official_typhoon_records':typhoon_only,
                                    'policy_basis':'official_catalog' if activity or policy_only else None,
                                    'assumption_id':self.config_id(),'retrieved_at':result['as_of'],
                                    'unit':'m/估计常住人口人数（按查询要素）' if static_only else 'cm/m（按要素）'},
@@ -801,6 +933,9 @@ class ForecastRuntime:
         meta.update(route='business_forecast',business_trial=True,business_query=result['kind'],
              business_state=result['state'],assumption_id=self.config_id(),business_evidence_id=evidence_id,
              business_instruction='业务数值只引用资料1的程序查询结果，不能从网页或模型记忆补数。直接给出数值、地点和时间，再解释；假设口径集中在末尾说明一次，避免配置编号和程序字段名，不说“本轮只回答”或“可确认的核心结论”等过程语。不得称为正式预警。缺数及不完整覆盖必须说明。只解释本轮查询范围，不能把SWL总潮位称为增水。岸段代表点试算不是验潮站实测或独立站点排名，参考站代码仅说明数据关联。活动台风数量是接口活动列表数量，不是未来24小时的预测；isActive=1表示接口标记活动。必须写最新位置记录时刻；记录滞后不代表此刻位置。不同机构路径分别解释，不混成一条。SSW按10米阵风试算，不转成平均风。岸段列表只给最高前5个时，说明完整结果可在本次数据链接和地图查看。网页仅补充相关解释，不逐份说明无关资料缺什么。')
+        if typhoon_only:
+            meta.update(business_trial=False,official_typhoon_records=True)
+            meta['business_instruction']='本题为台风接口记录查询。先明确回答已核对的活动数量和所选对象，再逐项给出用户所问的位置、强度和移动方向，保留各条记录时刻。数量是接口活动列表数量，不是未来数量预测；仅选某台风的记录数不能冒充全量活动数量。过期缓存、历史快照、部分名单与未到达的未来时刻分别说明，不把旧位置称为此刻位置。经纬度、气压、方向等原始字段按原值交付；风速和移动速度的未核单位只在相应字段旁注明，不把整份接口记录称为假设试算。没有请求的NC、SWL、天文潮及高程基准不作为本题缺项。只引用资料1中实际取得的记录和数量，网页可以补充解释，不能编造新记录。'
         if result.get('scope_note'):
             meta['marine_brief']=True
             meta['business_instruction']+='本题影响报告分为台风中心记录、海况预报和缺项。NC网格和岸段计算一律放入预报部分，不能放入实况部分；查询得到的数值不等于实测。'+result['scope_note']
@@ -841,11 +976,12 @@ class ForecastRuntime:
                 hits.extend([row for row in local if qa._can_send(row)][:1])
             web,web_meta=qa._fetch_public(question,meta.get('subquestions',[]),meta.get('dynamic_question',False),allow_web)
             hits.extend(select_evidence(question,web,meta.get('subquestions',[]),limit=4));meta.update(web_meta)
+        heading='**台风接口查询结果**' if typhoon_only else '**历史灾害指标比较**' if historical_only else '**官方规则查询**' if policy_only else '**空间数据查询**' if static_only else '**海洋活动分析**' if activity else '**试算结果（假设口径）**'
         if not qa.external_enabled or not qa.model_caller:
-            return {'answer':('**历史灾害指标比较**' if historical_only else '**官方规则查询**' if policy_only else '**空间数据查询**' if static_only else '**海洋活动分析**' if activity else '**试算结果（假设口径）**')+'\n'+text,'rag_sources':qa._public_sources(question,[hit]),'web_sources':[],
+            return {'answer':heading+'\n'+text,'rag_sources':qa._public_sources(question,[hit]),'web_sources':[],
                     'answer_meta':{**meta,'used_mode':'business_data'}}
         answer=qa._organized_answer(question,qa.model_name,hits,meta)
-        if answer['answer_meta'].get('used_mode')=='model_error' and any(f['kind'] in {'computed','analogue','marine_product','historical_metric','comparison'} for f in facts):
+        if answer['answer_meta'].get('used_mode')=='model_error' and (typhoon_only or any(f['kind'] in {'computed','analogue','marine_product','historical_metric','comparison'} or f['kind'].startswith('typhoon_') for f in facts)):
             return {'answer':delivery_table(result,facts,question=question),'rag_sources':qa._public_sources(question,[hit]),'web_sources':[],
                     'answer_meta':{**meta,'used_mode':'business_data','answerability':'partial','computed_table_fallback':True,
                                    'validation_error':answer['answer_meta'].get('validation_error'),
@@ -861,5 +997,5 @@ class ForecastRuntime:
                 answer['answer_meta']['answerability']='partial'
                 answer['answer_meta']['missing_information']=list(dict.fromkeys(
                     answer['answer_meta'].get('missing_information',[])+result['impact_assessment']['missing_inputs']))
-            answer['answer']=('**历史灾害指标比较**' if historical_only else '**官方规则查询**' if policy_only else '**空间数据查询**' if static_only else '**海洋活动分析**' if activity else '**试算结果（假设口径）**')+'\n\n'+answer['answer']
+            answer['answer']=heading+'\n\n'+answer['answer']
         return answer

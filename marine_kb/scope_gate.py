@@ -181,6 +181,30 @@ def _protected(gap_type, facets, text):
     return False
 
 
+def _nonrequired_dimension_gap(text, facets):
+    """Only remove a standalone dimension the contract explicitly excludes.
+
+    List-count units and municipal jurisdictions are not physical forecast
+    units or storm coordinates. Mixed missing inputs, actual requested region
+    filters, valid times, source provenance and numerical definitions remain.
+    """
+    if not facets or re.search(r'[；;\n]|高程|基准|SWL|潮位|增水|浪高|风速|经纬|经度|纬度|范围|统计口径|时刻|日期|时间|来源|出处|数值', text, re.I):
+        return False
+    unit_only = bool(re.fullmatch(r'(?:尚?未(?:明确|取得|提供|核实|核定)|尚?缺(?:少)?|没有)?\s*(?:该数量的|计数的|物理量的)?(?:物理量)?(?:计量)?单位(?:资料|信息|说明|定义|核定|确认|尚未核定|未核实)?[。\s]*', text))
+    place_only = bool(re.fullmatch(r'(?:尚?未(?:明确|取得|提供|核实)|尚?缺(?:少)?|没有)?\s*(?:适用|所问|具体)?(?:行政区|行政地点|行政区划|地点|地区)(?:资料|信息|说明|覆盖|尚未明确|未明确)?[。\s]*', text))
+    if not unit_only and not place_only:
+        return False
+    for facet in facets:
+        if facet.get('quantity_type') != 'count' and facet.get('domain') != 'typhoon_dynamics':
+            return False
+        required = set(facet.get('required_outputs') or [])
+        if unit_only and 'unit' in required:
+            return False
+        if place_only and ('place' in required or facet.get('places')):
+            return False
+    return True
+
+
 def gate(missing, contract, review_issues, *, subquestion_coverage=None):
     kept, removed, decisions, scope_notes, replacements = [], [], [], [], []
     flags = [str(i.get('text') or '') for i in review_issues or []
@@ -197,18 +221,20 @@ def gate(missing, contract, review_issues, *, subquestion_coverage=None):
             # and arbitrary interior substrings do not authorize an edit.
             flagged = any(span == value or span == part or
                           len(parts) == 1 and span in part for span in flags)
-            protected = any(_protected(typ, facets, part) for typ in types)
+            nonrequired_dimension = _nonrequired_dimension_gap(part, facets)
+            protected = not nonrequired_dimension and any(_protected(typ, facets, part) for typ in types)
             compatible = any(typ in facet.get('allowed_gaps', []) for facet in facets for typ in types)
             outside = _unasked_reason(part, facets)
             mixed = len(re.split(r'[；;\n]', part)) > 1
             can_remove = bool(facets and not protected and not mixed and
-                              'unclassified' not in types and (flagged or outside))
+                              (nonrequired_dimension or 'unclassified' not in types and (flagged or outside)))
             decision = {'text': part, 'parent_text': value,
                         'facet_ids': [f.get('fid') or f.get('id') for f in facets],
                         'gap_types': sorted(types), 'reviewed_exact_span': flagged,
                         'protected': protected, 'allowed_by_contract': compatible,
                         'action': 'remove_unasked_gap' if can_remove else 'keep',
-                        'rule': ('reviewer_exact_unasked_nonhard' if can_remove and flagged else
+                        'rule': ('dimension_not_required_by_typed_contract' if nonrequired_dimension else
+                                 'reviewer_exact_unasked_nonhard' if can_remove and flagged else
                                  'contract_scope_note' if can_remove else
                                  'hard_gap_protected' if protected else 'not_exactly_reviewed_or_ambiguous')}
             decisions.append(decision)
@@ -391,9 +417,11 @@ def reconcile_gap_resolution(missing, facets, accepted_atoms):
             else:
                 scope = facet.get('time') or {}
                 start, end = parse_date(scope.get('start')), parse_date(scope.get('end'), end=True)
-                if not start or not end or not facet.get('places'):
+                object_scoped = facet.get('quantity_type') == 'count' or facet.get('domain') == 'typhoon_dynamics'
+                if not start or not end or not facet.get('places') and not object_scoped:
                     reason = 'target_tuple_not_bounded'
                 else:
+                    bounded = []
                     for candidate in new:
                         if candidate.get('facet_ids') != [fid]:
                             continue
@@ -408,9 +436,17 @@ def reconcile_gap_resolution(missing, facets, accepted_atoms):
                         # substituted for the valid time of an outside value.
                         if any(stamp is None or not start <= stamp <= end for stamp in stamps):
                             continue
+                        bounded.append(candidate)
                         row = evaluate_delivery([facet], [candidate])[0]
                         if row['status'] == 'full':
                             proof.append(candidate['aid'])
+                    if object_scoped and not proof and bounded:
+                        # Multiple independently grounded fields from one
+                        # object-scoped subquestion may form its delivery;
+                        # physical forecasts still require a single tuple.
+                        row = evaluate_delivery([facet], bounded)[0]
+                        if row['status'] == 'full':
+                            proof = [candidate['aid'] for candidate in bounded]
                     reason = 'resolved_by_new_bound_grounded_tuple' if proof else 'new_recovery_tuple_incomplete'
         decision = {'text': text, 'facet_ids': [f.get('fid') for f in target],
                     'action': 'resolve' if proof else 'keep', 'rule': reason,

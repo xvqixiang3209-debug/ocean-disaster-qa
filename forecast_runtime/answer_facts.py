@@ -1,11 +1,195 @@
 """Bounded typed facts from actual tool outputs, never inferred from row IDs."""
 import math
+import re
+from datetime import datetime, timezone, timedelta
 
 PRODUCTS={'WAV':('有效波高','米'),'SSW':('阵风','m/s'),'SWL':('SWL水位分量','米'),
           'OCU':('格点流速','m/s'),'SST':('水温','℃'),'MWD':('平均波向原始角度','°')}
 
 def _finite(value):
     return type(value) in {int,float} and math.isfinite(value)
+
+
+def typhoon_requested_fields(question):
+    question=str(question or '')
+    requested=set()
+    if re.search(r'几个(?:正在)?(?:活动)?(?:的)?台风|多少(?:个)?(?:正在)?(?:活动)?(?:的)?台风|'
+                 r'(?:活动台风|台风|活动列表|活动清单)(?:的)?(?:数量|总数|数目)|'
+                 r'(?:活动台风|台风)(?:共有|一共|总共|共|有)?(?:多少个?|几个)(?:[？?。，,、]|分别|$)|'
+                 r'有哪些(?:正在)?(?:活动)?(?:的)?台风|哪些台风|全部活动台风',question):requested.add('count')
+    if re.search(r'(?:取得|获取|抓取|下载|快照).{0,8}(?:时间|时刻|几点)|(?:什么时候|何时|几点).{0,8}(?:取得|获取|抓取|快照)',question):requested.add('snapshot_time')
+    if re.search(r'查询.{0,6}(?:时间|时刻|几点)|(?:时间|时刻).{0,6}(?:本次|此次)查询',question):requested.add('query_time')
+    if re.search(r'(?:记录|位置)[^，,。；;？?、和与及]{0,8}(?:时间|时刻|几点|什么时候)',question):requested.add('record_time')
+    timing_only=bool(requested & {'snapshot_time','record_time','query_time'})
+    location_text=re.sub(r'(?:位置)?记录(?:是|的)?(?:时间|时刻|几点)|位置(?:记录|更新|对应的|对应|的|是)?(?:时间|时刻|几点)','',question) if timing_only else question
+    if re.search(r'位置|经纬|中心在哪|在哪里|哪儿',location_text):requested.add('position')
+    if re.search(r'强度|风速|风力|最大风|多强|几级',question):requested.add('intensity')
+    if re.search(r'气压',question):requested.add('pressure')
+    if re.search(r'方向|往哪|向哪',question):requested.add('direction')
+    if re.search(r'移速|移动速度|速度多|速度是|移动.{0,4}(?:快|慢)|时速',question):requested.add('speed')
+    if re.search(r'哪些|名称|名字|什么台风|哪个台风|叫什么|叫啥',question):requested.add('identity')
+    if not requested and question:requested={'identity','position','intensity','direction'}
+    if requested-{'count','snapshot_time','query_time'}:requested.add('identity')
+    return requested
+
+
+def _typhoon_requested(result):
+    explicit=result.get('requested_fields')
+    if isinstance(explicit,(list,tuple,set)):
+        return set(explicit)&{'count','identity','position','intensity','pressure','direction','speed','snapshot_time','record_time','query_time'}
+    return typhoon_requested_fields(result.get('request_question') or result.get('query_question') or result.get('question'))
+
+
+def _record_age(time,as_of):
+    try:
+        before=datetime.fromisoformat(str(time));after=datetime.fromisoformat(str(as_of))
+        zone=timezone(timedelta(hours=8))
+        if before.tzinfo is None:before=before.replace(tzinfo=zone)
+        if after.tzinfo is None:after=after.replace(tzinfo=zone)
+        return max(0,(after-before).total_seconds()/3600)
+    except (ValueError,TypeError):return None
+
+
+def typhoon_delivery_facts(result):
+    """Typed fields from an activity response, never inferred from NC or prose.
+
+    The original activity-list count is independent of a named-storm filter.
+    A verified empty list is zero; unavailable/partial lists remain unknown.
+    Each emitted field has enough scope for deterministic delivery and checks.
+    """
+    requested=_typhoon_requested(result)
+    as_of=result.get('requested_as_of') or result.get('as_of')
+    common={'citation':1,'required':True,'as_of':as_of,'requested_as_of':as_of,
+            'observed_at':None,'record_time':None,'status':'ready','retrieved_at':result.get('retrieved_at'),
+            'historical_snapshot':bool(result.get('historical_snapshot')),
+            'query_time_mode':result.get('query_time_mode'),'cache_stale':bool(result.get('cache_stale')),
+            'selection_scope':result.get('selection_scope','all_active')}
+    rows=result.get('list')
+    rows=rows if isinstance(rows,list) else []
+    healthy=result.get('state') in {'ready','no_active_typhoons'} and result.get('query_time_mode')!='future'
+    declared=result.get('activity_list_count')
+    verified=(healthy and result.get('activity_list_count_verified') is True and
+              result.get('snapshot_scope')=='complete_api_response' and
+              type(declared) is int and declared>=len(rows))
+    if not verified and healthy and result.get('selection_scope','all_active')=='all_active':
+        verified=(result.get('activity_count_verified') is True and
+                  result.get('snapshot_scope')=='complete_api_response' and isinstance(result.get('list'),list))
+        if verified:declared=len(rows)
+    facts=[]
+    for timing,label,value in [('snapshot_time','接口取得时刻',common['retrieved_at']),('query_time','本次查询截至时刻',as_of)]:
+        if timing in requested:
+            facts.append({**common,'kind':'typhoon_timing','field':timing,'metric':label,'value':value,
+                          'status':'ready' if value else 'missing'})
+    if 'count' in requested:
+        if verified:
+            stale_count=common['cache_stale'] or (common['historical_snapshot'] and common['query_time_mode']!='historical')
+            facts.append({**common,'kind':'typhoon_count','field':'count','metric':'接口完整活动列表数量',
+                          'value':declared,'unit':'个','count_scope':'complete_api_response',
+                          'stale':stale_count,'status':'stale' if stale_count else 'ready'})
+        else:
+            facts.append({**common,'kind':'typhoon_scope','field':'count','metric':'完整活动台风数量',
+                          'known_records':len(rows),'count_scope':'unverified','status':'missing',
+                          'reason':'未取得目标时刻完整的活动列表，不能把缺失数据或所选台风记录推定为全部数量'})
+    if not rows and requested-{'count','snapshot_time','query_time'}:
+        empty_all=verified and declared==0
+        facts.append({**common,'kind':'typhoon_availability','field':'availability','metric':'台风记录可用状态',
+                      'value':'no_active_typhoons' if empty_all else 'unknown',
+                      'count':0 if empty_all else None,
+                      'status':'ready' if empty_all else 'missing',
+                      'count_scope':'complete_api_response' if empty_all else 'unverified'})
+    if common['selection_scope']=='named_subset' and requested-{'count','snapshot_time','query_time'}:
+        facts.append({**common,'kind':'typhoon_selected_count','field':'identity','metric':'所选台风记录数',
+                      'value':len(rows),'unit':'个','count_scope':'named_subset'})
+    field_specs=(('position','position','中心位置',None),('intensity','maxSpeed','中心最大风速','m/s'),
+                 ('intensity','windScale','风力等级','级'),('intensity','intensity','接口强度标记',None),
+                 ('pressure','pressure','中心最低气压','hPa'),('direction','moveDirection','移动方向',None),
+                 ('speed','moveSpeed','移动速度','km/h'))
+    for storm in rows if requested-{'count','snapshot_time','query_time'} else []:
+        points=[p for p in storm.get('points') or [] if isinstance(p,dict) and p.get('time')]
+        latest=max(points,key=lambda p:str(p['time'])) if points else {}
+        name=str(storm.get('nameCN') or storm.get('nameEN') or '名称未提供')
+        identity=str(storm.get('typhoonID') or '')
+        label=name+('（接口标识'+identity+'）' if identity else '')
+        age=_record_age(latest.get('time'),as_of)
+        base={**common,'storm_id':identity,'storm_name':name,'location':label,'time':latest.get('time'),
+              'observed_at':latest.get('time'),'record_time':latest.get('time'),
+              'age_hours':round(age,1) if age is not None else None,
+              'stale':common['cache_stale'] or bool(age is not None and age>6)}
+        base['status']='stale' if base['stale'] else 'ready'
+        facts.append({**base,'kind':'typhoon_identity','field':'identity','metric':'台风身份','value':label})
+        if not latest:
+            for field in sorted(requested-{'count','identity','snapshot_time','query_time'}):
+                facts.append({**base,'kind':'typhoon_field_gap','field':field,'metric':{
+                    'position':'中心位置','intensity':'中心强度','pressure':'中心最低气压',
+                    'direction':'移动方向','speed':'移动速度','record_time':'位置记录时刻',
+                    'snapshot_time':'接口取得时刻','query_time':'本次查询截至时刻'}[field],'status':'missing','reason':'接口未提供带时刻的位置记录'})
+            continue
+        if 'record_time' in requested:
+            facts.append({**base,'kind':'typhoon_timing','field':'record_time','metric':'位置记录时刻','value':latest.get('time')})
+        for request_field,key,metric,unit in field_specs:
+            if request_field not in requested and not (key=='pressure' and 'intensity' in requested):continue
+            output_field=request_field if request_field in requested else 'intensity'
+            if key=='position':
+                value={'lon':latest.get('lon'),'lat':latest.get('lat')}
+                present=(all(_finite(value.get(k)) for k in ('lon','lat')) and
+                         -180<=value['lon']<=180 and -90<=value['lat']<=90)
+            else:
+                value=latest.get(key)
+                present=_finite(value) if key in {'maxSpeed','pressure','moveSpeed','windScale'} else bool(str(value or '').strip())
+            # Optional secondary strength labels cannot turn an absent wind into zero.
+            if not present and (key in {'windScale','intensity'} or (key=='pressure' and 'pressure' not in requested)):continue
+            if not present:
+                facts.append({**base,'kind':'typhoon_field_gap','field':output_field,'source_field':key,'metric':metric,'status':'missing',
+                              'reason':'该条接口记录未提供此字段'})
+                continue
+            facts.append({**base,'kind':'typhoon_field','field':output_field,'source_field':key,'metric':metric,'value':value,'unit':unit,
+                          'unit_assumed':key in {'maxSpeed','pressure','moveSpeed'} and not result.get(key+'_unit_verified',False)})
+    return facts
+
+
+def _typhoon_time_text(fact):
+    if fact.get('field')=='count' or fact['kind']=='typhoon_selected_count':
+        text='查询截至时刻：'+str(fact.get('as_of') or '未提供')
+    else:text='记录时刻：'+str(fact.get('time') or '未提供')+'；查询截至时刻：'+str(fact.get('as_of') or '未提供')
+    text+='；接口取得时间：'+str(fact.get('retrieved_at') or '未提供')
+    if fact.get('stale'):
+        text+='；记录或缓存可能滞后，仅代表上述记录或快照，不能认定为查询时刻的实时状态'
+    elif fact.get('historical_snapshot'):
+        text+='；历史原始快照，只代表当时已保存的接口记录'
+    return text
+
+
+def typhoon_fact_text(fact):
+    """One self-contained exact source line for field-level preservation."""
+    kind= fact['kind'];scope=_typhoon_time_text(fact)
+    if kind=='typhoon_count':
+        return f"接口完整活动列表有{fact['value']}个台风（活动台风数量）；{scope}；这是接口列表数量，不是未来台风数量预测。"
+    if kind=='typhoon_selected_count':
+        return f"所选台风记录数为{fact['value']}个；{scope}；所选对象记录数不等于全部活动台风数量。"
+    if kind=='typhoon_scope':
+        return f"完整活动台风数量未知；已取得{fact.get('known_records',0)}个台风记录；{scope}；仅为部分或所选记录，不能当作全部数量，也不能推定为0个。"
+    if kind=='typhoon_timing':
+        prefix=str(fact.get('location') or '台风接口')
+        return prefix+'，'+fact['metric']+'：'+str(fact.get('value') or '未提供')+'；'+scope+'。'
+    if kind=='typhoon_availability':
+        if fact['value']=='no_active_typhoons':
+            return '接口完整活动列表为空，活动台风数量为0个，因此没有可列示的活动台风位置、强度或移动方向；'+scope+'；该结论仅代表接口列表。'
+        return '未取得所问台风的可用接口记录，位置、强度和移动方向未知；'+scope+'；不能据此认定没有活动台风。'
+    identity=str(fact.get('location') or fact.get('storm_name') or '所选台风')
+    if kind=='typhoon_identity':return identity+'；台风身份来自接口记录；'+scope+'。'
+    if kind=='typhoon_field_gap':return identity+'，'+fact['metric']+'未提供；'+scope+'；'+fact['reason']+'，不按0处理。'
+    value=fact['value']
+    if fact['field']=='position':
+        lon=value['lon'];lat=value['lat']
+        content=('东经' if lon>=0 else '西经')+str(abs(lon))+'度，'+('北纬' if lat>=0 else '南纬')+str(abs(lat))+'度'
+    else:
+        directions={'N':'正北','NNE':'北偏东北','NE':'东北','ENE':'东偏东北','E':'正东','ESE':'东偏东南',
+                    'SE':'东南','SSE':'南偏东南','S':'正南','SSW':'南偏西南','SW':'西南','WSW':'西偏西南',
+                    'W':'正西','WNW':'西偏西北','NW':'西北','NNW':'北偏西北'}
+        content=str(value)+(('（'+directions[value]+'）') if fact['field']=='direction' and value in directions else '')
+        if fact.get('unit'):content+=' '+fact['unit']
+        if fact.get('unit_assumed'):content+='（单位按现有接口解释，尚未核定）'
+    return identity+'，'+fact['metric']+'：'+content+'；'+scope+'。'
 
 def delivery_facts(result):
     kind=result.get('kind')
@@ -16,15 +200,20 @@ def delivery_facts(result):
     if kind=='historical_comparison':
         from .historical_comparison import comparison_facts
         return comparison_facts(result)
-    if kind=='typhoons' and result.get('activity_scope_warning_required'):
+    typed_typhoon=kind=='typhoons' and bool(result.get('request_question') or result.get('requested_fields'))
+    if typed_typhoon:
+        facts=typhoon_delivery_facts(result)
+        # Institution forecasts retain the old independently bound rows below.
+        if not result.get('requested_forecast'):return facts
+    if kind=='typhoons' and result.get('activity_scope_warning_required') and not facts:
         facts.append({'kind':'typhoon_scope','citation':1,'required':True})
     if kind=='typhoons' and result.get('state')=='ready':
-        for storm in result.get('list',[])[:3]:
+        for storm in result.get('list',[]) if typed_typhoon else result.get('list',[])[:3]:
             points=storm.get('points') or []
             if not points:continue
             latest=max(points,key=lambda p:p['time'])
             name=str(storm.get('nameCN') or storm.get('nameEN') or '')+'（接口标识'+str(storm.get('typhoonID'))+'）'
-            if _finite(latest.get('maxSpeed')):
+            if _finite(latest.get('maxSpeed')) and not typed_typhoon:
                 facts.append({'kind':'computed','metric':'接口中心最大风速（单位按现有假设）','value':latest['maxSpeed'],
                     'unit':'m/s','location':name,'time':latest['time'],'citation':1,
                     'scope':'台风中心接口记录，不代表浙江局地风速','batch':latest['time']})
@@ -121,7 +310,9 @@ def fact_text(facts):
     """Preserve value-unit-place-time bindings in the retained source text."""
     lines=[]
     for fact in facts:
-        if fact['kind']=='comparison_scope':
+        if fact['kind'].startswith('typhoon_') and 'field' in fact:
+            lines.append(typhoon_fact_text(fact))
+        elif fact['kind']=='comparison_scope':
             lines.append('分项指标对照不代表总体灾损轻重；预报岸段峰值不是历史测站的同站差值，NC台风场景归属尚未核定。' if fact.get('forecast_benchmark') else '仅按相同指标分别比较历史事件，不按一个峰值推定总体灾害轻重或全国全历史排名。')
         elif fact['kind']=='comparison':
             direction='高' if fact['difference']>0 else '低' if fact['difference']<0 else '相同，差值为'
@@ -149,7 +340,9 @@ def fact_table(facts):
     rows=['| 地点 | 日期或发生时刻 | 指标 | 查询结果 |','|---|---|---|---|']
     extra=[]
     for f in facts:
-        if f['kind']=='impact_scope':
+        if f['kind'].startswith('typhoon_') and 'field' in f:
+            extra.append(typhoon_fact_text(f)+'[资料1]')
+        elif f['kind']=='impact_scope':
             extra.append('本次仅取得边界参考输入，未计算淹没范围、深度或转移人数；岸段代表点潮位不能代替本地淹没模型结果[资料1]。')
         elif f['kind']=='typhoon_scope':
             extra.append('完整活动台风数量未知：仅有部分历史记录或未保存截至时刻前的完整列表，不能据此统计全部活动数量[资料1]。')
@@ -183,6 +376,8 @@ def delivery_table(result,facts,question=''):
         prefix='本次仅取得边界参考输入，未计算淹没范围、深度或转移人数[资料1]。\n\n' if result.get('purpose')=='impact_boundary_inputs' else ''
         return prefix+'\n\n'.join(('**'+str(row.get('task_object') or '分项查询')+'**\n\n')+
                             delivery_table(row,delivery_facts(row),question) for row in result.get('items',[]))
+    if result.get('kind')=='typhoons' and any(f['kind'].startswith('typhoon_') and 'field' in f for f in facts):
+        return '\n\n'.join(['**台风接口查询结果**',fact_table(facts),'以上为台风接口列表与中心记录，不是NC海况格网，也不据此签发正式预警。'])
     if result.get('state') in {'needs_location','not_executed','unavailable','no_data'} and not facts:
         return str(result.get('reason') or '该项尚未取得有效数据。')+'[资料1]'
     if result.get('kind')=='historical_comparison':

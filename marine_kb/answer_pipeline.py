@@ -103,6 +103,8 @@ def withhold_disputed_atoms(result, issues):
             ambiguous.append({'issue':dict(issue),'reason':'answer_review_target_not_resolved'});continue
         candidates=[]
         for atom in result.get('accepted_atoms',[]):
+            if atom.get('origin') == 'verified_tool_record':
+                continue
             if atom.get('type') not in {'direct_fact','calculation','synthesis'}:continue
             alternatives=[compact(atom.get(key,'')) for key in ('text','display_text')]
             overlap=any(len(text)>=4 and (span in text or text in span) for text in alternatives)
@@ -142,6 +144,12 @@ def ground(qa,model,raw,evidence,facets):
         lambda payload:qa._call_model(model,PROMPT,json.dumps(payload,ensure_ascii=False)),budget=allow_recheck)
     review=conflict['review']
     result=apply_review(raw,review,evidence,facets,_decode)
+    # These fields are capabilities of server-verified tool records. They are
+    # never accepted from a draft or a model judgement, even if a future draft
+    # parser starts carrying additional JSON keys.
+    for atom in result.get('accepted_atoms',[]):
+        for key in ('origin','tool_fact','tool_fact_hash'):
+            atom.pop(key,None)
     result['judge_consistency']={k:v for k,v in conflict.items() if k!='review'}
     return enforce_relations(result,facets,evidence)
 
@@ -196,6 +204,9 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
     payload={**payload,'subquestions':facets,'facet_contract':facets,
              'typed_delivery_instruction':'逐个子问交付所需内容，允许依据多个有据前提作明确标注的比较归纳。文件身份与正文条款分开引用；元数据passage_id=0只支持身份。保留条件、否定、主语和适用对象。'}
     audit={'version':2,'facet_contract':facets,'scope_review':None,'scope_gate':None}
+    from .protected_tool_delivery import verified_tool_atoms,merge_tool_atoms,resolve_tool_gaps
+    tool_atoms,evidence,tool_audit=verified_tool_atoms(meta,evidence,facets)
+    audit['protected_tool_delivery']=tool_audit
     grounded=None
     raw=None
     try:
@@ -225,6 +236,8 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
         return {'answer':'DeepSeek暂时未能生成回答，请稍后重试。','rag_sources':[],'web_sources':[],
                 'answer_meta':{**meta,'used_mode':'model_error','route':'model_unavailable',
                                'phase2':audit,'generation_used':False}}
+
+    grounded=merge_tool_atoms(grounded,tool_atoms,facets)
 
     def permits(stage):
         budget=current_budget()
@@ -328,7 +341,17 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
         audit['gap_resolution']={k:v for k,v in resolution.items() if k!='accepted_atoms'}
         scope_missing=resolution['kept']
         grounded['accepted_atoms']=resolution['accepted_atoms']
+    grounded=merge_tool_atoms(grounded,tool_atoms,facets)
+    audit['tool_field_replacements']=grounded.get('tool_field_replacements',[])
     atoms=grounded['accepted_atoms']
+    tool_resolution=resolve_tool_gaps(scope_missing,facets,atoms)
+    scope_missing=tool_resolution['kept']
+    audit['tool_gap_resolution']=tool_resolution
+    resolved_text={row['text'] for row in tool_resolution['resolved']}
+    if resolved_text:
+        grounded['accepted_atoms']=[a for a in atoms if a.get('type')!='gap' or
+            str(a.get('text','')).strip('。；;') not in resolved_text]
+        atoms=grounded['accepted_atoms']
     rows=evaluate_delivery(facets,atoms)
     grounded.update(delivery=rows,publishable=publishable(facets,rows),
                     evidence_quotes=[ref for a in atoms for ref in a.get('evidence_quotes',[])])
@@ -338,7 +361,14 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
              for f,r in zip(facets,rows) if r['status']!='full']
     missing=list(dict.fromkeys(missing+[m for m in scope_missing if isinstance(m,str)]))
     complete=bool(rows) and all(r['status']=='full' for r in rows) and grounded['publishable'] and not missing
-    answer=render_answer(facets,atoms) if complete else render_with_gaps(facets,atoms,evidence,rows=rows)
+    from .protected_tool_delivery import tool_data_card,tool_display_atoms
+    data_card=tool_data_card(atoms)
+    if data_card:
+        display_atoms,display_audit=tool_display_atoms(atoms,facets)
+        audit['tool_display_deduplication']=display_audit
+    else:display_atoms=atoms
+    answer=render_answer(facets,display_atoms) if complete else render_with_gaps(facets,display_atoms,evidence,rows=rows)
+    if data_card:answer=data_card+('\n\n'+answer if answer else '')
     # A genuinely missing input remains visible even when all prose slots were
     # filled. Typed gap atoms may already display it; avoid repeating those.
     visible=[m for m in scope_missing if isinstance(m,str) and m and m not in answer]

@@ -48,6 +48,82 @@ _JURISDICTION = re.compile(
     r'现行|签发|由谁|谁(?:来|决定|批准)|金额|补助标准|赔偿标准|申请窗口|'
     r'开放|停运|停航|复航|回港|名单|准入|法定|强制')
 _LIVE = re.compile(r'当前|现在|今天|今日|明天|实时|截至|截止|20\d{2}[-年/]\d{1,2}[-月/]\d{1,2}')
+_COUNT = re.compile(r'几个|几条|几艘|几家|几处|几座|几人|多少(?:个|条|艘|家|处|座|人|台风|预警|记录|船舶|渔船|航次)|数量|总数|人数')
+
+
+def _requested_time_fields(text):
+    """Return requested clocks and mask them before detecting object fields.
+
+    A position-record *time* is metadata, not a request for its coordinates.
+    Keeping these tokens distinct also prevents retrieval time from filling a
+    requested observation timestamp or the user's query cutoff.
+    """
+    patterns = (
+        ('snapshot_time', r'(?:快照|接口|数据)(?:的)?(?:取得|获取|抓取|下载)(?:的)?(?:时间|时刻)|快照(?:时间|时刻)'),
+        ('record_time', r'(?:(?:最新)?(?:的)?(?:位置|观测|中心|业务数据|台风))?(?:的)?(?:记录|观测|更新)(?:的)?(?:时间|时刻)'),
+        ('query_time', r'(?:查询|统计)(?:的)?(?:截至|截止)?(?:时间|时刻)|(?:截至|截止)(?:的)?(?:时间|时刻)'),
+    )
+    fields, masked = [], text
+    for field, pattern in patterns:
+        if re.search(pattern, masked):
+            fields.append(field)
+            masked = re.sub(pattern, ' ', masked)
+    return fields, masked
+
+
+def delivery_shape(text, parent_text=''):
+    """Declare requested fields, not the values returned by a tool.
+
+    List counts have a statistical scope and an as-of time; metres and a
+    municipal jurisdiction are not their units. Storm motion instead has an
+    object identity and coordinates. Physical forecasts keep the strict
+    place/time/unit contract below.
+    """
+    if re.search(r'定义|含义|是什么意思|什么是|怎么计算|如何计算|计算公式|怎么算', text):
+        return {}
+    time_fields, field_text = _requested_time_fields(text)
+    contextual_storm = bool(re.search(r'台风|热带气旋', text + ' ' + parent_text))
+    count = bool(_COUNT.search(field_text))
+    if time_fields and not re.search(r'几个|几条|几艘|几家|几处|几座|几人|多少', field_text):
+        # "活动数量的统计截止时刻" asks for the clock, not a second
+        # count. Explicit "数量是多少，查询时间是什么" still asks both.
+        count = bool(re.search(r'(?:数量|总数|人数).{0,5}(?:是多少|几|多少)|(?:查询|给出|列出).{0,8}(?:数量|总数|人数)', field_text))
+    # "台风预警有几条" counts warnings, not tropical cyclones. The same
+    # distinction applies to storm-track points, stations and documents.
+    storm_count = count and not re.search(r'预警|警报|通报|预报产品|文件|台账|路径点|测站|站点|岸段|船|航次|'
+                                         r'(?:路径|轨迹|位置|观测)(?:点|记录)|(?:资料|文件|台风)记录(?:数|量)', field_text)
+    identity = bool(re.search(r'叫什么|分别叫|名称|名字|哪些台风|什么台风|哪个台风', field_text))
+    dynamic = contextual_storm and (bool(time_fields) or identity or bool(re.search(r'活动|实时|当前|现在|最新|位置|强度|移动|中心|风速|气压|几个|数量|总数', field_text)))
+    if not dynamic:
+        if time_fields:
+            return {'domain': 'record_metadata', 'quantity_type': 'metadata',
+                    'required_outputs': [*time_fields, 'provenance']}
+        return {'quantity_type': 'count'} if count else {}
+    fields = []
+    if storm_count:
+        fields += ['count', 'statistical_scope', 'as_of', 'provenance']
+    requested = []
+    if re.search(r'位置|在哪里|经纬度|中心(?:位于|在哪)', field_text):
+        requested.append('position')
+    if re.search(r'强度|几级|级别', field_text):
+        requested.append('intensity')
+    if re.search(r'最大风速|中心风速', field_text):
+        requested.append('max_wind_speed')
+    if re.search(r'风力', field_text):
+        requested.append('wind_scale')
+    if re.search(r'气压', field_text):
+        requested.append('pressure')
+    if re.search(r'移动方向|移动.{0,5}方向|移向|往哪|向哪里', field_text):
+        requested.append('motion_direction')
+    if re.search(r'移动速度|移速', field_text):
+        requested.append('motion_speed')
+    if requested:
+        fields += ['object_identity', *requested, 'valid_time', 'provenance']
+    elif identity:
+        fields += ['object_identity', 'provenance']
+    fields += [*time_fields, 'provenance'] if time_fields else []
+    return {'domain': 'typhoon_dynamics', 'quantity_type': 'count' if storm_count else 'dynamic' if requested or identity else 'metadata',
+            'required_outputs': list(dict.fromkeys(fields))} if fields else ({'quantity_type': 'count'} if count else {})
 
 
 def facet_contract_enabled():
@@ -183,13 +259,23 @@ def build_contract(question, planner_parts=None, history_state=None):
         time_scope = parent_time
         if explicit_time:
             time_scope = resolve_time_scope(text, state.get('time'))
+        shape = delivery_shape(text, question)
+        if shape.get('quantity_type') == 'count' and kind not in {'channel', 'procedure', 'distinction', 'definition', 'method_steps', 'calculation'}:
+            kind = 'numeric_value'
+        elif shape.get('domain') in {'typhoon_dynamics', 'record_metadata'} and shape.get('quantity_type') in {'dynamic', 'metadata'}:
+            kind = 'status_at_time'
+        outputs = shape.pop('required_outputs', None)
+        if shape.get('quantity_type') == 'count' and outputs is None and kind == 'numeric_value':
+            outputs = ['count', 'statistical_scope', 'as_of', 'provenance']
+        if shape.get('domain') == 'typhoon_dynamics':
+            role = 'statistical_scope' if shape.get('quantity_type') == 'count' else 'object_coordinates'
         key_material = {'text': re.sub(r'[\s？?。；;，,]', '', text), 'kind': kind,
                         'objects': object_names(text) or parent_objects, 'places': child_places}
         key = hashlib.sha1(json.dumps(key_material, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
         rows.append({'id': identity, 'fid': f'f{identity}', 'key': key, 'question': text, 'text': text,
                      'kind': kind, 'objects': key_material['objects'], 'places': list(child_places),
-                     'place_role': role, 'time': time_scope, 'required_outputs': list(_OUTPUTS[kind]),
-                     'allowed_gaps': allowed_gaps(kind, role, text), 'parent': part.get('parent')})
+                     'place_role': role, 'time': time_scope, 'required_outputs': outputs or list(_OUTPUTS[kind]),
+                     'allowed_gaps': allowed_gaps(kind, role, text), 'parent': part.get('parent'), **shape})
     return rows
 
 

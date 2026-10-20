@@ -456,7 +456,7 @@ def _safe_metadata(item: dict) -> dict:
     allowed = ("event_year", "publication_date", "issued_at", "effective_date", "expires_at", "edition_status", "source_type", "jurisdiction", "unit", "datum", "external_allowed", "review_scope", "review_method", "standard_id", "edition_current_verified", "retrieved_at", "read_status", "text_is_excerpt", "parent_url", "document_issued_at")
     allowed = allowed + ('trial', 'assumption_id', 'evidence_scope', 'policy_basis', 'applicability','primary_scope',
                          'derived_from_citation','calculation')
-    allowed=allowed+('read_from_cache','official_warning_records','historical_statistics_records','crag_channel','crag_passage_ids','crag_facets')
+    allowed=allowed+('read_from_cache','official_warning_records','official_typhoon_records','historical_statistics_records','crag_channel','crag_passage_ids','crag_facets')
     return {key: item.get("metadata", {}).get(key) for key in allowed if key in item.get("metadata", {})}
 
 
@@ -1056,6 +1056,9 @@ class MarineQuestionService:
                            excerpt=hit['text'][:500])
                 if hit.get('metadata',{}).get('historical_statistics_records'):
                     row.update(review_label='历史档案程序统计 · 样本定义与月份口径见结果',evidence_kind='历史台风档案月度样本计数')
+                if hit.get('metadata',{}).get('official_typhoon_records'):
+                    row.update(review_label='官方台风接口记录 · 查询、快照与位置时刻分别列明',
+                               evidence_kind='活动台风列表及中心动态接口记录')
             if hit.get('metadata', {}).get('source_type') == 'public_web':
                 row.update(source_type='public_web', url=hit['url'],
                            review_label='研究论文 · 方法参考，不代表本地实测或规定' if hit['metadata'].get('primary_scope')=='research_method' else '权威机构公开网页 · 正文节选' if hit['metadata'].get('read_status') == 'partial' or hit['metadata'].get('text_is_excerpt') else '权威机构公开网页 · 正文已提取',

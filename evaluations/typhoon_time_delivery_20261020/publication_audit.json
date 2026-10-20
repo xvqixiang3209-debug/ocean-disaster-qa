@@ -1,0 +1,8 @@
+{
+  "known_credential_exact_value_matches": 0,
+  "high_confidence_api_key_matches": 0,
+  "forbidden_payloads": 0,
+  "source_byte_comparisons": 400,
+  "source_byte_mismatches": [],
+  "limits": "Checks configured known values, high-confidence key patterns, file types/paths, and source bytes; not a formal security audit."
+}

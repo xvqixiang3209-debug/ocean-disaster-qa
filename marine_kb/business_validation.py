@@ -6,6 +6,114 @@ from decimal import Decimal
 from .quantities import normalize_grouped_numbers
 
 
+def _typhoon_time_present(text,value):
+    if not value:return True
+    try:t=datetime.fromisoformat(str(value))
+    except (ValueError,TypeError):return str(value) in text
+    day=rf'(?:{t.year}[-/]0?{t.month}[-/]0?{t.day}|(?:{t.year}年)?0?{t.month}月0?{t.day}日)'
+    clock=rf'(?:{t.hour:02d}:{t.minute:02d}|(?<!\d)0?{t.hour}(?:时|点)(?:0?{t.minute}分?)?)'
+    return bool(re.search(day,text) and re.search(clock,text))
+
+
+def _typhoon_lines(answer,fact):
+    citation=f"[资料{fact.get('citation',1)}]"
+    lines=[line for line in answer.splitlines() if citation in line]
+    if fact['kind'] in {'typhoon_field','typhoon_field_gap','typhoon_identity'} or (fact['kind']=='typhoon_timing' and fact.get('storm_id')):
+        identity=str(fact.get('storm_id') or fact.get('storm_name') or fact.get('location') or '')
+        lines=[line for line in lines if identity and identity in line]
+    return lines
+
+
+def _typhoon_count_claims(answer):
+    patterns=(r'(?:活动台风(?:数量|总数|数)?|(?:完整)?活动列表)(?:[^。；\n\d]{0,18})?(?P<value>\d+)\s*个',
+              r'(?:共有|共|现在有|目前有|当前有|有)\s*(?P<value>\d+)\s*个(?:正在)?(?:活动(?:的)?台风|台风(?:在活动|正在活动))')
+    for line in answer.splitlines():
+        if re.search(r'未知|无法(?:确认|确定|统计)|不能.{0,14}(?:推定|当作|统计)|不等于|不是.{0,10}数量预测',line):
+            # A historical/scoped assertion still has to report its actual count;
+            # this exemption only rejects neither zero nor future count disclaimers.
+            if not re.search(r'接口完整活动列表有\d+个台风',line):continue
+        for pattern in patterns:
+            for match in re.finditer(pattern,line):yield int(match['value']),line
+
+
+def _validate_typhoon_fact(answer,fact):
+    """Bind individual interface fields; other numbers cannot fill a missing one."""
+    kind=fact['kind'];lines=_typhoon_lines(answer,fact)
+    if kind=='typhoon_count':
+        good=[]
+        for line in lines:
+            if not re.search(r'活动台风|活动列表',line):continue
+            if not re.search(r'(?<!\d)'+str(fact['value'])+r'\s*个(?:台风)?',line):continue
+            if not re.search(r'接口|列表|清单|快照',line):continue
+            if not _typhoon_time_present(line,fact.get('as_of')):continue
+            good.append(line)
+        if not good:raise ValueError('business_delivery_missing_typhoon_count')
+        for value,line in _typhoon_count_claims(answer):
+            if value!=fact['value']:raise ValueError('business_delivery_typhoon_count_mismatch')
+        if fact.get('stale') and not any(re.search(r'快照|缓存|滞后|仅代表|历史记录',line) for line in good):
+            raise ValueError('business_delivery_typhoon_count_freshness_missing')
+        return
+    if kind=='typhoon_scope':
+        if not any(re.search(r'(?:完整)?活动台风数量.{0,12}(?:未知|不明|无法)|(?:无法|不能).{0,15}(?:统计|确认).{0,8}(?:完整|全部).{0,8}数量',line) for line in lines):
+            raise ValueError('business_delivery_unknown_typhoon_count_scope')
+        for _,line in _typhoon_count_claims(answer):
+            if not re.search(r'所选|部分|快照|历史|未知|无法|不能',line):
+                raise ValueError('business_delivery_unverified_active_typhoon_count')
+        return
+    if kind=='typhoon_selected_count':
+        if not any(re.search(r'所选|选中|指定',line) and re.search(r'(?<!\d)'+str(fact['value'])+r'\s*个',line) for line in lines):
+            raise ValueError('business_delivery_missing_typhoon_selected_count')
+        return
+    if kind=='typhoon_identity':
+        if not lines:raise ValueError('business_delivery_missing_typhoon_identity')
+        return
+    if kind=='typhoon_timing':
+        if not any(fact['metric'] in line and
+                   (_typhoon_time_present(line,fact.get('value')) if fact.get('value') else re.search(r'未提供|缺少|未知',line)) for line in lines):
+            raise ValueError('business_delivery_missing_typhoon_timing:'+str(fact.get('field')))
+        return
+    if kind=='typhoon_availability':
+        if fact.get('value')=='no_active_typhoons':
+            valid=any(re.search(r'完整活动列表.{0,6}为空|活动台风数量.{0,4}0个',line) and
+                      re.search(r'无|没有|不适用',line) and _typhoon_time_present(line,fact.get('as_of')) for line in lines)
+        else:
+            valid=any(re.search(r'未取得|未知|不可用|无法查询',line) and re.search(r'台风|位置|强度|方向',line) for line in lines)
+        if not valid:raise ValueError('business_delivery_missing_typhoon_availability')
+        return
+    metric=str(fact.get('metric') or '')
+    aliases={
+        'position':r'中心位置|位置|经度|纬度|东经|西经|北纬|南纬',
+        'maxSpeed':r'最大风速|中心风速|最大风', 'windScale':r'风力等级|风力|级',
+        'intensity':r'强度|等级', 'pressure':r'气压',
+        'moveDirection':r'移动方向|移向|方向', 'moveSpeed':r'移动速度|移速|速度'}
+    source_field=fact.get('source_field') or fact.get('field')
+    pattern=aliases.get(source_field,re.escape(metric))
+    matching=[line for line in lines if re.search(pattern,line)]
+    if kind=='typhoon_field_gap':
+        if not any(re.search(r'未提供|缺失|缺少|未取得|未知|无法',line) for line in matching):
+            raise ValueError('business_delivery_missing_typhoon_field_gap:'+str(source_field))
+        return
+    if kind!='typhoon_field':return
+    accepted=[]
+    for line in matching:
+        if not _typhoon_time_present(line,fact.get('time')):continue
+        if source_field=='position':
+            value=fact['value'];lon=value['lon'];lat=value['lat']
+            longitude=(r'东经' if lon>=0 else r'西经')+r'\s*'+_number(abs(lon))+r'\s*(?:度|°)?'
+            latitude=(r'北纬' if lat>=0 else r'南纬')+r'\s*'+_number(abs(lat))+r'\s*(?:度|°)?'
+            coordinate_pair=r'(?<![\d.])'+_number(lon)+r'\s*[,，/]\s*'+_number(lat)+r'(?![\d.])'
+            if not ((re.search(longitude,line) and re.search(latitude,line)) or re.search(coordinate_pair,line)):continue
+        elif isinstance(fact.get('value'),(int,float)):
+            if not re.search(r'(?<![\d.])'+_number(fact['value'])+r'(?![\d.])',line):continue
+            unit=fact.get('unit');units={'m/s':r'm/s|米/秒|米每秒','km/h':r'km/h|千米/小时|公里/小时|千米每小时','hPa':r'hPa|百帕','级':'级'}
+            if unit and not re.search(units.get(unit,re.escape(unit)),line,re.I):continue
+        elif str(fact.get('value')) not in line:continue
+        if fact.get('unit_assumed') and not re.search(r'单位.{0,28}(?:假设|尚未核定|未核定|暂按)|(?:假设|暂按).{0,10}(?:单位|m/s|km/h|hPa)',line):continue
+        if fact.get('stale') and not re.search(r'滞后|不是.{0,12}实时|不能.{0,16}(?:认定|代表).{0,16}(?:实时|此刻)|仅代表|历史记录',line):continue
+        accepted.append(line)
+    if not accepted:raise ValueError('business_delivery_missing_typhoon_field:'+str(source_field))
+
+
 def _computed_present(answer,fact):
     unit=fact.get('unit','')
     aliases={'cm':r'厘米|cm','m':r'米|m(?![A-Za-z/])','米':r'米|m(?![A-Za-z/])',
@@ -283,6 +391,9 @@ def validate_business_delivery(answer,meta,citations):
     for fact in facts:
         if fact.get('required') is False:continue
         kind=fact['kind']
+        if kind.startswith('typhoon_') and 'field' in fact:
+            _validate_typhoon_fact(line_text,fact)
+            continue
         if kind=='comparison_scope':
             if fact.get('forecast_benchmark'):
                 if not re.search(r'非同站|不是.{0,20}同站|不(?:能|可).{0,20}同站|不能.{0,20}(?:直接|等同).{0,20}(?:实测|测站)|采样.{0,20}不同|(?:岸段|代表点).{0,40}(?:测站|验潮站).{0,30}(?:不同|对照|比较)|(?:测站|验潮站).{0,40}(?:岸段|代表点).{0,30}(?:不同|对照|比较)',text):

@@ -1,5 +1,5 @@
 台风与海洋灾害专业问答 · 首期本地工作台
-Version: phase1.8.4-grounded-recovery
+Version: phase1.8.5-typhoon-time-delivery
 Release date: 20261020
 Baseline: 1.4.10 (20260916), preserved in a separate directory
 Platform: Windows native (no Docker)
@@ -13,3 +13,5 @@ QA maintenance 20261018: valid-time interval and as-of isolation, domain routing
 
 QA maintenance 20261020: full facet registry with target-only recovery; object-aware delivery floors; exact short navigation references; canonical health-source identity; quoted-clause preservation; constrained synthesis proof schema; post-rewrite scope lifecycle and review disagreement handling.
 Validation status: deterministic offline regressions on the prior 24 recordings; no new paid model answers in this maintenance run. This is not business acceptance or a new full-160 evaluation.
+QA maintenance 20261020 (typhoon delivery): frozen per-request clock; current/historical/future observation routing; complete-list versus selected-storm count; typed count/identity/position/intensity/motion data; exact-source protected tool handoff; field-level missing values and quantity-specific delivery contracts.
+Validation for this follow-up is recorded separately; the preceding 24-recording validation remains historical, not a new result for this version.

@@ -1,17 +1,18 @@
 # 台风与海洋灾害知识问答系统
 
-当前版本：`phase1.8.4-grounded-recovery`（2026-10-20）。本次在 Claude 的 P0–P6 方案上继续修复子问归属、局部恢复、额外缺项、证据与数值校验，保留 DeepSeek、本地知识库、官方联网检索、地图和业务计算模块。
+当前版本：`phase1.8.5-typhoon-time-delivery`（2026-10-20）。在Claude P0–P6实现上继续修复今日/历史时间路由、活动台风数量和中心动态字段交付，以及不同业务类型的缺项模板。保留DeepSeek、CRAG、本地资料、官方联网检索和地图连续问答。
 
-**Claude 从 [本轮复审任务](docs/CLAUDE_FOLLOWUP_20261020.md) 开始；可直接使用 [评审提问](docs/CLAUDE_PROMPT.md)。** 原方案针对 `a6113ee`，见 [NEXT_PHASE_PLAN_FOR_CODEX.md](docs/NEXT_PHASE_PLAN_FOR_CODEX.md)。本轮请只读审查并设计下一阶段方案。
+**Claude先读[本轮专项复审](docs/CLAUDE_TYPHOON_DELIVERY_REVIEW_20261020.md)，可复制[评审提问](docs/CLAUDE_PROMPT.md)。** 原P0–P6方案和上一轮未解决项保留于 [NEXT_PHASE_PLAN_FOR_CODEX.md](docs/NEXT_PHASE_PLAN_FOR_CODEX.md) 和 [CLAUDE_FOLLOWUP_20261020.md](docs/CLAUDE_FOLLOWUP_20261020.md)。
 
 ## 验证状态
 
-- 完整本机代码：1485 项测试、102 项子测试通过。
-- 公开代码快照：1433 项测试、102 项子测试通过；52 项依赖本机私有录制的测试跳过。
-- 用先前 24 次真实录制做确定性阶段复核，识别错误完整标签、来源识别和缺项生命周期问题。
-- 本轮新增付费模型问答为 0，未生成新版 24 次或 160 题端到端回答；没有完整正确率或专家验收结论。
+- 本机1694项测试、102项子测试通过；公开快照1642项通过、52项依赖私有录制的测试跳过、102项子测试通过。
+- 本轮9次真实问答，内部共57次模型调用。最后3题执行期间源码稳定：今日full、历史partial、多子问full；字段值与工具结果一致。
+- 历史partial保留旧记录及具体数值，只缺截止时点前进一步更新，未用今日数据回填。
+- 最后增加的展示去重补丁用实际录制做离线展示阶段回归，没有重新收费生成答案；原始回答与离线展示结果分别保存。
+- 没有本轮160题、24题或专家验收结果；程序full不能等同于单位已核定、事实全部正确或公众活动许可。
 
-详见 [验证记录](docs/SNAPSHOT_VALIDATION.md)、[离线证据目录](evaluations/p1_p6_followup_20261020/README.md)。`evaluations/previous_160.json` 和 `evaluations/public_services_12.json` 为 10 月 19 日历史结果。新增 `prior_live_24.json` 保存首轮 P1–P6 的旧实际回答，不代表本轮代码输出。HTTP 成功、引用存在、模型 full 标签和程序测试通过分别报告。
+详见[验证记录](docs/SNAPSHOT_VALIDATION.md)、[公开实测说明](evaluations/typhoon_time_delivery_20261020/README.md)、[完整实际回答与离线展示对照](evaluations/typhoon_time_delivery_20261020/REPORT.md)。旧24次和160题文件均保留原日期，不代表当前代码输出。
 
 ## 代码入口
 
@@ -47,11 +48,11 @@ $env:TYPHOON_WEB_READ_ENABLED = 'false'
 
 这些测试使用临时数据和模拟依赖。完整业务演示还需单独恢复数据库与业务文件，见 [数据资产说明](docs/DATA_ASSETS.md)。私有录制不包含在公开仓库，相关测试按设计跳过，不提供真实 API 回退。可独立运行 `tests/test_followup_pipeline_contracts.py`、`tests/test_followup_recovery_delivery.py`、`tests/test_scope_lifecycle_followup.py` 验证本轮通用机制。
 
-浏览空库界面时，保持以上外部调用开关关闭，设置 `APP_HOST=127.0.0.1`、`APP_PORT=8771`，再运行 `.\.venv\Scripts\python.exe .\production_server.py`。完整本地安装还提供 `start_p1_p6_followup.ps1`，沿用父目录 `.venv` 的既有目录结构。
+浏览空库界面时，保持以上外部调用开关关闭，设置 `APP_HOST=127.0.0.1`、`APP_PORT=8772`，再运行 `.\.venv\Scripts\python.exe .\production_server.py`。完整本地安装还提供 `start_p1_p6_followup.ps1`，沿用父目录 `.venv` 的既有目录结构。
 
 ## 仍待解决
 
-受限归纳如何在首次生成时稳定提供证明、不同阶段模型审查的分歧如何裁决、通用完整交付如何超越关键词规则，仍需继续评审和新的真实模型验证。旧记录中 22 个归纳未提供证明、1 个审查记录因片段边界变化不能复用、17 次正文哈希未匹配均如实保留。
+父级对象继承造成的多子问归属过宽、跨类型工具字段交付如何扩展、受限归纳如何在首次生成时稳定提供证明、不同阶段模型审查的分歧如何裁决、通用完整交付如何超越关键词规则，仍需继续评审和新的真实模型验证。旧记录中 22 个归纳未提供证明、1 个审查记录因片段边界变化不能复用、17 次正文哈希未匹配均如实保留。
 
 SWL、MWD、L2/L5 等业务定义仍待数据方回复；时间重合不能证明 NC 由某个台风造成。地形和人口筛查不等于精细淹没或人员转移计算。
 

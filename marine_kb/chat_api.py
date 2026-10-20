@@ -41,7 +41,7 @@ def create_chat_blueprint(qa, typhoon_components=None):
                      'data/public_references/manifest.json','data/public_references/ningbo_public_catastrophe_2024_2026.pdf',
                      'data/public_references/ningbo_public_catastrophe_2024_2026_excerpt.txt')
     tracked=tracked+tuple('marine_kb/'+name+'.py' for name in ('phase2','facet_contract','scope_gate',
-        'evidence_units','typed_grounding','facet_delivery','recovery','relation_guard','answer_pipeline'))
+        'evidence_units','typed_grounding','facet_delivery','recovery','relation_guard','answer_pipeline','protected_tool_delivery'))
     tracked=tracked+('data/domain/relation_lexicon.json',)
     build={'version':(root/'VERSION.txt').read_text(encoding='utf-8').split('Version: ',1)[-1].splitlines()[0],
            'runtime_source_sha256':{name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in tracked}}
