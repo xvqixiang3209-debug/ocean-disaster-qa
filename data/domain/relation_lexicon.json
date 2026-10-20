@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "purpose": "仅检测关系混淆，不作为回答事实或诊疗建议的证据",
+  "relations": [
+    {
+      "key": "dengue",
+      "disease": "登革热",
+      "aliases": [
+        "登革热",
+        "登革出血热"
+      ],
+      "route": "mosquito",
+      "enabled": true,
+      "source_url": "https://www.chinacdc.cn/jkts/202605/t20260509_1835669.html",
+      "source_title": "2026年5月健康风险提示",
+      "checked_at": "2026-10-20",
+      "review_method": "官方正文逐段核对；非专家医疗审定",
+      "excerpt": "登革热由登革热病毒引起，经伊蚊叮咬传播。",
+      "excerpt_sha256": "db836e68471bb6f83322a083d00fa8cb6e85b6788baca943c609f1769ba7485a",
+      "checked_by": "Codex：核对官方正文，未作医疗专家审定"
+    },
+    {
+      "key": "chikungunya",
+      "disease": "基孔肯雅热",
+      "aliases": [
+        "基孔肯雅热"
+      ],
+      "route": "mosquito",
+      "enabled": true,
+      "source_url": "https://www.chinacdc.cn/jkts/202605/t20260509_1835669.html",
+      "source_title": "2026年5月健康风险提示",
+      "checked_at": "2026-10-20",
+      "review_method": "官方正文逐段核对；非专家医疗审定",
+      "excerpt": "基孔肯雅热由基孔肯雅病毒引起，经伊蚊叮咬传播。",
+      "excerpt_sha256": "da6ee9139bfe2a86acc80e8728bb8775d5aca81d1d1618639a8e7dd498c685aa",
+      "checked_by": "Codex：核对官方正文，未作医疗专家审定"
+    },
+    {
+      "key": "je",
+      "disease": "流行性乙型脑炎",
+      "aliases": [
+        "乙脑",
+        "乙型脑炎"
+      ],
+      "route": "mosquito",
+      "enabled": true,
+      "source_url": "https://www.chinacdc.cn/jkyj/mygh02/ymkyfjb/yn/202606/t20260622_1837243.html",
+      "source_title": "乙脑",
+      "checked_at": "2026-10-20",
+      "review_method": "官方正文逐段核对；非专家医疗审定",
+      "excerpt": "乙脑病毒主要通过库蚊传播",
+      "excerpt_sha256": "2de02289377628dc747d8334d86fe8eddb4455c46e59471661ce928d82dad512",
+      "checked_by": "Codex：核对官方正文，未作医疗专家审定"
+    },
+    {
+      "key": "hfrs",
+      "disease": "肾综合征出血热",
+      "aliases": [
+        "肾综合征出血热",
+        "流行性出血热",
+        "出血热"
+      ],
+      "route": "rodent_exposure",
+      "enabled": true,
+      "source_url": "https://www.chinacdc.cn/jkkp/crb/ycr/202502/t20250220_304455.html",
+      "source_title": "早期症状似感冒，易被忽略，这种传染病一定要注意预防",
+      "checked_at": "2026-10-20",
+      "review_method": "官方正文核对传播途径；别名出血热仅用于报警，不自动判病种",
+      "excerpt": "破损皮肤、口腔、鼻等黏膜接触了其排泄物、尿液或唾液等",
+      "excerpt_sha256": "5f8b2b31a4c3fb70be4607dfd37732d3ffb569a79526ae0ac79a56fc5a2235c5",
+      "checked_by": "Codex：核对官方正文，未作医疗专家审定"
+    },
+    {
+      "key": "leptospirosis",
+      "disease": "钩端螺旋体病",
+      "aliases": [
+        "钩端螺旋体病",
+        "钩体病"
+      ],
+      "route": "contaminated_water_exposure",
+      "enabled": true,
+      "source_url": "https://www.chinacdc.cn/jkyj/tfggws/jswj1/201408/t20140820_301450.html",
+      "source_title": "自然灾害传染病防控技术指南",
+      "checked_at": "2026-10-20",
+      "review_method": "官方正文逐段核对；非专家医疗审定",
+      "excerpt": "人因接触被带菌动物(鼠类、猪、犬和牛)尿污染的水体而感染本病",
+      "excerpt_sha256": "871fe08e55a993c40ce3999e90040a92c4d83ec520e8bda06ca2c45bfc994a1d",
+      "checked_by": "Codex：核对官方正文，未作医疗专家审定"
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import hashlib
+import os
 import re
 import threading
 import time
@@ -274,6 +275,58 @@ def focused_public_text(body, question, subquestions=None, limit=2400):
     return '\n\n'.join(selected) if selected else body[:limit]
 
 
+def focused_public_spans(body, question, subquestions=None, limit=4800):
+    """Exact offsets selected per facet, emitted in original document order.
+
+    No dates/implementation clauses are moved to the front. Section ancestry
+    remains separately available even when an operative paragraph is far below
+    its heading (notably winter/spring relief in section 6.3.1).
+    """
+    from .evidence_units import build_passages
+    rows = build_passages({'source_text': body})
+    parts = [p.get('question', '') if isinstance(p, dict) else str(p)
+             for p in (subquestions or [question])]
+    selected, used = {}, 0
+    rankings = []
+    for part in parts:
+        words = focus_words(part) + research_focus(part) + _source_identifiers(part)
+        words += [word for label, pattern in PUBLIC_INTENTS.items() if re.search(pattern, part)
+                  for word in FACET_WORDS.get(label, tuple(label.split()))]
+        words += [word for pattern, focus in SAFETY_FOCUS if re.search(pattern, part, re.I) for word in focus]
+        for pattern in focus_groups(part):
+            words += [m[0] for row in rows for m in re.finditer(pattern, row.text)]
+        phrases = re.findall(r'[\u4e00-\u9fff]{2,}', part[:240])
+        words += [phrase[start:start+size] for phrase in phrases for size in range(2,min(7,len(phrase)+1))
+                  for start in range(len(phrase)-size+1)
+                  if phrase[start:start+size] not in {'什么','哪些','怎么','如何','是不是','是否','办理','程序'}]
+        words = list(dict.fromkeys(word for word in words if len(word) >= 2))
+        def score(row):
+            content = (' '.join(row.section_path)+' '+row.text).lower()
+            return sum(min(3, content.count(word.lower())) * min(12, len(word)) for word in words)
+        rankings.append(sorted(((score(row), row) for row in rows), key=lambda item: (-item[0], item[1].start)))
+    # Reserve the first useful unit for each facet before filling any facet.
+    for offset in range(3):
+        for ranked in rankings:
+            candidates = [row for score, row in ranked if score > 0 and row.passage_id not in selected]
+            if not candidates: continue
+            row = candidates[0]
+            if used + len(row.text) > limit: continue
+            selected[row.passage_id] = row; used += len(row.text)
+    if not selected:
+        for row in rows:
+            if used + len(row.text) > limit: break
+            selected[row.passage_id] = row; used += len(row.text)
+    return [row.to_dict() for row in sorted(selected.values(), key=lambda row: row.start)]
+
+
+def irrelevant_interactive_path(question, row):
+    """Avoid known JS maps for unrelated tasks; never blanket-drop alert channels."""
+    host = (urlsplit(row.get('url', '')).hostname or '').lower()
+    if host not in {'typhoon.nmc.cn', 'typhoon.slt.zj.gov.cn'}:
+        return False
+    return not bool(re.search(r'路径|预警|警报|当前台风|台风动态|活动台风|台风位置|台风.{0,8}(?:在哪|现在|强度|移动)', question))
+
+
 def _base_public_search_queries(question, dynamic=False, subquestions=None, default_jurisdiction='浙江'):
     """Search public identities/intents across marine questions, not just definitions."""
     question = question.replace('天文大潮', '天文潮')
@@ -474,14 +527,15 @@ def fresh_public_page(page, now=None):
     return -86400 <= (now - stamp).total_seconds() <= 72 * 3600
 
 
-def trusted_url(url, allow_academic=False):
+def trusted_url(url, allow_academic=False, allow_health=False):
     try:
         value = urlsplit(url)
         host = (value.hostname or '').lower()
         return (value.scheme in {'http', 'https'} and not value.username and not value.password
                 and value.port in {None, 80, 443}
                 and any(host == domain or host.endswith('.' + domain)
-                        for domain in TRUSTED_DOMAINS+(ACADEMIC_DOMAINS if allow_academic else ())))
+                        for domain in TRUSTED_DOMAINS+(ACADEMIC_DOMAINS if allow_academic else ())+
+                        (('chinacdc.cn',) if allow_health else ())))
     except (ValueError, TypeError):
         return False
 
@@ -509,13 +563,23 @@ def terminology_queries(question):
 
 
 class OfficialWebSupplement:
-    def __init__(self, search_client, reader, enabled=False, reference_pages=None, default_jurisdiction='浙江'):
+    def __init__(self, search_client, reader, enabled=False, reference_pages=None, default_jurisdiction='浙江',
+                 evidence_units=None, connector_v2=None):
         self.search_client, self.reader, self.enabled = search_client, reader, bool(enabled)
         self._cache, self._lock = {}, threading.Lock()
         self.reference_pages = REFERENCE_PAGES if reference_pages is None else reference_pages
         self.default_jurisdiction = default_jurisdiction
+        self.evidence_units = (os.getenv('MARINE_EVIDENCE_UNITS', 'false').lower() in {'1','true','on'}
+                               if evidence_units is None else bool(evidence_units))
+        self.connector_v2 = (os.getenv('MARINE_CONNECTOR_V2', 'false').lower() in {'1','true','on'}
+                             if connector_v2 is None else bool(connector_v2))
 
     def fetch(self, question, *, dynamic=False, subquestions=None, refresh=False, _gap_retry=False, corrective=False):
+        from .phase2 import current_budget
+        budget = current_budget()
+        if budget is not None and budget.remaining() <= 0:
+            return [], {'web_supplement_state':'budget_exhausted','web_search_executed':False,
+                        'web_search_queries':[],'web_body_read_failures':[]}
         subquestions = [part.get('question','') if isinstance(part,dict) else part for part in (subquestions or [])]
         queries = public_search_queries(question, dynamic=dynamic, subquestions=subquestions,
                                         default_jurisdiction=self.default_jurisdiction) if self.enabled else []
@@ -533,12 +597,16 @@ class OfficialWebSupplement:
         if not queries:
             return [], {'web_supplement_state': 'not_requested'}
         cache_key = (question, dynamic, tuple(subquestions or []), tuple(queries),corrective)
+        from .phase2 import current_turn_key
+        if current_turn_key():cache_key=cache_key+(current_turn_key(),)
         with self._lock:
             cached = self._cache.get(cache_key)
         if not refresh and cached and time.monotonic() - cached[0] < (60 if dynamic else 3600):
             return cached[1], {**cached[2], 'web_supplement_cache_hit': True}
 
         def lookup(query):
+            if budget is not None and budget.remaining() <= 0:
+                return None
             try:
                 storms = [name for name, english in STORM_ALIASES.items() if name in query or english in query.lower()]
                 # Generic topics are not entity identities. Requiring 台风 in
@@ -548,7 +616,9 @@ class OfficialWebSupplement:
             except Exception:
                 return None
         with ThreadPoolExecutor(max_workers=4, thread_name_prefix='marine-terms') as pool:
-            outcomes = list(pool.map(lookup, queries))
+            from .qa_observability import submit_observed
+            futures = [submit_observed(pool, lookup, query) for query in queries]
+            outcomes = [future.result() for future in futures]
         # One result per query first, so a compound question keeps topic diversity.
         groups = []
         for query, outcome in zip(queries, outcomes):
@@ -569,7 +639,7 @@ class OfficialWebSupplement:
                 if not dynamic and topic in query and re.search(pattern, query) and self.reference_pages is REFERENCE_PAGES:
                     group.insert(0, {'title':title, 'url':url, '_supplement_term':topic})
             for row in outcome.results if outcome else []:
-                if trusted_url(row.get('url', ''),academic):
+                if trusted_url(row.get('url', ''),academic,allow_health=self.connector_v2):
                     row = dict(row)
                     row['_supplement_term'] = term
                     row['url'] = canonical_public_url(row['url'])
@@ -578,7 +648,7 @@ class OfficialWebSupplement:
             groups.append(group)
         candidates, seen = [], set()
         if self.reference_pages is REFERENCE_PAGES:
-            for row in primary_routes(question):
+            for row in primary_routes(question,connector_v2=self.connector_v2):
                 candidates.append(row);seen.add(row['url'])
         for offset in range(3):
             for group in groups:
@@ -588,30 +658,40 @@ class OfficialWebSupplement:
                     seen.add(row['url'])
         # Prefer an actual article over a home/column page before paying for
         # body reads; retain round-robin facet diversity among article results.
+        skipped = []
+        if self.connector_v2:
+            skipped = [{'url': row['url'], 'state': 'skipped_irrelevant',
+                        'reason': 'interactive_typhoon_path_unrelated_to_question'}
+                       for row in candidates if irrelevant_interactive_path(question, row)]
+            candidates = [row for row in candidates if not irrelevant_interactive_path(question, row)]
         candidates.sort(key=lambda row: len(urlsplit(row['url']).path.strip('/')) < 5)
         candidates = candidates[:12]
         try:
-            pages = self.reader.enrich(candidates) if candidates else []
+            pages = self.reader.enrich(candidates) if candidates and (budget is None or budget.remaining()>0) else []
             unread=[page for page in pages if page.get('read_status')=='not_attempted']
-            if unread:
+            if unread and (budget is None or budget.remaining()>0):
                 completed={page['url']:page for page in self.reader.enrich(unread)}
                 pages=[completed.get(page['url'],page) if page.get('read_status')=='not_attempted' else page for page in pages]
         except Exception:
             pages = []
-        read_failures=[{'url':p.get('url'),'state':p.get('read_status'),'reason':p.get('read_error')}
+        read_failures=[{'url':p.get('url'),'state':p.get('read_status'),'reason':p.get('read_error'),
+                        'http_status':p.get('http_status'),'final_url':p.get('final_url')}
                        for p in pages if p.get('read_status') not in {'success','partial'}]
         # A notice often puts the operative clauses in an official attachment.
         # Read at most two, using the same pinned/public reader and size limits.
         attachments = []
-        if is_policy_lookup(question) or (not dynamic and re.search(r'标准|规范', question)):
+        if (is_policy_lookup(question) or (not dynamic and re.search(r'标准|规范', question))
+                or self.connector_v2 and re.search(r'方案|细则|指南|手册|规范|通知附件|防蚊|灭蚊|防台|加固', question)):
             for page in pages:
                 parent_url = page.get('final_url') or page.get('url', '')
-                if not trusted_url(parent_url) or page.get('read_status') not in {'success', 'partial'}:
+                if not trusted_url(parent_url,allow_health=self.connector_v2) or page.get('read_status') not in {'success', 'partial'}:
                     continue
                 for link in page.get('document_links', []):
                     url = link.get('url', '')
-                    if (trusted_url(url) and re.search(r'\.(?:pdf|docx)$', urlsplit(url).path, re.I)
-                            and url not in seen and re.search(r'预案|标准|规范|办法|正文|附件', link.get('title', ''))):
+                    if (trusted_url(url,allow_health=self.connector_v2) and re.search(r'\.(?:pdf|docx)$', urlsplit(url).path, re.I)
+                            and url not in seen and re.search(
+                                r'预案|标准|规范|办法|正文|附件|方案|细则|指南|手册' if self.connector_v2 else r'预案|标准|规范|办法|正文|附件',
+                                link.get('title', ''))):
                         parent_body = page.get('content', '')
                         issued = re.search(r'(?:自然资源部办公厅|自然资源部)\s*(20\d{2})年\s*(\d{1,2})月\s*(\d{1,2})日', parent_body)
                         issued_at = '-'.join([issued[1], issued[2].zfill(2), issued[3].zfill(2)]) if issued else None
@@ -619,8 +699,12 @@ class OfficialWebSupplement:
                                             'published_at': page.get('published_at'),
                                             '_document_issued_at': issued_at,
                                             '_parent_notice': parent_body if len(parent_body) <= 900 else focused_public_text(parent_body, question, subquestions, limit=900)})
+                        if self.connector_v2:
+                            from .evidence_units import build_doc_card
+                            parent_card = build_doc_card({**page, 'source_text': parent_body}).to_dict()
+                            attachments[-1]['_parent_doc_card'] = parent_card
                         seen.add(url)
-            if attachments:
+            if attachments and (budget is None or budget.remaining()>0):
                 try:
                     pages += self.reader.enrich(attachments[:2])
                 except Exception:
@@ -631,7 +715,7 @@ class OfficialWebSupplement:
             body = str(page.get('content') or '')
             # Search summaries discover sources; only fetched official bodies
             # become answer evidence. Re-check after redirects.
-            if not trusted_url(url,academic) or page.get('read_status') not in {'success', 'partial'} or len(body.strip()) < 30:
+            if not trusted_url(url,academic,allow_health=self.connector_v2) or page.get('read_status') not in {'success', 'partial'} or len(body.strip()) < 30:
                 continue
             url = canonical_public_url(url)
             research_source=academic and any((urlsplit(url).hostname or '')==domain for domain in ACADEMIC_DOMAINS)
@@ -719,6 +803,22 @@ class OfficialWebSupplement:
                                       'document_issued_at': page.get('_document_issued_at'),
                                       'applicability': assessment,
                                       'text_is_excerpt': text[:3000] != body}})
+            if self.evidence_units:
+                from .evidence_units import build_doc_card
+                unit_hit = hits[-1]
+                unit_hit['source_text'] = body
+                unit_hit['passages'] = focused_public_spans(body, question, subquestions,
+                    limit=6000 if assessment['kind'] == 'policy' else 4800)
+                if page.get('_parent_doc_card'):
+                    unit_hit['metadata']['parent_notice_doc_card'] = page['_parent_doc_card']
+                unit_hit['doc_card'] = build_doc_card({**page, **unit_hit}).to_dict()
+                # Inheritance remains explicit, not silently asserted as the
+                # attachment's own content or identity.
+                unit_hit['metadata']['evidence_view_version'] = 2
+                unit_hit['metadata']['extraction_method'] = page.get('extraction_method')
+                unit_hit['metadata']['read_from_reviewed_archive'] = bool(page.get('read_from_reviewed_archive'))
+                unit_hit['metadata']['body_sha256'] = hashlib.sha256(body.encode()).hexdigest()
+                unit_hit['metadata']['selected_original_passage_ids'] = [p['id'] for p in unit_hit['passages']]
         reconcile_notices(hits)
         available_count = len(hits)
         hits = select_evidence(question, hits, subquestions, limit=6)
@@ -727,7 +827,7 @@ class OfficialWebSupplement:
         before_coverage = coverage_matrix(question, subquestions, hits)
         gaps = [row['question'] for row in before_coverage if row['state']!='candidate_evidence']
         retry_meta = None
-        if gaps and subquestions and not _gap_retry and (len(gaps)<len(subquestions) or len(subquestions)>1):
+        if gaps and subquestions and not _gap_retry and (len(gaps)<len(subquestions) or len(subquestions)>1) and (budget is None or budget.remaining()>0):
             retry_hits, retry_meta = self.fetch(question, dynamic=dynamic,
                 subquestions=gaps, refresh=True, _gap_retry=True)
             hits = select_evidence(question, reconcile_notices(hits + retry_hits), subquestions, limit=6)
@@ -745,6 +845,8 @@ class OfficialWebSupplement:
                 'web_gap_retry_queries': retry_meta.get('web_search_queries', []) if retry_meta else [],
                 'web_supplement_cache_hit': False}
         meta['web_corrective_pass']=corrective
+        if self.connector_v2:
+            meta['web_candidates_skipped'] = skipped
         if any(term in question for term in ('五停', '停课', '停工', '停产', '停运', '停业')) and not any(place in question for place in PUBLIC_PLACES):
             meta['web_default_jurisdiction'] = self.default_jurisdiction
         if hits:

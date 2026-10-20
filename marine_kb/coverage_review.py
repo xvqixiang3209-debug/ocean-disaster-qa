@@ -47,5 +47,9 @@ def decode_review(raw,answer,missing,targets=None):
             elif text not in matches[0]:raise ValueError('coverage_review_unknown_span')
         if not isinstance(text,str) or len(text)<4 or not(text in answer or any(text in item for item in missing)):
             raise ValueError('coverage_review_unknown_span')
-        valid.append({'kind':issue['kind'],'text':text[:800],'reason':str(issue.get('reason',''))[:500]})
+        row={'kind':issue['kind'],'text':text[:800],'reason':str(issue.get('reason',''))[:500]}
+        # Stable target identity is needed by the scope gate and by replay.
+        from .phase2 import active
+        if active() and target is not None:row['target_id']=target
+        valid.append(row)
     return {'verdict':'revise' if valid else 'pass','issues':valid}

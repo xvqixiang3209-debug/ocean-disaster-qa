@@ -192,6 +192,8 @@ class GridAcquisition:
         cache_cutoff = cutoff if explicit_as_of else cutoff.replace(minute=cutoff.minute // 10 * 10, second=0, microsecond=0)
         cache_material = {'start': start.isoformat(), 'end': end.isoformat(),
                           'products': selected, 'as_of_upper': cache_cutoff.isoformat()}
+        from marine_kb.phase2 import current_turn_key
+        if current_turn_key():cache_material['turn_state_fingerprint']=current_turn_key()
         cache_key = 'grid_acquisition:' + hashlib.sha256(json.dumps(cache_material, sort_keys=True).encode()).hexdigest()[:24]
         with self.lock:
             cached = None

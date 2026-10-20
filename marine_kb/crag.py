@@ -15,6 +15,7 @@ from .evidence_applicability import assess_page, facet_support
 from .evidence_selection import select_evidence
 from .model_json import model_json
 from .retrieval import source_text
+from .qa_observability import submit_observed, model_stage, evidence_view, event
 
 UPSTREAM='https://github.com/HuskyInSalt/CRAG/tree/de7c2961ae624a1483a138c5798e1f6d0c4fb0e0'
 PROMPT=(
@@ -100,14 +101,19 @@ class CorrectiveRetrieval:
 
     def _evaluate(self, question, parts, hits):
         from .qa import _evidence_passages,_safe_metadata
+        from .phase2 import enabled
+        from .evidence_units import evidence_view as canonical_view
+        canonical=canonical_view(hits) if enabled('MARINE_EVIDENCE_UNITS') else None
         documents=[]
         for index,hit in enumerate(hits,1):
             text=source_text(hit)[:(8000 if channel(hit)=='tool' else 3000)]
             passages=_evidence_passages(text)
+            if canonical is not None:passages=canonical[index-1]['passages']
             documents.append({'source':index,'channel':channel(hit),'title':hit.get('title'),
                 'metadata':_safe_metadata(hit),'applicability':(hit.get('metadata') or {}).get('crag_applicability',[]),
                 'passages':passages})
         if not hits:return [],'no_candidates'
+        evidence_view('crag_candidates', [{'citation':d['source'],'passages':d['passages']} for d in documents])
         try:
             raw=self.qa._call_model(self.qa.model_name,PROMPT,json.dumps({'question':question,'subquestions':parts,'documents':documents},ensure_ascii=False))
             value=model_json(raw)
@@ -127,6 +133,11 @@ class CorrectiveRetrieval:
                         app=next((a for a in (hit.get('metadata') or {}).get('crag_applicability',[]) if a['id']==item['id']),{})
                         if app.get('use')=='excluded' or not facet_support(question,part['question'],hit):continue
                         effective='ambiguous' if app.get('use')=='reference' else grade
+                        from .phase2 import mode
+                        if mode('MARINE_RELATION_GUARD') == 'on' and part.get('kind') == 'risk_relation':
+                            from .relation_guard import load_lexicon,_diseases,health_authority
+                            if _diseases(part['question']+' '+source_text(hit),load_lexicon()) and not health_authority(hit):
+                                effective='ambiguous'
                         decisions.append({'source':number,'facet':item['id'],'grade':effective,'passages':sorted(set(ids)),
                                           'reason':str(item.get('reason',''))[:180]})
             return decisions,'deepseek_relevance_with_exact_passage_ids'
@@ -156,11 +167,15 @@ class CorrectiveRetrieval:
 
     def retrieve(self, question, meta, allow_web, pinned=None, queries=None, sid=None):
         pinned=list(pinned or []);parts=meta.get('subquestions') or [{'id':1,'question':question}]
-        parts=[{'id':p.get('id',i),'question':p.get('question',question)} if isinstance(p,dict) else {'id':i,'question':str(p)} for i,p in enumerate(parts[:6],1)]
+        parts=[{**p,'id':p.get('id',i),'question':p.get('question',question)} if isinstance(p,dict) else {'id':i,'question':str(p)} for i,p in enumerate(parts[:6],1)]
+        from .phase2 import enabled,current_budget
+        if enabled('MARINE_FACET_CONTRACT'):
+            from .facet_contract import build_contract
+            parts=build_contract(question,parts,meta.get('turn_state'))
         dynamic=meta.get('dynamic_question',False)
         with ThreadPoolExecutor(max_workers=2,thread_name_prefix='marine-crag') as pool:
-            local_job=pool.submit(self._local,question,queries or [],parts,meta,sid)
-            web_job=pool.submit(self.qa._fetch_public,question,parts,dynamic,allow_web)
+            local_job=submit_observed(pool,self._local,question,queries or [],parts,meta,sid)
+            web_job=submit_observed(pool,self.qa._fetch_public,question,parts,dynamic,allow_web)
             local,local_meta=local_job.result();web,web_meta=web_job.result()
         local_total=len(local);permitted=[h for h in local if self.qa._can_send(h)]
         local=select_evidence(question,permitted,parts,limit=5)
@@ -169,16 +184,17 @@ class CorrectiveRetrieval:
         decisions,evaluator=self._evaluate(question,parts,hits)
         first_plan=self._plan(parts,hits,decisions);rounds=[{'stage':'dual_retrieval_and_evaluation','facets':first_plan,'evaluator':evaluator}]
         gaps=[p for p in first_plan if p['state']!='supported'];extra_meta={};new_count=0
-        if gaps and allow_web and self.qa.web_supplement is not None and self.qa.web_supplement.enabled:
+        budget=current_budget()
+        if gaps and allow_web and self.qa.web_supplement is not None and self.qa.web_supplement.enabled and (budget is None or budget.remaining()>0):
             # Public searches receive only the user's facets, never private
             # retrieved text, model answers or inferred source-specific facts.
-            retry_parts=[{'id':p['id'],'question':p['question']} for p in gaps]
+            retry_parts=[{**p,'id':p['id'],'question':p['question']} for p in gaps]
             with ThreadPoolExecutor(max_workers=2,thread_name_prefix='marine-crag-corrective') as pool:
-                local_job=pool.submit(self._local,question,[p['question'] for p in gaps],retry_parts,meta,sid)
+                local_job=submit_observed(pool,self._local,question,[p['question'] for p in gaps],retry_parts,meta,sid)
                 def public_retry():
                     try:return self.qa.web_supplement.fetch(question,dynamic=dynamic,subquestions=[p['question'] for p in gaps],refresh=True,_gap_retry=True,corrective=True)
                     except Exception:return [],{'web_corrective_state':'unavailable','web_search_executed':False}
-                web_job=pool.submit(public_retry)
+                web_job=submit_observed(pool,public_retry)
                 local_extra,_=local_job.result();extra,extra_meta=web_job.result()
             known={key(h) for h in hits};new_count=sum(key(h) not in known for h in local_extra+extra)
             if new_count:
@@ -187,7 +203,8 @@ class CorrectiveRetrieval:
                 candidates=[h for n,h in enumerate(hits,1) if n in protected and channel(h)!='tool']
                 candidates+=select_evidence(question,local+local_extra,parts,limit=6)+select_evidence(question,web+extra,parts,limit=6)
                 hits,more_excluded=self._prepare(question,parts,candidates,pinned,dynamic);excluded+=more_excluded
-                decisions,evaluator=self._evaluate(question,parts,hits)
+                with model_stage('crag_eval_corrective'):
+                    decisions,evaluator=self._evaluate(question,parts,hits)
                 # A gap correction must not discard a previously verified
                 # sibling. Reuse only exact unchanged source text/passages;
                 # never carry a grade across a new URL/body or excluded scope.
@@ -216,6 +233,16 @@ class CorrectiveRetrieval:
                 'crag_channel':channel(hit),'crag_passage_ids':sorted({i for d in ds for i in d['passages']}) if n>len(pinned) else [],
                 'crag_facets':[{'id':d['facet'],'question':next(p['question'] for p in parts if p['id']==d['facet']),'grade':d['grade']} for d in ds]}})
         remap={old:new for new,old in enumerate(chosen,1)}
+        from .qa import _evidence_passages
+        selected_view=[
+            {'citation':n,'passages':[p for p in _evidence_passages(source_text(h)[:(8000 if channel(h)=='tool' else 3000)])
+                if not h['metadata'].get('crag_passage_ids') or p['id'] in h['metadata']['crag_passage_ids']]}
+            for n,h in enumerate(selected,1)]
+        if enabled('MARINE_EVIDENCE_UNITS'):
+            from .evidence_units import evidence_view as canonical_view
+            selected_view=canonical_view(selected)
+        evidence_view('crag_selected',selected_view)
+        event('crag_source_remap', citations=remap)
         for part in final_plan:
             for name in ('correct_sources','reference_sources'):part[name]=[remap[n] for n in part[name] if n in remap]
             part['state']='supported' if part['correct_sources'] else 'partial' if part['reference_sources'] else 'missing'

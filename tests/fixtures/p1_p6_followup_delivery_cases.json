@@ -1,0 +1,3728 @@
+{
+  "recorded_run": "p1_p6_20261020_092625_18d96920",
+  "kind": "real_completed_output_structure_not_new_model_execution",
+  "cases": {
+    "C2": {
+      "source_result_sha256": "eb0dd8fce6a28c28b2f4018cfb5d2e14692537475bfe146310da156676f1eb50",
+      "question": "宁波居民想查询气象部门的台风预警和海洋部门的海浪警报，分别去哪里查？",
+      "facets": [
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "key": "99d31b0833c5",
+          "kind": "channel",
+          "objects": [
+            "台风预警"
+          ],
+          "parent": null,
+          "place_role": "jurisdiction_required",
+          "places": [
+            "宁波"
+          ],
+          "question": "宁波居民查询气象部门的台风预警去哪里查？",
+          "required_outputs": [
+            "channel_name",
+            "access_path"
+          ],
+          "text": "宁波居民查询气象部门的台风预警去哪里查？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "key": "03c037aa456c",
+          "kind": "channel",
+          "objects": [
+            "海浪警报"
+          ],
+          "parent": null,
+          "place_role": "jurisdiction_required",
+          "places": [
+            "宁波"
+          ],
+          "question": "宁波居民查询海洋部门的海浪警报去哪里查？",
+          "required_outputs": [
+            "channel_name",
+            "access_path"
+          ],
+          "text": "宁波居民查询海洋部门的海浪警报去哪里查？",
+          "time": null
+        }
+      ],
+      "old_delivery": [
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "local1_1_c3a1",
+            "local1_2_c4a1",
+            "local1_3_c5a1"
+          ],
+          "covered_outputs": [
+            "access_path",
+            "channel_name"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "kind": "channel",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "local1_1_c3a1",
+            "local1_2_c4a1",
+            "local1_3_c5a1"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c4a1",
+            "c5a1",
+            "c6a1"
+          ],
+          "covered_outputs": [
+            "access_path",
+            "channel_name"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "kind": "channel",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c4a1",
+            "c5a1",
+            "c6a1"
+          ]
+        }
+      ],
+      "accepted_atoms": [
+        {
+          "aid": "c4a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "查询海洋部门海浪警报，可到“浙江海洋预报网”[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 6,
+              "quote": "“浙江海洋预报网”于22日正式上线运行。该平台是一个权威发布浙江省海洋灾害预警信息的专业化服务平台，可提供浙江管辖海域和百个海岛的3至5天海洋预报，为防灾减灾指挥决策提供信息支持。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "",
+          "text": "查询海洋部门海浪警报，可到“浙江海洋预报网”。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c5a1",
+          "binding": "text_overlap",
+          "context_subject": [],
+          "display_text": "该平台是发布浙江省海洋灾害预警信息的专业化服务平台，发布风暴潮、巨浪、赤潮等海洋灾害预警信息以及潮汐、海温、海浪等海洋预报信息，并设有“灾害预警”板块[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 6,
+              "quote": "“浙江海洋预报网”于22日正式上线运行。该平台是一个权威发布浙江省海洋灾害预警信息的专业化服务平台，可提供浙江管辖海域和百个海岛的3至5天海洋预报，为防灾减灾指挥决策提供信息支持。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 8,
+              "quote": "浙江省自然资源厅副厅长沈仁华介绍，浙江海洋预报网作为全国第一家省级海洋预报网，是一个权威发布浙江省风暴潮、巨浪、赤潮等海洋灾害预警信息，以及潮汐、海温、海浪等海洋预报信息的专业化服务平台，区域范围不仅包括全省管辖的26万平方公里海域，还覆盖到浙江渔船生产作业的13大渔场共452个渔区。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 11,
+              "quote": "据了解，该网站首期推出了灾害预警、环境预报、滨海旅游、海洋渔业、台风路径、防灾减灾、海洋之窗等七大板块，不仅可满足社会公众、涉海企业在海边生产、生活、休闲的需求，也可为全省各级地方政府防灾减灾指挥决策提供信息支持。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "",
+          "text": "该平台是发布浙江省海洋灾害预警信息的专业化服务平台，发布风暴潮、巨浪、赤潮等海洋灾害预警信息以及潮汐、海温、海浪等海洋预报信息，并设有“灾害预警”板块[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c6a1",
+          "binding": "text_overlap",
+          "context_subject": [],
+          "display_text": "查询步骤：进入浙江海洋预报网，查看“灾害预警”板块中的海浪相关预警[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 6,
+              "quote": "“浙江海洋预报网”于22日正式上线运行。该平台是一个权威发布浙江省海洋灾害预警信息的专业化服务平台，可提供浙江管辖海域和百个海岛的3至5天海洋预报，为防灾减灾指挥决策提供信息支持。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 11,
+              "quote": "据了解，该网站首期推出了灾害预警、环境预报、滨海旅游、海洋渔业、台风路径、防灾减灾、海洋之窗等七大板块，不仅可满足社会公众、涉海企业在海边生产、生活、休闲的需求，也可为全省各级地方政府防灾减灾指挥决策提供信息支持。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "",
+          "text": "查询步骤：进入浙江海洋预报网，查看“灾害预警”板块中的海浪相关预警[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_1_c3a1",
+          "binding": "single_facet",
+          "context_subject": [],
+          "display_text": "查询海洋部门的海浪警报，可到“浙江海洋预报网”查看[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 6,
+              "quote": "“浙江海洋预报网”于22日正式上线运行。该平台是一个权威发布浙江省海洋灾害预警信息的专业化服务平台，可提供浙江管辖海域和百个海岛的3至5天海洋预报，为防灾减灾指挥决策提供信息支持。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "",
+          "text": "查询海洋部门的海浪警报，可到“浙江海洋预报网”查看[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_2_c4a1",
+          "binding": "single_facet",
+          "context_subject": [],
+          "display_text": "该平台是发布浙江省海洋灾害预警信息的专业化服务平台，发布风暴潮、巨浪、赤潮等海洋灾害预警信息以及潮汐、海温、海浪等海洋预报信息，并设有“灾害预警”板块[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 8,
+              "quote": "浙江省自然资源厅副厅长沈仁华介绍，浙江海洋预报网作为全国第一家省级海洋预报网，是一个权威发布浙江省风暴潮、巨浪、赤潮等海洋灾害预警信息，以及潮汐、海温、海浪等海洋预报信息的专业化服务平台，区域范围不仅包括全省管辖的26万平方公里海域，还覆盖到浙江渔船生产作业的13大渔场共452个渔区。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 11,
+              "quote": "据了解，该网站首期推出了灾害预警、环境预报、滨海旅游、海洋渔业、台风路径、防灾减灾、海洋之窗等七大板块，不仅可满足社会公众、涉海企业在海边生产、生活、休闲的需求，也可为全省各级地方政府防灾减灾指挥决策提供信息支持。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "",
+          "text": "该平台是发布浙江省海洋灾害预警信息的专业化服务平台，发布风暴潮、巨浪、赤潮等海洋灾害预警信息以及潮汐、海温、海浪等海洋预报信息，并设有“灾害预警”板块[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_3_c5a1",
+          "binding": "single_facet",
+          "context_subject": [],
+          "display_text": "查询步骤：进入浙江海洋预报网，查看“灾害预警”板块中的海浪相关预警[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 6,
+              "quote": "“浙江海洋预报网”于22日正式上线运行。该平台是一个权威发布浙江省海洋灾害预警信息的专业化服务平台，可提供浙江管辖海域和百个海岛的3至5天海洋预报，为防灾减灾指挥决策提供信息支持。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 11,
+              "quote": "据了解，该网站首期推出了灾害预警、环境预报、滨海旅游、海洋渔业、台风路径、防灾减灾、海洋之窗等七大板块，不仅可满足社会公众、涉海企业在海边生产、生活、休闲的需求，也可为全省各级地方政府防灾减灾指挥决策提供信息支持。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "",
+          "text": "查询步骤：进入浙江海洋预报网，查看“灾害预警”板块中的海浪相关预警[资料2]。",
+          "type": "direct_fact"
+        }
+      ]
+    },
+    "M1_extra_2": {
+      "source_result_sha256": "9a4704c153665f2d4e97400dbb3254457635a2f0734b93dbbe510576d4e01645",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "facets": [
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "key": "20da4e9af7ce",
+          "kind": "risk_relation",
+          "objects": [
+            "蚊子"
+          ],
+          "parent": null,
+          "place_role": "none",
+          "places": [],
+          "question": "灾后蚊子特别多，会不会传染病？",
+          "required_outputs": [
+            "relation",
+            "conditions"
+          ],
+          "text": "灾后蚊子特别多，会不会传染病？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "key": "99aaff818ff6",
+          "kind": "method_steps",
+          "objects": [
+            "蚊子"
+          ],
+          "parent": null,
+          "place_role": "none",
+          "places": [],
+          "question": "灾后蚊子特别多，怎么防？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "灾后蚊子特别多，怎么防？",
+          "time": null
+        }
+      ],
+      "old_delivery": [
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c8a1",
+            "c10a1",
+            "local1_1_c6a1",
+            "local1_2_c6a2",
+            "local1_3_c7a1",
+            "local1_4_c7a2",
+            "local1_5_c8a1",
+            "local1_6_c8a2",
+            "local1_7_c9a1",
+            "local1_8_c9a2",
+            "local1_9_c10a1"
+          ],
+          "covered_outputs": [
+            "conditions",
+            "relation"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "kind": "risk_relation",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c8a1",
+            "c10a1",
+            "local1_1_c6a1",
+            "local1_2_c6a2",
+            "local1_3_c7a1",
+            "local1_4_c7a2",
+            "local1_5_c8a1",
+            "local1_6_c8a2",
+            "local1_7_c9a1",
+            "local1_8_c9a2",
+            "local1_9_c10a1"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c6a1",
+            "c6a2",
+            "c7a1",
+            "c7a2",
+            "c8a1",
+            "c8a2",
+            "c9a1",
+            "c9a2",
+            "c10a1"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c6a1",
+            "c6a2",
+            "c7a1",
+            "c7a2",
+            "c8a1",
+            "c8a2",
+            "c9a1",
+            "c9a2",
+            "c10a1"
+          ]
+        }
+      ],
+      "accepted_atoms": [
+        {
+          "aid": "c6a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c6a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c7a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 44,
+              "quote": "防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "2. 做好物理防护",
+          "text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c7a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "选用正规厂家生产的电蚊拍、蚊帐和驱蚊用品，使用电蚊拍时不要用手或导电金属棒接触高压电网[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "2. 做好物理防护",
+          "text": "选用正规厂家生产的电蚊拍、蚊帐和驱蚊用品，使用电蚊拍时不要用手或导电金属棒接触高压电网[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "黄昏和黎明蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1",
+            "f2"
+          ],
+          "heading": "3. 避开蚊虫高峰和潮湿环境",
+          "text": "黄昏和黎明蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，带婴儿外出时手推车挂蚊帐[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "3. 避开蚊虫高峰和潮湿环境",
+          "text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，带婴儿外出时手推车挂蚊帐[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "蚊虫可能进入住宅时，床上设置蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "蚊虫可能进入住宅时，床上设置蚊帐；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c10a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f1",
+            "f2"
+          ],
+          "heading": "5. 叮咬后观察",
+          "text": "如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_1_c6a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_2_c6a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_3_c7a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 44,
+              "quote": "防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "2. 物理防护",
+          "text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_4_c7a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "选用正规厂家生产的电蚊拍、蚊帐和驱蚊用品，使用电蚊拍时不要用手或导电金属棒接触高压电网[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "2. 物理防护",
+          "text": "选用正规厂家生产的电蚊拍、蚊帐和驱蚊用品，使用电蚊拍时不要用手或导电金属棒接触高压电网[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_5_c8a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "黄昏和黎明蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "3. 避开高峰",
+          "text": "黄昏和黎明蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_6_c8a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，带婴儿外出时手推车挂蚊帐[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "3. 避开高峰",
+          "text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，带婴儿外出时手推车挂蚊帐[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_7_c9a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "蚊虫可能进入住宅时，床上设置蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "蚊虫可能进入住宅时，床上设置蚊帐[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_8_c9a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_9_c10a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "5. 及时就医",
+          "text": "如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "type": "direct_fact"
+        }
+      ]
+    },
+    "M1_extra_3": {
+      "source_result_sha256": "cfda7c5a3f55d784d77f57febd7552577a75c006b9b1dae4e4e509ea4f1a599d",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "facets": [
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "key": "20da4e9af7ce",
+          "kind": "risk_relation",
+          "objects": [
+            "蚊子"
+          ],
+          "parent": null,
+          "place_role": "none",
+          "places": [],
+          "question": "灾后蚊子特别多，会不会传染病？",
+          "required_outputs": [
+            "relation",
+            "conditions"
+          ],
+          "text": "灾后蚊子特别多，会不会传染病？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "key": "99aaff818ff6",
+          "kind": "method_steps",
+          "objects": [
+            "蚊子"
+          ],
+          "parent": null,
+          "place_role": "none",
+          "places": [],
+          "question": "灾后蚊子特别多，怎么防？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "灾后蚊子特别多，怎么防？",
+          "time": null
+        }
+      ],
+      "old_delivery": [
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c8a1",
+            "local1_1_c6a1",
+            "local1_2_c6a2",
+            "local1_3_c7a1",
+            "local1_4_c7a2",
+            "local1_5_c8a1",
+            "local1_6_c8a2",
+            "local1_7_c9a1",
+            "local1_8_c9a2",
+            "local1_9_c10a1"
+          ],
+          "covered_outputs": [
+            "conditions",
+            "relation"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "kind": "risk_relation",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c8a1",
+            "local1_1_c6a1",
+            "local1_2_c6a2",
+            "local1_3_c7a1",
+            "local1_4_c7a2",
+            "local1_5_c8a1",
+            "local1_6_c8a2",
+            "local1_7_c9a1",
+            "local1_8_c9a2",
+            "local1_9_c10a1"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c6a1",
+            "c6a2",
+            "c7a1",
+            "c7a2",
+            "c8a1",
+            "c8a2",
+            "c9a1",
+            "c9a2",
+            "c10a1"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c6a1",
+            "c6a2",
+            "c7a1",
+            "c7a2",
+            "c8a1",
+            "c8a2",
+            "c9a1",
+            "c9a2",
+            "c10a1"
+          ]
+        }
+      ],
+      "accepted_atoms": [
+        {
+          "aid": "c6a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c6a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c7a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 44,
+              "quote": "防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "2. 做好物理防护",
+          "text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c7a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "购买正规厂家的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "2. 做好物理防护",
+          "text": "购买正规厂家的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "黄昏和黎明前蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1",
+            "f2"
+          ],
+          "heading": "3. 避开蚊虫高峰和潮湿场所",
+          "text": "黄昏和黎明前蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，婴儿手推车挂蚊帐[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "3. 避开蚊虫高峰和潮湿场所",
+          "text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，婴儿手推车挂蚊帐[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "蚊虫可能进入住宅时，床上设置蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "蚊虫可能进入住宅时，床上设置蚊帐；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a2",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c10a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "蚊虫叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "5. 及时就医",
+          "text": "蚊虫叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_1_c6a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_2_c6a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "1. 清除孳生地",
+          "text": "定期清理家庭卫生死角，保持台面干燥不留积水，清理花盆托盘、废旧盆罐，水培植物每3—5天换一次水[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_3_c7a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 44,
+              "quote": "防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "2. 防叮咬",
+          "text": "纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_4_c7a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "购买正规厂家的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "2. 防叮咬",
+          "text": "购买正规厂家的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_5_c8a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "黄昏和黎明前蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "3. 避开高峰",
+          "text": "黄昏和黎明前蚊子出没高峰期不要外出，夜间外出穿长袖长裤、别穿凉鞋[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_6_c8a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，婴儿手推车挂蚊帐[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "3. 避开高峰",
+          "text": "黎明和黄昏尽量不要去潮湿、泥泞的室外或花草树木较多的场所，室外活动穿长裤、轻薄长袖和能遮住脚趾的鞋子，婴儿手推车挂蚊帐[资料4]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_7_c9a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "蚊虫可能进入住宅时，床上设置蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "蚊虫可能进入住宅时，床上设置蚊帐[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_8_c9a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "4. 室内防蚊",
+          "text": "夜间在寝室内使用灭蚊喷雾器、放有杀虫片的灭蚊器或点燃盘式蚊香[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_9_c10a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "蚊虫叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "evidence_quotes": [
+            {
+              "citation": 4,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "5. 及时就医",
+          "text": "蚊虫叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料4]。",
+          "type": "direct_fact"
+        }
+      ]
+    },
+    "M2": {
+      "source_result_sha256": "36dbf1a72ff15604eae93e9b8a843b370cc7a9caeac4fb631a8b4ef8b2089af9",
+      "question": "台风暴雨后舟山家里花盆和院子有积水，蚊虫很多，怎么清理孳生地和防叮咬？",
+      "facets": [
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "key": "126730f44565",
+          "kind": "method_steps",
+          "objects": [
+            "蚊虫"
+          ],
+          "parent": null,
+          "place_role": "context",
+          "places": [
+            "舟山"
+          ],
+          "question": "台风暴雨后舟山家里花盆有积水，怎么清理蚊虫孳生地？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "台风暴雨后舟山家里花盆有积水，怎么清理蚊虫孳生地？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "key": "e1ffa87f524d",
+          "kind": "method_steps",
+          "objects": [
+            "蚊虫"
+          ],
+          "parent": null,
+          "place_role": "context",
+          "places": [
+            "舟山"
+          ],
+          "question": "台风暴雨后舟山院子有积水，怎么清理蚊虫孳生地？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "台风暴雨后舟山院子有积水，怎么清理蚊虫孳生地？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f3",
+          "id": 3,
+          "key": "fe4a76946a64",
+          "kind": "method_steps",
+          "objects": [
+            "蚊虫"
+          ],
+          "parent": null,
+          "place_role": "context",
+          "places": [
+            "舟山"
+          ],
+          "question": "台风暴雨后舟山蚊虫很多，怎么防叮咬？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "台风暴雨后舟山蚊虫很多，怎么防叮咬？",
+          "time": null
+        }
+      ],
+      "old_delivery": [
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c3a1",
+            "c4a1",
+            "c5a1",
+            "c5a2",
+            "c6a1",
+            "c11a2",
+            "c15a2"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c3a1",
+            "c4a1",
+            "c5a1",
+            "c5a2",
+            "c6a1",
+            "c11a2",
+            "c15a2"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c7a1",
+            "c8a1",
+            "c9a1",
+            "c10a1",
+            "c11a1",
+            "c11a2",
+            "c15a2"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c7a1",
+            "c8a1",
+            "c9a1",
+            "c10a1",
+            "c11a1",
+            "c11a2",
+            "c15a2"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c11a2",
+            "c12a1",
+            "c13a1",
+            "c13a2",
+            "c14a1",
+            "c14a2",
+            "c15a1",
+            "c15a2",
+            "c16a1",
+            "c17a1",
+            "local1_1_c3a1",
+            "local1_2_c4a1",
+            "local1_3_c5a1",
+            "local1_4_c6a1",
+            "local1_5_c7a1",
+            "local1_6_c8a1",
+            "local1_7_c9a1",
+            "local1_8_c10a1",
+            "local1_9_c11a1",
+            "local1_10_c12a1",
+            "local1_11_c13a1",
+            "local1_12_c14a1",
+            "local1_13_c15a1",
+            "local1_14_c15a2",
+            "local1_15_c16a1",
+            "local1_16_c16a2",
+            "local1_17_c17a1",
+            "local1_18_c18a1",
+            "local1_19_c19a1",
+            "local1_20_c20a1"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f3",
+          "id": 3,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c11a2",
+            "c12a1",
+            "c13a1",
+            "c13a2",
+            "c14a1",
+            "c14a2",
+            "c15a1",
+            "c15a2",
+            "c16a1",
+            "c17a1",
+            "local1_1_c3a1",
+            "local1_2_c4a1",
+            "local1_3_c5a1",
+            "local1_4_c6a1",
+            "local1_5_c7a1",
+            "local1_6_c8a1",
+            "local1_7_c9a1",
+            "local1_8_c10a1",
+            "local1_9_c11a1",
+            "local1_10_c12a1",
+            "local1_11_c13a1",
+            "local1_12_c14a1",
+            "local1_13_c15a1",
+            "local1_14_c15a2",
+            "local1_15_c16a1",
+            "local1_16_c16a2",
+            "local1_17_c17a1",
+            "local1_18_c18a1",
+            "local1_19_c19a1",
+            "local1_20_c20a1"
+          ]
+        }
+      ],
+      "accepted_atoms": [
+        {
+          "aid": "c3a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "1. 翻盆倒罐，把花盆托盘里的积水倒空[资料1][资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 16,
+              "quote": "外环境一般以清污为主。常昭瑞建议，对于重点场所，清污以后要做消毒处理。及时清理居室周边的雨水、垃圾，翻盆倒罐清除积水，减少蚊虫。如果有蚊虫滋生，必要时使用杀虫剂。"
+            },
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**1. 家里花盆积水**",
+          "text": "1. 翻盆倒罐，把花盆托盘里的积水倒空[资料1][资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c4a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "2. 水培植物每3—5天更换一次水[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**1. 家里花盆积水**",
+          "text": "2. 水培植物每3—5天更换一次水[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c5a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "3. 每天清理水池，保持台面干燥不留积水[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**1. 家里花盆积水**",
+          "text": "3. 每天清理水池，保持台面干燥不留积水；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c5a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "每周向地漏补水一次，保持地漏处于水封状态[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**1. 家里花盆积水**",
+          "text": "每周向地漏补水一次，保持地漏处于水封状态[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c6a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "4. 定期清理家庭卫生死角[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**1. 家里花盆积水**",
+          "text": "4. 定期清理家庭卫生死角[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c7a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "1. 清理庭院内的积水，包括花盆托盘和废旧盆罐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**2. 院子积水**",
+          "text": "1. 清理庭院内的积水，包括花盆托盘和废旧盆罐[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "2. 将花瓶托盘、废旧轮胎、水桶一律倒空[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**2. 院子积水**",
+          "text": "2. 将花瓶托盘、废旧轮胎、水桶一律倒空[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "3. 清除花坛、废旧轮胎里的积水，避免蚊子孳生[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 10,
+              "quote": "台风过后，受灾地区老鼠、蚊蝇容易大量孳生，也容易给人类带来虫媒传染病，比如登革热等。因此，台风过后一定要做好周围环境的清洁工作，将花坛、废旧轮胎里的积水除去，避免蚊子孳生，搞好家庭卫生，消灭苍蝇、蟑螂。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**2. 院子积水**",
+          "text": "3. 清除花坛、废旧轮胎里的积水，避免蚊子孳生[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c10a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "4. 及时清理居室周边的雨水、垃圾[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 16,
+              "quote": "外环境一般以清污为主。常昭瑞建议，对于重点场所，清污以后要做消毒处理。及时清理居室周边的雨水、垃圾，翻盆倒罐清除积水，减少蚊虫。如果有蚊虫滋生，必要时使用杀虫剂。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**2. 院子积水**",
+          "text": "4. 及时清理居室周边的雨水、垃圾[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c11a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "5. 大水体可每周投放灭蚊蚴缓释剂[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**2. 院子积水**",
+          "text": "5. 大水体可每周投放灭蚊蚴缓释剂[资料2]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c11a2",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "如有蚊虫滋生，必要时使用杀虫剂[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 16,
+              "quote": "外环境一般以清污为主。常昭瑞建议，对于重点场所，清污以后要做消毒处理。及时清理居室周边的雨水、垃圾，翻盆倒罐清除积水，减少蚊虫。如果有蚊虫滋生，必要时使用杀虫剂。"
+            }
+          ],
+          "facet_ids": [
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "heading": "**2. 院子积水**",
+          "text": "如有蚊虫滋生，必要时使用杀虫剂[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c12a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "1. 纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 44,
+              "quote": "防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "1. 纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c13a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "2. 购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "2. 购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c13a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "使用电蚊拍时，不要用手或导电金属棒接触高压电网[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "使用电蚊拍时，不要用手或导电金属棒接触高压电网[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c14a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "3. 黎明和黄昏蚊子出没高峰期尽量不要外出[资料1][资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            },
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "3. 黎明和黄昏蚊子出没高峰期尽量不要外出；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c14a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "夜间外出穿长袖长裤，别穿凉鞋[资料1][资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            },
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "夜间外出穿长袖长裤，别穿凉鞋[资料1][资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c15a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "4. 驱避剂可喷洒在衣服、鞋、蚊帐和其他物品上[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "4. 驱避剂可喷洒在衣服、鞋、蚊帐和其他物品上；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c15a2",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "蚊虫可能进入住宅时，床上设置蚊帐，寝室内可使用灭蚊喷雾器、灭蚊器或盘式蚊香[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "蚊虫可能进入住宅时，床上设置蚊帐，寝室内可使用灭蚊喷雾器、灭蚊器或盘式蚊香[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c16a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "5. 带婴儿外出时，婴儿手推车应挂上蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "5. 带婴儿外出时，婴儿手推车应挂上蚊帐[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c17a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "6. 被叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**3. 防叮咬**",
+          "text": "6. 被叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_1_c3a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "1. 翻盆倒罐，把花盆托盘里的积水倒空[资料1][资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            },
+            {
+              "citation": 2,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**一、家里花盆积水怎么清理**",
+          "text": "1. 翻盆倒罐，把花盆托盘里的积水倒空[资料1][资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_2_c4a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "2. 水培植物每3—5天更换一次水[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**一、家里花盆积水怎么清理**",
+          "text": "2. 水培植物每3—5天更换一次水[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_3_c5a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "3. 每天清理水池，保持台面干燥不留积水[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**一、家里花盆积水怎么清理**",
+          "text": "3. 每天清理水池，保持台面干燥不留积水[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_4_c6a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "4. 每周向地漏补水一次，保持地漏处于水封状态[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**一、家里花盆积水怎么清理**",
+          "text": "4. 每周向地漏补水一次，保持地漏处于水封状态[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_5_c7a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "5. 定期清理家庭卫生死角[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**一、家里花盆积水怎么清理**",
+          "text": "5. 定期清理家庭卫生死角[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_6_c8a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "1. 清理庭院内的积水，包括花盆托盘和废旧盆罐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 25,
+              "quote": "中国疾病预防控制中心研究员潘力军建议，首先，清除蚊虫滋生的场所。定期清理家庭卫生死角，如每天清理水池，保持台面干燥不留积水，每周向地漏补水一次，保持地漏处于水封状态；清理庭院内的积水，包括花盆托盘或者废旧盆罐，给水培植物每3—5天更换一次水。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**二、院子积水怎么清理**",
+          "text": "1. 清理庭院内的积水，包括花盆托盘和废旧盆罐[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_7_c9a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "2. 将花瓶托盘、废旧轮胎、水桶一律倒空[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**二、院子积水怎么清理**",
+          "text": "2. 将花瓶托盘、废旧轮胎、水桶一律倒空[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_8_c10a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "3. 清除花坛、废旧轮胎里的积水，避免蚊子孳生[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 10,
+              "quote": "台风过后，受灾地区老鼠、蚊蝇容易大量孳生，也容易给人类带来虫媒传染病，比如登革热等。因此，台风过后一定要做好周围环境的清洁工作，将花坛、废旧轮胎里的积水除去，避免蚊子孳生，搞好家庭卫生，消灭苍蝇、蟑螂。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**二、院子积水怎么清理**",
+          "text": "3. 清除花坛、废旧轮胎里的积水，避免蚊子孳生[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_9_c11a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "4. 及时清理居室周边的雨水、垃圾[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 16,
+              "quote": "外环境一般以清污为主。常昭瑞建议，对于重点场所，清污以后要做消毒处理。及时清理居室周边的雨水、垃圾，翻盆倒罐清除积水，减少蚊虫。如果有蚊虫滋生，必要时使用杀虫剂。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**二、院子积水怎么清理**",
+          "text": "4. 及时清理居室周边的雨水、垃圾[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_10_c12a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "5. 大水体可每周投放灭蚊蚴缓释剂[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 43,
+              "quote": "清积水：翻盆倒罐清积水，花瓶托盘、废旧轮胎、水桶一律倒空，大水体每周投灭蚊蚴缓释剂。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**二、院子积水怎么清理**",
+          "text": "5. 大水体可每周投放灭蚊蚴缓释剂[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_11_c13a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "6. 如有蚊虫滋生，必要时使用杀虫剂[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 16,
+              "quote": "外环境一般以清污为主。常昭瑞建议，对于重点场所，清污以后要做消毒处理。及时清理居室周边的雨水、垃圾，翻盆倒罐清除积水，减少蚊虫。如果有蚊虫滋生，必要时使用杀虫剂。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**二、院子积水怎么清理**",
+          "text": "6. 如有蚊虫滋生，必要时使用杀虫剂[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_12_c14a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "1. 纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料2]。",
+          "evidence_quotes": [
+            {
+              "citation": 2,
+              "passage_id": 44,
+              "quote": "防叮咬：纱窗蚊帐蚊香驱蚊液全家上岗，户外穿长袖长裤。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "1. 纱窗、蚊帐、蚊香、驱蚊液全家使用，户外穿长袖长裤[资料2]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_13_c15a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "2. 购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "2. 购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_14_c15a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "使用电蚊拍时，不要用手或导电金属棒接触高压电网[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 26,
+              "quote": "再者，选择合适的防蚊产品并合理使用。购买正规厂家生产的电蚊拍、蚊帐和驱蚊用品，选用高密度蚊帐，使用电蚊拍时忌用手或者导电金属棒接触高压电网，以防发生意外。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "使用电蚊拍时，不要用手或导电金属棒接触高压电网[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_15_c16a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "3. 黎明和黄昏蚊子出没高峰期尽量不要外出[资料1][资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "3. 黎明和黄昏蚊子出没高峰期尽量不要外出[资料1][资料3]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_16_c16a2",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "夜间外出穿长袖长裤，别穿凉鞋[资料1][资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "夜间外出穿长袖长裤，别穿凉鞋[资料1][资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_17_c17a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "4. 驱避剂可喷洒在衣服、鞋、蚊帐和其他物品上[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "4. 驱避剂可喷洒在衣服、鞋、蚊帐和其他物品上[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_18_c18a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "5. 蚊虫可能进入住宅时，床上设置蚊帐，寝室内可使用灭蚊喷雾器、灭蚊器或盘式蚊香[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 11,
+              "quote": "在黄昏和黎明前蚊子出没高峰期，不要外出。夜间外出穿长袖和长裤，别穿凉鞋。驱避剂也可喷洒在衣服、鞋、蚊帐和其他物品上。如果蚊虫可能进入住宅，应在床上设置蚊帐。夜间在寝室内使用灭蚊喷雾器或放有杀虫片的灭蚊器，或点燃盘式蚊香。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "5. 蚊虫可能进入住宅时，床上设置蚊帐，寝室内可使用灭蚊喷雾器、灭蚊器或盘式蚊香[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_19_c19a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "6. 带婴儿外出时，婴儿手推车应挂上蚊帐[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "6. 带婴儿外出时，婴儿手推车应挂上蚊帐[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_20_c20a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "7. 被叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 27,
+              "quote": "此外，合理选择活动区域和个人防护用品。黎明和黄昏时，尽量不要去潮湿、泥泞的室外或花草树木较多的场所。室外活动时，穿上长裤、轻薄的长袖和能遮住脚趾的鞋子。如果带婴儿外出，婴儿手推车应挂上蚊帐。蚊虫叮咬后，如出现严重过敏反应，如全身荨麻疹、呼吸困难、支气管痉挛等症状，应及时就医。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、怎么防叮咬**",
+          "text": "7. 被叮咬后如出现全身荨麻疹、呼吸困难、支气管痉挛等严重过敏反应，应及时就医[资料1]。",
+          "type": "direct_fact"
+        }
+      ]
+    },
+    "A1": {
+      "source_result_sha256": "ce64dc15937b76586ee3fd36ddc4549737ae3940a29bc3d8be97a34648a328c2",
+      "question": "我是象山县养殖户，台风前怎么加固网箱和池塘？损失了能赔吗？",
+      "facets": [
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "key": "acaf731c8433",
+          "kind": "method_steps",
+          "objects": [
+            "网箱"
+          ],
+          "parent": null,
+          "place_role": "context",
+          "places": [
+            "象山"
+          ],
+          "question": "台风前怎么加固网箱？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "台风前怎么加固网箱？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "key": "71aefa939645",
+          "kind": "method_steps",
+          "objects": [
+            "池塘"
+          ],
+          "parent": null,
+          "place_role": "context",
+          "places": [
+            "象山"
+          ],
+          "question": "台风前怎么加固池塘？",
+          "required_outputs": [
+            "steps"
+          ],
+          "text": "台风前怎么加固池塘？",
+          "time": null
+        },
+        {
+          "allowed_gaps": [
+            "evidence_not_found",
+            "individual_determination_required",
+            "jurisdiction_rule_not_found"
+          ],
+          "fid": "f3",
+          "id": 3,
+          "key": "d019a9c81fdd",
+          "kind": "eligibility",
+          "objects": [
+            "网箱",
+            "池塘"
+          ],
+          "parent": null,
+          "place_role": "jurisdiction_required",
+          "places": [
+            "象山"
+          ],
+          "question": "损失了能赔吗？",
+          "required_outputs": [
+            "conditions",
+            "application_path"
+          ],
+          "text": "损失了能赔吗？",
+          "time": null
+        }
+      ],
+      "old_delivery": [
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c1a1",
+            "c2a1",
+            "c2a2",
+            "c3a1",
+            "c3a2",
+            "c4a1",
+            "c5a1",
+            "c5a2",
+            "c6a1",
+            "c7a1",
+            "c8a1",
+            "c8a2",
+            "c8a3",
+            "c9a1",
+            "c9a2",
+            "c10a1"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f1",
+          "id": 1,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c1a1",
+            "c2a1",
+            "c2a2",
+            "c3a1",
+            "c3a2",
+            "c4a1",
+            "c5a1",
+            "c5a2",
+            "c6a1",
+            "c7a1",
+            "c8a1",
+            "c8a2",
+            "c8a3",
+            "c9a1",
+            "c9a2",
+            "c10a1"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c1a1",
+            "c11a1",
+            "c12a1",
+            "c13a1",
+            "c14a1",
+            "c15a1",
+            "c16a1",
+            "c17a1",
+            "c18a1",
+            "c19a1",
+            "c20a1"
+          ],
+          "covered_outputs": [
+            "steps"
+          ],
+          "fid": "f2",
+          "id": 2,
+          "kind": "method_steps",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c1a1",
+            "c11a1",
+            "c12a1",
+            "c13a1",
+            "c14a1",
+            "c15a1",
+            "c16a1",
+            "c17a1",
+            "c18a1",
+            "c19a1",
+            "c20a1"
+          ]
+        },
+        {
+          "allowed_gap_atom_ids": [],
+          "atom_ids": [
+            "c21a1",
+            "c22a1",
+            "c23a1",
+            "local1_1_c1a1",
+            "local1_2_c1a2",
+            "local1_3_c2a1",
+            "local1_4_c2a2",
+            "local1_5_c3a1",
+            "local1_6_c3a2",
+            "local1_7_c4a1",
+            "local1_8_c5a1",
+            "local1_9_c5a2",
+            "local1_10_c6a1",
+            "local1_11_c6a2",
+            "local1_12_c7a1",
+            "local1_13_c7a2",
+            "local1_14_c7a3",
+            "local1_15_c8a1",
+            "local1_16_c8a2",
+            "local1_17_c9a1",
+            "local1_18_c10a1",
+            "local1_19_c10a2",
+            "local1_20_c11a1",
+            "local1_21_c12a1",
+            "local1_22_c13a1",
+            "local1_23_c13a2",
+            "local1_24_c14a1",
+            "local1_25_c14a2",
+            "local1_26_c15a1",
+            "local1_27_c15a2",
+            "local1_28_c16a1",
+            "local1_29_c17a1",
+            "local1_30_c18a1",
+            "local1_31_c19a1"
+          ],
+          "covered_outputs": [
+            "application_path",
+            "conditions"
+          ],
+          "fid": "f3",
+          "id": 3,
+          "kind": "eligibility",
+          "missing_outputs": [],
+          "status": "full",
+          "substantive_atom_ids": [
+            "c21a1",
+            "c22a1",
+            "c23a1",
+            "local1_1_c1a1",
+            "local1_2_c1a2",
+            "local1_3_c2a1",
+            "local1_4_c2a2",
+            "local1_5_c3a1",
+            "local1_6_c3a2",
+            "local1_7_c4a1",
+            "local1_8_c5a1",
+            "local1_9_c5a2",
+            "local1_10_c6a1",
+            "local1_11_c6a2",
+            "local1_12_c7a1",
+            "local1_13_c7a2",
+            "local1_14_c7a3",
+            "local1_15_c8a1",
+            "local1_16_c8a2",
+            "local1_17_c9a1",
+            "local1_18_c10a1",
+            "local1_19_c10a2",
+            "local1_20_c11a1",
+            "local1_21_c12a1",
+            "local1_22_c13a1",
+            "local1_23_c13a2",
+            "local1_24_c14a1",
+            "local1_25_c14a2",
+            "local1_26_c15a1",
+            "local1_27_c15a2",
+            "local1_28_c16a1",
+            "local1_29_c17a1",
+            "local1_30_c18a1",
+            "local1_31_c19a1"
+          ]
+        }
+      ],
+      "accepted_atoms": [
+        {
+          "aid": "c1a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "可以分三块看：网箱和池塘的台风前加固，国家海水鱼产业技术体系手册有具体操作[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            },
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f1",
+            "f2"
+          ],
+          "heading": "",
+          "text": "可以分三块看：网箱和池塘的台风前加固，国家海水鱼产业技术体系手册有具体操作；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c2a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "1. 关注台风预警动态，及时采取预防措施[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "1. 关注台风预警动态，及时采取预防措施；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c2a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查夜间警示装置能否正常工作[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "检查夜间警示装置能否正常工作[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c3a1",
+          "binding": "explicit_object",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "2. 检查网箱框架各部位，有隐患及时修理加固[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "2. 检查网箱框架各部位，有隐患及时修理加固；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c3a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "清除框架附着物，避免磨破网衣逃鱼[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "清除框架附着物，避免磨破网衣逃鱼[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c4a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "3. 加固框架锚泊系缚受力点，检查固定单体框架间缓冲装置[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "3. 加固框架锚泊系缚受力点，检查固定单体框架间缓冲装置[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c5a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "4. 检查缆绳有无断股、磨损，必要时在迎风面增加较长锚固[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "4. 检查缆绳有无断股、磨损，必要时在迎风面增加较长锚固；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c5a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查缓冲沉子或浮桶是否完好、绑系牢固，按极端海况波高等距离加固加长锚绳，避免“硬拉”[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "检查缓冲沉子或浮桶是否完好、绑系牢固，按极端海况波高等距离加固加长锚绳，避免“硬拉”[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c6a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "5. 连接贯通不同方向的缆绳，使箱体与缆绳成整体，限制箱体变形[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "5. 连接贯通不同方向的缆绳，使箱体与缆绳成整体，限制箱体变形[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c7a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "6. 检查浮筒数量及有无裂纹，检查连接卸扣套环有无损伤松脱[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "6. 检查浮筒数量及有无裂纹，检查连接卸扣套环有无损伤松脱[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "7. 更换附着生物多的网衣，检查网衣破损及绑系受力是否均衡[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "7. 更换附着生物多的网衣，检查网衣破损及绑系受力是否均衡；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查沉子数量且均匀分布[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "检查沉子数量且均匀分布；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c8a3",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "加装并系紧盖网[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "加装并系紧盖网[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "8. 检查管理房门窗、顶装太阳能、风力电机等外置设备，加固管理房浮子及碰撞缓冲设备[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "8. 检查管理房门窗、顶装太阳能、风力电机等外置设备，加固管理房浮子及碰撞缓冲设备；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c9a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "抗风差的管理平台及时拖回避风港固锚，人员上岸避风[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "抗风差的管理平台及时拖回避风港固锚，人员上岸避风[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c10a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "9. 台风期间严禁人员、船只出海作业，直至台风警报解除且海况符合海上作业要求[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f1"
+          ],
+          "heading": "**一、台风前加固网箱**",
+          "text": "9. 台风期间严禁人员、船只出海作业，直至台风警报解除且海况符合海上作业要求[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c11a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "1. 关注台风预警动态，及时预防[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "1. 关注台风预警动态，及时预防[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c12a1",
+          "binding": "explicit_object",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "2. 台风到来前饲料适时减量投喂或停喂，减少鱼和池塘环境负荷[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "2. 台风到来前饲料适时减量投喂或停喂，减少鱼和池塘环境负荷[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c13a1",
+          "binding": "explicit_object",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "3. 适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时加装防逃逸围网[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "3. 适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时加装防逃逸围网[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c14a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "4. 全面检查塘基可靠性，判断是否需加高或加固塘基，提防溃塌[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "4. 全面检查塘基可靠性，判断是否需加高或加固塘基，提防溃塌[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c15a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "5. 维护增氧设备，检查电缆、增氧机等归置是否妥当[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "5. 维护增氧设备，检查电缆、增氧机等归置是否妥当[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c16a1",
+          "binding": "explicit_object",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "6. 对池塘周围供电设施（电杆、电线、配电室、应急发电室等）做适当加固安全处理[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "6. 对池塘周围供电设施（电杆、电线、配电室、应急发电室等）做适当加固安全处理[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c17a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "7. 塘口配备原塘电力负荷一半以上功率的发电机，备足三天燃料[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "7. 塘口配备原塘电力负荷一半以上功率的发电机，备足三天燃料[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c18a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "8. 提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "8. 提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c19a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "9. 检查房屋及饲料、药品库房是否坚固、充分防水[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "9. 检查房屋及饲料、药品库房是否坚固、充分防水[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c20a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "10. 遇超强台风及时撤离至安全区域[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f2"
+          ],
+          "heading": "**二、台风前加固池塘**",
+          "text": "10. 遇超强台风及时撤离至安全区域[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c21a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "不能一概说“能赔”或“不能赔”[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 73,
+              "quote": "第二十二条 保险事故发生后，按照保险合同请求保险人赔偿或者给付保险金时，投保人、被保险人或者受益人应当向保险人提供其所能提供的与确认保险事故的性质、原因、损失程度等有关的证明和资料。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 75,
+              "quote": "第二十三条 保险人收到被保险人或者受益人的赔偿或者给付保险金的请求后，应当及时作出核定；情形复杂的，应当在三十日内作出核定，但合同另有约定的除外。保险人应当将核定结果通知被保险人或者受益人；对属于保险责任的，在与被保险人或者受益人达成赔偿或者给付保险金的协议后十日内，履行赔偿或者给付保险金义务。保险合同对赔偿或者给付保险金的期限有约定的，保险人应当按照约定履行赔偿或者给付保险金义务。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、损失能否获赔**",
+          "text": "不能一概说“能赔”或“不能赔”。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c22a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "按保险法一般规定，保险事故发生后，投保人、被保险人或受益人向保险人请求赔偿时，应提供其所能提供的、与确认事故性质、原因、损失程度有关的证明和资料；保险人收到请求后应及时核定，情形复杂的应在三十日内核定（合同另有约定除外），属于保险责任的，达成赔偿协议后十日内履行赔付义务（合同对期限另有约定的从约定）[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 73,
+              "quote": "第二十二条 保险事故发生后，按照保险合同请求保险人赔偿或者给付保险金时，投保人、被保险人或者受益人应当向保险人提供其所能提供的与确认保险事故的性质、原因、损失程度等有关的证明和资料。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 75,
+              "quote": "第二十三条 保险人收到被保险人或者受益人的赔偿或者给付保险金的请求后，应当及时作出核定；情形复杂的，应当在三十日内作出核定，但合同另有约定的除外。保险人应当将核定结果通知被保险人或者受益人；对属于保险责任的，在与被保险人或者受益人达成赔偿或者给付保险金的协议后十日内，履行赔偿或者给付保险金义务。保险合同对赔偿或者给付保险金的期限有约定的，保险人应当按照约定履行赔偿或者给付保险金义务。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、损失能否获赔**",
+          "text": "按保险法一般规定，保险事故发生后，投保人、被保险人或受益人向保险人请求赔偿时，应提供其所能提供的、与确认事故性质、原因、损失程度有关的证明和资料[资料3]；保险人收到请求后应及时核定，情形复杂的应在三十日内核定（合同另有约定除外），属于保险责任的，达成赔偿协议后十日内履行赔付义务（合同对期限另有约定的从约定）[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "c23a1",
+          "binding": "unresolved",
+          "context_subject": [],
+          "display_text": "手册也提示：记录养殖设施内死亡鱼数量、规格及设施受损部位，及时拍照并做好记录，如有养殖投保，可联系保险公司定损[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 8,
+              "quote": "第7页\n3 \n \n（2）台风前锚泊系统检查、加固 \n锚链是否有腐蚀或磨损现象、附着物是否已影响正常使用,必要时在可能的\n迎风面增加相对较长锚固;检查锚链缓冲沉子或浮桶是否完好且连接可靠；检查\n浮筒数量及是否完好无裂纹,注意浮筒连接卸扣套环是否有损伤或松脱。 \n（3）台风前网衣系统检查、加固 \n清洗附着生物较多的网衣,检查网衣有无破损及绑系受力是否均衡。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点与措施 \n（1）台风后检查桁架类网箱和综合平台养殖主体结构、网衣及锚泊系统有\n无受损,确保现存鱼类安全。 \n（2）台风后及时恢复监测监控设备,也可采用投饵采食量来估算存鱼数量,\n加强日常养殖管理与评估,如需要可提前上市养殖鱼品。 \n（3）对于死鱼、病鱼等要立即捞出，并集中进行无害化处理，减轻对养殖\n环境的影响。 \n（4）加强养殖管理，注意消毒杀菌，严防台风后鱼类病害发生。必要时，\n可根据养殖鱼类感染情况，选择合适药物进行治疗。 \n（5）记录养殖设施内死亡鱼的数量、规格以及设施受损部位等情况，及时\n拍照并做好记录，如有养殖投保，可联系保险公司定损。 \n（四）围栏养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）围栏柱桩与围栏内辅助设施检查、加固 \n清理柱桩上的附着物和柱桩间的杂物，移出或加固围栏设施内的辅助网箱、\n水面投饵圈拦等辅助设施，避免网衣与漂移物接触而造成破网逃鱼。 \n（2）网衣系统检查、加固 \n检查围栏网衣整体连接是否牢靠， 着重检查网衣拼接处和网衣系统的横向力\n纲与纵向力纲，检查是否需要做加固处理。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点及措施 \n（1）检查围栏设施网衣有无破损，如有破损应及时修补，防止造成更多的\n养殖鱼逃逸，及时排除逃鱼隐患。积极组织养殖现场复工及设施维修。 \n（2）对网衣与柱桩连接处进行安全检查，排除每根柱桩位置存在的安全隐\n患。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "**三、损失能否获赔**",
+          "text": "手册也提示：记录养殖设施内死亡鱼数量、规格及设施受损部位，及时拍照并做好记录，如有养殖投保，可联系保险公司定损[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_1_c1a1",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "网箱和池塘的台风前加固，国家海水鱼产业技术体系手册有具体操作[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            },
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "",
+          "text": "网箱和池塘的台风前加固，国家海水鱼产业技术体系手册有具体操作[资料1]；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_2_c1a2",
+          "binding": "explicit_object",
+          "context_subject": [],
+          "display_text": "至于“损失了能赔吗”，现有资料只能说明保险理赔的一般条件和报案取证做法，不能确认象山网箱、池塘养殖是否已投保、能否获赔[资料1][资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 8,
+              "quote": "第7页\n3 \n \n（2）台风前锚泊系统检查、加固 \n锚链是否有腐蚀或磨损现象、附着物是否已影响正常使用,必要时在可能的\n迎风面增加相对较长锚固;检查锚链缓冲沉子或浮桶是否完好且连接可靠；检查\n浮筒数量及是否完好无裂纹,注意浮筒连接卸扣套环是否有损伤或松脱。 \n（3）台风前网衣系统检查、加固 \n清洗附着生物较多的网衣,检查网衣有无破损及绑系受力是否均衡。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点与措施 \n（1）台风后检查桁架类网箱和综合平台养殖主体结构、网衣及锚泊系统有\n无受损,确保现存鱼类安全。 \n（2）台风后及时恢复监测监控设备,也可采用投饵采食量来估算存鱼数量,\n加强日常养殖管理与评估,如需要可提前上市养殖鱼品。 \n（3）对于死鱼、病鱼等要立即捞出，并集中进行无害化处理，减轻对养殖\n环境的影响。 \n（4）加强养殖管理，注意消毒杀菌，严防台风后鱼类病害发生。必要时，\n可根据养殖鱼类感染情况，选择合适药物进行治疗。 \n（5）记录养殖设施内死亡鱼的数量、规格以及设施受损部位等情况，及时\n拍照并做好记录，如有养殖投保，可联系保险公司定损。 \n（四）围栏养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）围栏柱桩与围栏内辅助设施检查、加固 \n清理柱桩上的附着物和柱桩间的杂物，移出或加固围栏设施内的辅助网箱、\n水面投饵圈拦等辅助设施，避免网衣与漂移物接触而造成破网逃鱼。 \n（2）网衣系统检查、加固 \n检查围栏网衣整体连接是否牢靠， 着重检查网衣拼接处和网衣系统的横向力\n纲与纵向力纲，检查是否需要做加固处理。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点及措施 \n（1）检查围栏设施网衣有无破损，如有破损应及时修补，防止造成更多的\n养殖鱼逃逸，及时排除逃鱼隐患。积极组织养殖现场复工及设施维修。 \n（2）对网衣与柱桩连接处进行安全检查，排除每根柱桩位置存在的安全隐\n患。 "
+            },
+            {
+              "citation": 3,
+              "passage_id": 73,
+              "quote": "第二十二条 保险事故发生后，按照保险合同请求保险人赔偿或者给付保险金时，投保人、被保险人或者受益人应当向保险人提供其所能提供的与确认保险事故的性质、原因、损失程度等有关的证明和资料。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 75,
+              "quote": "第二十三条 保险人收到被保险人或者受益人的赔偿或者给付保险金的请求后，应当及时作出核定；情形复杂的，应当在三十日内作出核定，但合同另有约定的除外。保险人应当将核定结果通知被保险人或者受益人；对属于保险责任的，在与被保险人或者受益人达成赔偿或者给付保险金的协议后十日内，履行赔偿或者给付保险金义务。保险合同对赔偿或者给付保险金的期限有约定的，保险人应当按照约定履行赔偿或者给付保险金义务。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "",
+          "text": "至于“损失了能赔吗”，现有资料只能说明保险理赔的一般条件和报案取证做法，不能确认象山网箱、池塘养殖是否已投保、能否获赔[资料1][资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_3_c2a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "1. 关注台风预警动态，及时采取预防措施[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "1. 关注台风预警动态，及时采取预防措施；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_4_c2a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查夜间警示装置能否正常工作[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "检查夜间警示装置能否正常工作[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_5_c3a1",
+          "binding": "explicit_object",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "2. 检查网箱框架各部位，有隐患及时修理加固[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "2. 检查网箱框架各部位，有隐患及时修理加固；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_6_c3a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "清除框架附着物，避免磨破网衣逃鱼[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "清除框架附着物，避免磨破网衣逃鱼[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_7_c4a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "3. 加固框架锚泊系缚受力点，检查固定单体框架间缓冲装置[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "3. 加固框架锚泊系缚受力点，检查固定单体框架间缓冲装置[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_8_c5a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "4. 检查缆绳有无断股、磨损，必要时在迎风面增加较长锚固[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "4. 检查缆绳有无断股、磨损，必要时在迎风面增加较长锚固；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_9_c5a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查缓冲沉子或浮桶是否完好、绑系牢固，按极端海况波高等距离加固加长锚绳，避免“硬拉”[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "检查缓冲沉子或浮桶是否完好、绑系牢固，按极端海况波高等距离加固加长锚绳，避免“硬拉”[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_10_c6a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "5. 连接贯通不同方向的缆绳，使箱体与缆绳成整体，限制箱体变形[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "5. 连接贯通不同方向的缆绳，使箱体与缆绳成整体，限制箱体变形；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_11_c6a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查浮筒数量及有无裂纹，检查连接卸扣套环有无损伤松脱[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "检查浮筒数量及有无裂纹，检查连接卸扣套环有无损伤松脱[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_12_c7a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "6. 更换附着生物多的网衣，检查网衣破损及绑系受力是否均衡[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 6,
+              "quote": "第5页\n1 \n \n海水鱼海上设施养殖台风防御指南 \n \n海水鱼海上设施养殖主要有重力式网箱、桁架类网箱、综合平台和围栏养殖\n等模式。 台风对海上设施养殖造成的灾害影响主要体现在： 设施损坏， 网破鱼逃；\n鱼体擦伤损伤，致鱼死亡，以及次生病害导致死鱼等。 \n（一）台风前海上设施养殖注意事项 \n1.密切关注台风动态，提前做好防御安排 \n气象台根据台风可能产生的影响，在预报时采用“消息”“警报”和“紧急\n警报”三种形式向社会发布。同时，按台风可能造成的影响程度，由轻到重向社\n会发布蓝、黄、橙、红四色台风预警信号。海水鱼网箱养殖从业者应密切关注台\n风预警动态，及时采取预防措施。 \n2.夜间警示安全检查 \n检查设施上夜间警示装置可否正常工作，避免设施与船只发生碰撞。 \n（二）重力式网箱养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）网箱框架检查、加固 \n① 查看网箱框架各部位是否完好，有隐患的部位要及时修理加固；及时清\n除框架上的附着物，避免网衣因强浪流漂移接触而磨破网衣逃鱼。 \n② 对网箱框架锚泊系缚受力点位置进行必要加固，并对网箱单体框架间缓\n冲装置进行检查固定，提高台风行经期间网箱结构安全。 \n（2）锚泊系统检查、加固 \n① 缆绳是否有断股或磨损现象、附着物是否已影响缆绳的正常使用，必要\n时可在可能的迎风面增加相对较长锚固。 \n② 检查缆绳缓冲沉子或浮桶是否完好且绑系牢固，并根据极端海况的波高\n情况，等距离加固、加长所有固定锚绳，避免锚绳与网箱框架无缓冲“硬拉”。  \n③ 连接贯通不同方向的缆绳， 使箱体与缆绳成为一个整体， 限制箱体形变，\n避免箱体因强风大浪变形而崩塌 或折断。 \n④ 检查浮筒数量及是否完好无裂纹，注意浮筒连接卸扣套环是否有损伤或\n松脱。 \n（3）网衣系统检查、加固 \n① 更换附着生物较多的网衣，检查网衣有无破损及绑系受力是否均衡。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "6. 更换附着生物多的网衣，检查网衣破损及绑系受力是否均衡；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_13_c7a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "检查沉子数量且均匀分布[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "检查沉子数量且均匀分布；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_14_c7a3",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "加装并系紧盖网[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "加装并系紧盖网[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_15_c8a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "7. 检查管理房门窗、顶装太阳能、风力电机等外置设备，加固管理房浮子及碰撞缓冲设备[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "7. 检查管理房门窗、顶装太阳能、风力电机等外置设备，加固管理房浮子及碰撞缓冲设备；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_16_c8a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "抗风差的管理平台及时拖回避风港固锚，人员上岸避风[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "抗风差的管理平台及时拖回避风港固锚，人员上岸避风[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_17_c9a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "网箱"
+          ],
+          "display_text": "台风期间严禁人员、船只出海作业，直至台风警报解除且海况符合海上作业要求[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 7,
+              "quote": "第6页\n2 \n \n② 检查网衣沉子数量且均匀分布完好。 \n③ 加装并系紧盖网。 \n（4）养殖鱼抗应激及防病处理 \n① 及时关注台风动态信息，在台风来临前 7 天采用投喂免疫多糖、复合维\n生素、中成药制剂等进行养殖鱼类抗应激处理。 \n② 同步使用吊挂碘、氯制剂等方式，对网箱及养殖鱼类进行防病处理，降\n低台风行径时损伤感染。 \n（5）附属设施检查及人员撤离 \n检查完网箱养殖系统后，重点检查网箱管理房设施结构，如门窗、顶装太阳\n能、风力电机等外置设备，同时加固管理房浮子及碰撞缓冲设备；整理饲料、药\n物等养殖物资；抗风能力较差的管理平台等附属设施要及时拖回避风港固锚，养\n殖工作人员必须上岸避风，人员撤离时带走液化石油气等易燃易爆物品。 \n* 台风期间，严禁人员、船只出海作业，直至台风警报解除，且海况条件符\n合海上作业要求。 \n2.台风后防灾减灾要点与措施 \n（1）进行网箱养殖现场安全检查，及时排除现场存在的安全隐患。 \n（2）检查网箱框架、网衣及锚泊系统有无破损，确保现存鱼类安全。 \n（3）清捞养殖区域内杂物，积极组织养殖现场复工及设施维修。 \n（4）及时吊挂和泼洒碘、氯等消毒剂，减少继发感染，必要时根据养殖鱼\n类感染情况，选择合适药物进行治疗。 \n（5）无害化清除并掩埋腐烂变质的死鱼，减轻对养殖环境的影响。 \n（6）可采用投饵采食量来估算存鱼数量，合理安排后续养殖投喂。 \n（7）加强日常养殖管理，严防各种鱼类病害发生。 \n（8）在做好以上防风工作的同时，要做好风后持续大暴雨防范工作。 \n（9）总结经验，吸取教训，对在台风中的损失做正确的估计，强化下一步\n养殖工作注意事项。 \n（三）桁架类网箱和综合平台养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）台风前主体结构检查、加固 \n查看主体结构各部位是否完好、钢制构件是否出现腐蚀,有隐患的部位要及\n时修理加固；清除附着物,避免网衣因强浪流漂移接触而磨破网衣逃鱼；查看相\n关监控监测设备是否完好,预估人员撤离后储能电池电量是否够用。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "一、台风前网箱加固",
+          "text": "台风期间严禁人员、船只出海作业，直至台风警报解除且海况符合海上作业要求[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_18_c10a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "1. 关注台风预警动态，及时预防[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "1. 关注台风预警动态，及时预防；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_19_c10a2",
+          "binding": "explicit_object",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "台风到来前饲料适时减量投喂或停喂，减少鱼和池塘环境负荷[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "台风到来前饲料适时减量投喂或停喂，减少鱼和池塘环境负荷[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_20_c11a1",
+          "binding": "explicit_object",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "2. 适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时加装防逃逸围网[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "2. 适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时加装防逃逸围网[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_21_c12a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "3. 全面检查塘基可靠性，判断是否需加高或加固塘基，提防溃塌[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "3. 全面检查塘基可靠性，判断是否需加高或加固塘基，提防溃塌[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_22_c13a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "4. 维护增氧设备，检查电缆、增氧机等归置是否妥当[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "4. 维护增氧设备，检查电缆、增氧机等归置是否妥当；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_23_c13a2",
+          "binding": "explicit_object",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "对池塘周围供电设施（电杆、电线、配电室、应急发电室等）做适当加固安全处理[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "对池塘周围供电设施（电杆、电线、配电室、应急发电室等）做适当加固安全处理[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_24_c14a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "5. 塘口配备原塘电力负荷一半以上功率的发电机，备足三天燃料[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "5. 塘口配备原塘电力负荷一半以上功率的发电机，备足三天燃料；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_25_c14a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_26_c15a1",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "6. 检查房屋及饲料、药品库房是否坚固、充分防水[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "6. 检查房屋及饲料、药品库房是否坚固、充分防水；",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_27_c15a2",
+          "binding": "inherited_heading",
+          "context_subject": [
+            "池塘"
+          ],
+          "display_text": "遇超强台风及时撤离至安全区域[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 11,
+              "quote": "第10页\n1 \n \n海水鱼池塘养殖台风防御指南 \n \n台风灾害对海水鱼池塘养殖的影响主要体现在：台风伴随强降水使水位猛\n涨，造成洪涝灾害和水质环境因子突变；设施受损，破堤跑鱼；停电缺氧等。 \n（一）台风前注意事项与防护要点 \n1.密切关注台风动态，提前做好防御安排。气象台根据台风可能产生的影\n响，在预报时采用“消息”“警报”和“紧急警报”三种形式向社会发布。同\n时，按台风可能造成的影响程度，由轻到重向社会发布蓝、黄、橙、红四色台\n风预警信号。海水鱼池塘养殖从业者应密切关注台风预警动态，及时采取预防\n措施。 \n2.台风到来前，饲料要适时减量投喂或停喂，减少养殖鱼类及养殖池塘环\n境负荷。 \n3.适当预降池塘水位，防止风暴增水造成逃鱼和窜塘，必要时要加装防逃\n逸围网。 \n4.全面检查塘基的可靠性。依据池塘实际情况，判断是否需要加高或加固\n塘基，提防塘基溃塌。 \n5.做好增氧设备的维护，检查电缆、增氧机等设备归置是否妥当。 \n6.依据台风预报情况，对池塘周围供电设施（电杆、电线、配电室、应急\n发电室等）做适当的加固安全处理。 \n7.塘口配备原塘电力负荷一半以上功率的发电机，且备足三天燃料。 \n8.提前准备固体增氧剂、粗盐、抗应激制剂、沙袋等应急物资。 \n9.检查房屋是否有安全隐患，放置饲料、药品的库房是否坚固和充分防\n水。 \n10.遇超强台风，请及时撤离至安全区域躲避，做好防台风安全措施。 \n（二）台风后防灾减灾要点及措施 \n1.台风过后，对池塘塘基进行安全检查，及时排除逃鱼隐患。 \n2.对池塘配套设施进行安全检查，排除复产现场存在的安全隐患。内容包\n括：机械设备的配电箱有否水淹情况、电线线路连接是否正常、电器设备是否"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "二、台风前池塘加固",
+          "text": "遇超强台风及时撤离至安全区域[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_28_c16a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "不能一概说“能赔”或“不能赔”[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 73,
+              "quote": "第二十二条 保险事故发生后，按照保险合同请求保险人赔偿或者给付保险金时，投保人、被保险人或者受益人应当向保险人提供其所能提供的与确认保险事故的性质、原因、损失程度等有关的证明和资料。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 75,
+              "quote": "第二十三条 保险人收到被保险人或者受益人的赔偿或者给付保险金的请求后，应当及时作出核定；情形复杂的，应当在三十日内作出核定，但合同另有约定的除外。保险人应当将核定结果通知被保险人或者受益人；对属于保险责任的，在与被保险人或者受益人达成赔偿或者给付保险金的协议后十日内，履行赔偿或者给付保险金义务。保险合同对赔偿或者给付保险金的期限有约定的，保险人应当按照约定履行赔偿或者给付保险金义务。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "三、损失能否获赔",
+          "text": "不能一概说“能赔”或“不能赔”[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_29_c17a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "按保险法一般规定，保险事故发生后，投保人、被保险人或受益人向保险人请求赔偿时，应提供其所能提供的、与确认事故性质、原因、损失程度有关的证明和资料；保险人收到请求后应及时核定，情形复杂的应在三十日内核定（合同另有约定除外），属于保险责任的，达成赔偿协议后十日内履行赔付义务（合同对期限另有约定的从约定）[资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 3,
+              "passage_id": 73,
+              "quote": "第二十二条 保险事故发生后，按照保险合同请求保险人赔偿或者给付保险金时，投保人、被保险人或者受益人应当向保险人提供其所能提供的与确认保险事故的性质、原因、损失程度等有关的证明和资料。"
+            },
+            {
+              "citation": 3,
+              "passage_id": 75,
+              "quote": "第二十三条 保险人收到被保险人或者受益人的赔偿或者给付保险金的请求后，应当及时作出核定；情形复杂的，应当在三十日内作出核定，但合同另有约定的除外。保险人应当将核定结果通知被保险人或者受益人；对属于保险责任的，在与被保险人或者受益人达成赔偿或者给付保险金的协议后十日内，履行赔偿或者给付保险金义务。保险合同对赔偿或者给付保险金的期限有约定的，保险人应当按照约定履行赔偿或者给付保险金义务。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "三、损失能否获赔",
+          "text": "按保险法一般规定，保险事故发生后，投保人、被保险人或受益人向保险人请求赔偿时，应提供其所能提供的、与确认事故性质、原因、损失程度有关的证明和资料；保险人收到请求后应及时核定，情形复杂的应在三十日内核定（合同另有约定除外），属于保险责任的，达成赔偿协议后十日内履行赔付义务（合同对期限另有约定的从约定）[资料3]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_30_c18a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "手册也提示：记录养殖设施内死亡鱼数量、规格及设施受损部位，及时拍照并做好记录，如有养殖投保，可联系保险公司定损[资料1]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 8,
+              "quote": "第7页\n3 \n \n（2）台风前锚泊系统检查、加固 \n锚链是否有腐蚀或磨损现象、附着物是否已影响正常使用,必要时在可能的\n迎风面增加相对较长锚固;检查锚链缓冲沉子或浮桶是否完好且连接可靠；检查\n浮筒数量及是否完好无裂纹,注意浮筒连接卸扣套环是否有损伤或松脱。 \n（3）台风前网衣系统检查、加固 \n清洗附着生物较多的网衣,检查网衣有无破损及绑系受力是否均衡。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点与措施 \n（1）台风后检查桁架类网箱和综合平台养殖主体结构、网衣及锚泊系统有\n无受损,确保现存鱼类安全。 \n（2）台风后及时恢复监测监控设备,也可采用投饵采食量来估算存鱼数量,\n加强日常养殖管理与评估,如需要可提前上市养殖鱼品。 \n（3）对于死鱼、病鱼等要立即捞出，并集中进行无害化处理，减轻对养殖\n环境的影响。 \n（4）加强养殖管理，注意消毒杀菌，严防台风后鱼类病害发生。必要时，\n可根据养殖鱼类感染情况，选择合适药物进行治疗。 \n（5）记录养殖设施内死亡鱼的数量、规格以及设施受损部位等情况，及时\n拍照并做好记录，如有养殖投保，可联系保险公司定损。 \n（四）围栏养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）围栏柱桩与围栏内辅助设施检查、加固 \n清理柱桩上的附着物和柱桩间的杂物，移出或加固围栏设施内的辅助网箱、\n水面投饵圈拦等辅助设施，避免网衣与漂移物接触而造成破网逃鱼。 \n（2）网衣系统检查、加固 \n检查围栏网衣整体连接是否牢靠， 着重检查网衣拼接处和网衣系统的横向力\n纲与纵向力纲，检查是否需要做加固处理。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点及措施 \n（1）检查围栏设施网衣有无破损，如有破损应及时修补，防止造成更多的\n养殖鱼逃逸，及时排除逃鱼隐患。积极组织养殖现场复工及设施维修。 \n（2）对网衣与柱桩连接处进行安全检查，排除每根柱桩位置存在的安全隐\n患。 "
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "三、损失能否获赔",
+          "text": "手册也提示：记录养殖设施内死亡鱼数量、规格及设施受损部位，及时拍照并做好记录，如有养殖投保，可联系保险公司定损[资料1]。",
+          "type": "direct_fact"
+        },
+        {
+          "aid": "local1_31_c19a1",
+          "binding": "inherited_heading",
+          "context_subject": [],
+          "display_text": "因此，能否获赔取决于是否投保及保险合同约定，需向承保保险公司报案定损[资料1][资料3]。",
+          "evidence_quotes": [
+            {
+              "citation": 1,
+              "passage_id": 8,
+              "quote": "第7页\n3 \n \n（2）台风前锚泊系统检查、加固 \n锚链是否有腐蚀或磨损现象、附着物是否已影响正常使用,必要时在可能的\n迎风面增加相对较长锚固;检查锚链缓冲沉子或浮桶是否完好且连接可靠；检查\n浮筒数量及是否完好无裂纹,注意浮筒连接卸扣套环是否有损伤或松脱。 \n（3）台风前网衣系统检查、加固 \n清洗附着生物较多的网衣,检查网衣有无破损及绑系受力是否均衡。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点与措施 \n（1）台风后检查桁架类网箱和综合平台养殖主体结构、网衣及锚泊系统有\n无受损,确保现存鱼类安全。 \n（2）台风后及时恢复监测监控设备,也可采用投饵采食量来估算存鱼数量,\n加强日常养殖管理与评估,如需要可提前上市养殖鱼品。 \n（3）对于死鱼、病鱼等要立即捞出，并集中进行无害化处理，减轻对养殖\n环境的影响。 \n（4）加强养殖管理，注意消毒杀菌，严防台风后鱼类病害发生。必要时，\n可根据养殖鱼类感染情况，选择合适药物进行治疗。 \n（5）记录养殖设施内死亡鱼的数量、规格以及设施受损部位等情况，及时\n拍照并做好记录，如有养殖投保，可联系保险公司定损。 \n（四）围栏养殖台风防御 \n1.台风前注意事项及防护措施 \n（1）围栏柱桩与围栏内辅助设施检查、加固 \n清理柱桩上的附着物和柱桩间的杂物，移出或加固围栏设施内的辅助网箱、\n水面投饵圈拦等辅助设施，避免网衣与漂移物接触而造成破网逃鱼。 \n（2）网衣系统检查、加固 \n检查围栏网衣整体连接是否牢靠， 着重检查网衣拼接处和网衣系统的横向力\n纲与纵向力纲，检查是否需要做加固处理。 \n养殖鱼抗应激及防病处理、附属设施检查及人员撤离等同上。 \n2.台风后防灾减灾要点及措施 \n（1）检查围栏设施网衣有无破损，如有破损应及时修补，防止造成更多的\n养殖鱼逃逸，及时排除逃鱼隐患。积极组织养殖现场复工及设施维修。 \n（2）对网衣与柱桩连接处进行安全检查，排除每根柱桩位置存在的安全隐\n患。 "
+            },
+            {
+              "citation": 3,
+              "passage_id": 73,
+              "quote": "第二十二条 保险事故发生后，按照保险合同请求保险人赔偿或者给付保险金时，投保人、被保险人或者受益人应当向保险人提供其所能提供的与确认保险事故的性质、原因、损失程度等有关的证明和资料。"
+            }
+          ],
+          "facet_ids": [
+            "f3"
+          ],
+          "heading": "三、损失能否获赔",
+          "text": "因此，能否获赔取决于是否投保及保险合同约定，需向承保保险公司报案定损；",
+          "type": "direct_fact"
+        }
+      ]
+    }
+  }
+}

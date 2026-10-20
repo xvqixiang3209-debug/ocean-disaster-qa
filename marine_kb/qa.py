@@ -1,6 +1,7 @@
 """Professional marine RAG with explicit privacy, evidence and time boundaries."""
 from __future__ import annotations
 
+import hashlib
 import json
 from .model_json import model_json
 from .business_validation import validate_business_delivery
@@ -18,6 +19,7 @@ from .answer_design import answer_design, readability_issues, response_parts
 from .evidence_selection import select_evidence
 from .evidence_applicability import coverage_matrix
 from .conversation import followup_question, selected_case_applies
+from .qa_observability import traced_answer
 from .guidance import (GUIDANCE_PROMPT, guidance_payload, decode_guidance,
                        explanation_question, system_question, system_hit)
 
@@ -174,6 +176,36 @@ def _part_coverage(decoded, parts, coverage, citations):
     return result
 
 
+def _short_navigation_quote(quote, passage, source, answer):
+    """Accept an exact, hashed short menu label, never an arbitrary short claim.
+
+    Canonical v2 units retain their body offsets, so four-character menu items
+    do not need to borrow unrelated text merely to meet a length threshold.
+    Legacy free-form quotes and metadata identities keep the old minimum.
+    """
+    if source.get('evidence_view_version') != 2 or not isinstance(passage, dict):
+        return False
+    if (passage.get('kind') != 'body' or type(passage.get('id')) is not int or
+            passage['id'] <= 0 or not re.fullmatch(r'[\u4e00-\u9fffA-Za-z·]{2,5}', quote)):
+        return False
+    start, end = passage.get('start'), passage.get('end')
+    body = source.get('text')
+    if (type(start) is not int or type(end) is not int or not isinstance(body, str) or
+            start < 0 or end <= start or end > len(body) or end-start != len(quote) or body[start:end] != quote):
+        return False
+    if (passage.get('sha256') != hashlib.sha256(quote.encode()).hexdigest() or
+            source.get('body_sha256') != hashlib.sha256(body.encode()).hexdigest()):
+        return False
+    for line in str(answer).splitlines():
+        labelled = any(left+quote+right in line for left,right in [('“','”'),('「','」'),('"','"'),('‘','’')])
+        # Navigation prose also uses unquoted labels such as 天气预警页面.
+        # Exact label+locator adjacency is required, not a free substring.
+        labelled = labelled or bool(re.search(re.escape(quote)+r'(?:页面|栏目|入口|菜单|导航)', line))
+        if labelled and re.search(r'栏目|入口|菜单|导航|官网|网站|页面|点击|选择', line):
+            return True
+    return False
+
+
 def _decode_model_answer(raw, evidence):
     value = model_json(raw)
     if not isinstance(value, dict) or value.get('answerability') not in {'full', 'partial', 'insufficient'}:
@@ -188,6 +220,11 @@ def _decode_model_answer(raw, evidence):
         if not re.search(r'不足|无法|未找到|未提供|不能|缺少|尚未|没有|未接入|请|需要', answer):
             raise ValueError('insufficient_answer_must_explain_gap')
         return answer.strip(), 'insufficient', set()
+    if isinstance(value.get('evidence_quotes'),list) and any(
+            isinstance(q,dict) and q.get('passage_id') == 0 for q in value['evidence_quotes']):
+        from .phase2 import enabled
+        if enabled('MARINE_EVIDENCE_UNITS'):
+            return _decode_doc_card_answer(value,evidence)
     _validate_model_answer(answer, evidence)
     citations = {int(number) for number in re.findall(r'\[资料(\d+)\]', answer)}
     quoted = set()
@@ -207,6 +244,7 @@ def _decode_model_answer(raw, evidence):
             raise ValueError('invalid_evidence_quote')
         if not 1 <= index <= len(evidence):
             raise ValueError('invalid_evidence_quote')
+        passage = None
         if 'passage_id' in item:
             passage_id = item['passage_id']
             if type(passage_id) is not int:
@@ -219,7 +257,9 @@ def _decode_model_answer(raw, evidence):
         else:
             # Retain strict validation of older model responses and export records.
             quote = item.get('quote')
-        if not 1 <= index <= len(evidence) or not isinstance(quote, str) or len(_compact(quote)) < 6:
+        if not isinstance(quote, str):
+            raise ValueError('invalid_evidence_quote')
+        if len(_compact(quote)) < 6 and not _short_navigation_quote(quote, passage, evidence[index-1], answer):
             raise ValueError('invalid_evidence_quote')
         if _compact(quote) not in _compact(evidence[index - 1]['text']):
             raise ValueError('quote_not_in_source')
@@ -239,6 +279,84 @@ def _decode_model_answer(raw, evidence):
     # An incomplete answer can legitimately quote the limited known facts.
     # Keep all grounding checks, rather than rejecting it for its coverage label.
     return answer.strip(), 'partial' if declared_insufficient else value['answerability'], citations
+
+
+def _decode_doc_card_answer(value,evidence):
+    """Validate metadata identities apart from unchanged body grounding.
+
+    Passage 0 never enters the numerical/body validator. A separate exact
+    identity clause can use verified card names, issuers or role-bound dates;
+    every operative claim still needs a selected positive-ID body passage.
+    This branch is opt-in and is not an entailment/answerability upgrade.
+    """
+    from .typed_grounding import prepare_draft,_identity
+    answer=value['answer']
+    refs={int(n) for n in re.findall(r'\[资料(\d+)\]',answer)}
+    if not refs or any(not 1<=n<=len(evidence) for n in refs):
+        raise ValueError('missing_or_unknown_citation')
+    card_refs={};body_quotes=[]
+    for original in value['evidence_quotes']:
+        if not isinstance(original,dict):raise ValueError('invalid_evidence_quote')
+        item=dict(original);n=item.get('citation')
+        if isinstance(n,str) and re.fullmatch(r'(?:资料)?[1-9]\d*',n):
+            n=int(n.removeprefix('资料'))
+        if type(n) is not int or not 1<=n<=len(evidence):raise ValueError('invalid_evidence_quote')
+        item['citation']=n
+        if item.get('passage_id') != 0:
+            body_quotes.append(item)
+            continue
+        if type(item.get('passage_id')) is not int:raise ValueError('invalid_evidence_passage')
+        source=evidence[n-1]
+        if source.get('evidence_view_version')!=2 or not source.get('doc_card'):
+            raise ValueError('document_identity_requires_v2_card')
+        passage=next((p for p in source.get('passages',[]) if p.get('id',p.get('passage_id'))==0),None)
+        if not passage or passage.get('kind')!='document_identity':
+            raise ValueError('unknown_evidence_passage')
+        card_refs[n]={'citation':n,'passage_id':0,'quote':passage['text'],'source':source}
+    # Parse as one scope only to preserve every exact clause. This partition
+    # does not assign business subquestions; typed grounding does that later.
+    parsed=prepare_draft(value,[{'fid':'decoder','question':'校验现有回答','kind':'explanation','objects':[]}])
+    remainder=list(parsed['draft']['answer'])
+    for atom in parsed['atoms']:
+        remainder[atom['start']:atom['end']]=' '*(atom['end']-atom['start'])
+    # The atom parser preserves headings as provenance. Their typography must
+    # not become a hiding place for an uncited amount or eligibility verdict.
+    outside=''.join(remainder)
+    if re.search(QUANTITY_PATTERN,outside):raise ValueError('uncited_quantity')
+    for line in outside.splitlines():
+        label=re.sub(r'^[\s#*\d.、．-]+|[\s*:：]+$','',line)
+        question_label=re.search(r'是否|是不是|何|什么|哪些|为什么|怎么|能否',label)
+        if not question_label and re.search(r'可以|均可|必须|应当|不需要|无需|保证|安全|符合资格|有资格|都能|现行有效|属于|不是一回事|不等同',label):
+            raise ValueError('metadata_identity_unchecked_heading')
+    bodies=[];identities=0;seen=set()
+    for atom in parsed['atoms']:
+        text=atom['text'];cited={int(n) for n in re.findall(r'\[资料(\d+)\]',text)}
+        identity=False
+        if cited and cited<=card_refs.keys() and not atom.get('table_header'):
+            try:_identity(text,[card_refs[n] for n in sorted(cited)])
+            except ValueError:pass
+            else:identity=True
+        if identity:
+            identities+=1;seen.update(cited)
+        else:
+            # Metadata-only claims that contain amounts, legal duties,
+            # qualification or current validity cannot borrow card support.
+            if cited and not cited<={q['citation'] for q in body_quotes}:
+                raise ValueError('doc_card_cannot_support_body_fact')
+            header=atom.get('table_header')
+            bodies.append((header+'\n|'+'---|'*len(header.strip('|').split('|'))+'\n'+text) if header else text)
+    if not identities:
+        # No identity was proved, so passage0 is ignored altogether. This
+        # cannot make a formerly unsupported body claim pass.
+        body_value={**value,'evidence_quotes':body_quotes}
+        return _decode_model_answer(json.dumps(body_value,ensure_ascii=False),evidence)
+    if bodies:
+        body_answer='\n'.join(bodies)
+        body_value={**value,'answer':body_answer,'evidence_quotes':body_quotes}
+        _,_,body_refs=_decode_model_answer(json.dumps(body_value,ensure_ascii=False),evidence)
+        seen.update(body_refs)
+    if not refs<=seen:raise ValueError('citation_without_supporting_quote')
+    return answer.strip(),'partial' if value['answerability']=='insufficient' else value['answerability'],refs
 
 
 def _recover_supported_numbers(raw,evidence):
@@ -309,10 +427,14 @@ def _sources_with_selected_passages(sources,evidence,decoded):
         if type(n) is not int or not 1<=n<=len(evidence):continue
         row=evidence[n-1];pid=item.get('passage_id')
         quote=next((p['text'] for p in row.get('passages',[]) if p['id']==pid),None) if pid is not None else item.get('quote')
-        if not isinstance(quote,str) or _compact(quote) not in _compact(row['text']):continue
+        if not isinstance(quote,str):continue
+        identity=pid == 0 and row.get('evidence_view_version') == 2
+        if not identity and _compact(quote) not in _compact(row['text']):continue
         record={'passage_id':pid,'quote':quote,'sha256':hashlib.sha256(quote.encode()).hexdigest()}
+        if identity:record['kind']='document_identity'
         if record not in selected.setdefault(n,[]):selected[n].append(record)
     return [{**source,'supporting_passages':selected.get(source['citation_id'],[])[:16],
+             **({'doc_card':evidence[source['citation_id']-1]['doc_card']} if evidence[source['citation_id']-1].get('doc_card') else {}),
              'support_validation_scope':'typed_business_record' if evidence[source['citation_id']-1].get('metadata',{}).get('source_type')=='business_forecast' else 'selected_passages'}
             for source in sources]
 
@@ -645,9 +767,26 @@ class MarineQuestionService:
         from .claim_grounding import PROMPT as CLAIM_GROUNDING_PROMPT
         from .citation_repair import PROMPT as QUOTE_REPAIR_PROMPT
         from .crag import PROMPT as CRAG_PROMPT
+        from .typed_grounding import PROMPT as TYPED_PROMPT
         options = {'response_format':{'type':'json_object'}, 'max_tokens':4096} if system in {NORMALIZE_PROMPT, STRUCTURED_ANSWER_PROMPT, CITATION_FORMAT_REPAIR_PROMPT,CLAIM_GROUNDING_PROMPT,QUOTE_REPAIR_PROMPT,CRAG_PROMPT} else {}
-        return str(self.model_caller(model, system, prompt, stream=False, temperature=.1, timeout=25,
-                                     max_retries=0, thinking="disabled", **options) or "").strip()
+        from .coverage_review import PROMPT as COVERAGE_PROMPT
+        from .answer_completeness import PROMPT as COMPLETENESS_PROMPT
+        from .qa_observability import observed_model_call
+        from .phase2 import current_budget
+        if system == TYPED_PROMPT:
+            options = {'response_format':{'type':'json_object'}, 'max_tokens':8192}
+        stage = {NORMALIZE_PROMPT:'normalize', STRUCTURED_ANSWER_PROMPT:'generate',
+                 CITATION_FORMAT_REPAIR_PROMPT:'citation_format_repair', CLAIM_GROUNDING_PROMPT:'claim_grounding',
+                 QUOTE_REPAIR_PROMPT:'citation_repair', CRAG_PROMPT:'crag_eval',
+                 COVERAGE_PROMPT:'coverage_review', COMPLETENESS_PROMPT:'completeness',
+                 GUIDANCE_PROMPT:'guidance', TYPED_PROMPT:'typed_grounding'}.get(system, 'answer')
+        budget=current_budget()
+        timeout=25
+        if budget is not None:
+            budget.take()
+            timeout=min(timeout,max(.05,budget.remaining()))
+        return observed_model_call(self.model_caller, model, system, prompt,
+            dict(stream=False, temperature=.1, timeout=timeout, max_retries=0, thinking='disabled', **options), stage=stage)
 
     def _normalize(self, question: str, model: str, context=None, fallback_question=None):
         normalized = normalize_question(fallback_question or question)
@@ -757,11 +896,22 @@ class MarineQuestionService:
 
     def prepare_question(self, question, model_name=None, history=None, selected_context=None, sid=None):
         question = ' '.join(str(question or '').strip().split())[:2000]
+        from .facet_contract import build_contract, facet_contract_enabled
+        typed_contract = facet_contract_enabled()
+        turn_state = previous_state = None
+        state_resolved_question = None
+        if typed_contract:
+            from .conversation import (resolve_turn, resolve_state_question,
+                                       state_reference_question, turn_state_from_history)
+            previous_state = turn_state_from_history(history)
+            turn_state = resolve_turn(question, previous_state)
         model = self.model_name if self.require_model_answer else model_name or self.model_name
         context, fallback = None, question
-        use_history = followup_question(question) and bool(history)
+        use_history = (state_reference_question(question) if typed_contract else followup_question(question)) and bool(history)
         messages = self._conversation_context(history) if use_history else []
         selected = selected_context if selected_case_applies(question, selected_context, STORM_ALIASES) else None
+        if typed_contract and selected:
+            turn_state = resolve_turn(question, previous_state, selected_sid=selected.get('sid'))
         if messages:
             previous = next((m['content'] for m in reversed(messages) if m['role']=='user'), '')
             fallback = (previous[:1500] + '；' + question)[:2000]
@@ -783,6 +933,14 @@ class MarineQuestionService:
                     previous = re.sub(r'浙江|上海|福建|广东|海南|广西|江苏|山东|河北|天津|辽宁', '', previous)
                     fallback = (question + ' ' + previous)[:2000]
             context = {'history': messages}
+            if typed_contract:
+                previous_input = next((str(row.get('context_question') or row.get('question') or '')
+                                       for row in reversed(history or []) if isinstance(row, dict)), '')
+                state_resolved_question = resolve_state_question(question, previous_input, previous_state, turn_state)
+                if state_resolved_question:
+                    fallback = state_resolved_question
+                context['resolved_turn_state'] = turn_state.as_dict()
+                context['state_instruction'] = 'resolved_turn_state为本轮已解析的输入；显式更正替换旧地点、日期或台风，不保留被否定的实体。历史答案不是事实依据。'
         if selected:
             context = context or {}
             context['map_selection'] = {key:selected.get(key) for key in ('sid','name','season')}
@@ -794,11 +952,22 @@ class MarineQuestionService:
             return {'normalized_question':question,'normalizer':'needs_context','retrieval_queries':[],
                     'subquestions':[],'sid':None,'context_used':False,'history_messages_used':0,
                     'clarification':'你指的是哪一项内容？请补充问题，或先选择要讨论的台风。'}
-        normalized, normalizer, queries, parts = self._normalize(question, model, context, fallback)
+        normalized, normalizer, queries, parts = self._normalize(state_resolved_question or question, model, context, fallback)
+        if typed_contract and state_resolved_question:
+            from .evidence_applicability import leaf_places
+            if set(leaf_places(normalized)) != set(turn_state.places):
+                normalized, normalizer, queries = fallback, 'typed_state_fallback', []
+                parts = _question_parts(fallback)
         if selected_context:
             sid = selected_context.get('sid') if selected_case_applies(normalized, selected_context, STORM_ALIASES) else None
-        return {'normalized_question':normalized, 'normalizer':normalizer, 'retrieval_queries':queries,
+        result = {'normalized_question':normalized, 'normalizer':normalizer, 'retrieval_queries':queries,
                 'subquestions':parts, 'sid':sid, 'context_used':bool(context), 'history_messages_used':len(messages)}
+        if typed_contract:
+            facets = build_contract(normalized, parts, turn_state)
+            result.update(subquestions=facets, facets=facets, facet_contract=facets,
+                          turn_state=turn_state.as_dict(), inherited_fields=list(turn_state.inherited_fields),
+                          turn_state_fingerprint=turn_state.fingerprint())
+        return result
 
     def _legacy(self, question: str, sid: str | None) -> list[dict]:
         if self.legacy_rag is None:
@@ -1078,6 +1247,13 @@ class MarineQuestionService:
         return self._organized_answer(question, model, [], meta, boundary)
 
     def _organized_answer(self, question, model, hits, meta, boundary_reason=''):
+        from .answer_trace import current_trace, error_code
+        from .qa_observability import event, evidence_view, observe_failure, review_summary
+        trace = current_trace()
+        if trace is not None:
+            meta = dict(meta)
+            meta['coverage_review_history'] = []
+            meta['attempt_errors'] = []
         question = meta.get('normalized_question') or question
         from .grounded_calculations import add_public_calculations
         hits=add_public_calculations(question,hits)
@@ -1094,11 +1270,21 @@ class MarineQuestionService:
             if selected_ids:
                 selected=[p for p in row['passages'] if p['id'] in selected_ids]
                 if selected:row['passages']=selected
+        from .phase2 import enabled, mode
+        if enabled('MARINE_EVIDENCE_UNITS'):
+            from .evidence_units import evidence_view as canonical_view
+            canonical=canonical_view(hits)
+            for old,new in zip(evidence,canonical):
+                new['metadata']=old['metadata']
+                new['quality_warning']=old.get('quality_warning')
+                new['status']=old['status']
+            evidence=canonical
         # Send each passage once. Keep the untouched text locally for citation,
         # quantity and exact-source checks, independent of model selections.
         model_evidence = [{key: value for key, value in row.items() if key != 'text'} for row in evidence]
         for index, row in enumerate(model_evidence, 1):
             row['citation'] = index
+        evidence_view('generation', model_evidence)
         payload = {'question': question, 'subquestions': meta.get('subquestions', []),
                    'date': meta['as_of'], 'boundary_reason': boundary_reason, 'evidence': model_evidence}
         from .question_contract import question_contract
@@ -1154,6 +1340,13 @@ class MarineQuestionService:
             payload['version_instruction'] = '同一文件的版本限制只说明一次；上列限制只针对对应资料编号，不得套在其他官方联网来源上。'
         if meta.get('web_default_jurisdiction'):
             payload['jurisdiction_context'] = '未指定地区，系统默认业务范围为' + meta['web_default_jurisdiction'] + '；请在回答中明确此范围，不能把其他地区的规定作为这里的规则。'
+        if enabled('MARINE_FACET_CONTRACT'):
+            from .facet_contract import build_contract
+            payload['subquestions']=build_contract(question,payload['subquestions'],meta.get('turn_state'))
+            payload['facet_contract']=payload['subquestions']
+        if mode('MARINE_TYPED_GROUNDING') == 'on':
+            from .answer_pipeline import organized_v2
+            return organized_v2(self,question,model,hits,sources,evidence,payload,meta,boundary_reason)
         attempts, validation_error, editorial_repairs, supported_draft = 0, None, 0, None
         pending_citation_repair=None
         quantity_diagnostics=None
@@ -1169,6 +1362,7 @@ class MarineQuestionService:
                 else:
                     raw = self._call_model(model, STRUCTURED_ANSWER_PROMPT, json.dumps(payload, ensure_ascii=False))
             except Exception as exc:
+                observe_failure('generate', exc, attempt=attempts)
                 if supported_draft is not None:
                     raw = supported_draft
                 else:
@@ -1204,6 +1398,7 @@ class MarineQuestionService:
                 if coverage == 'full' and missing:
                     coverage = 'partial'
                 part_rows = _part_coverage(decoded, payload['subquestions'], coverage, citations)
+                event('draft_validation', attempt=attempts, part_rows=part_rows, answerability=coverage)
                 review=None
                 if (getattr(self,'coverage_review_enabled',False) and coverage in {'full','partial'}
                         and citations):
@@ -1214,11 +1409,35 @@ class MarineQuestionService:
                         'cited_passages':[{'citation':i,'text':evidence[i-1]['text'][:3000]}
                             for i in sorted(citations)]}
                     review_payload['review_targets']=review_targets(answer,missing)
+                    coverage_view=[{'citation':i, 'passages':_evidence_passages(evidence[i-1]['text'][:3000])}
+                                   for i in sorted(citations)]
+                    if enabled('MARINE_EVIDENCE_UNITS'):
+                        coverage_view=[{k:v for k,v in evidence[i-1].items() if k!='text'} for i in sorted(citations)]
+                        review_payload['cited_passages']=coverage_view
+                    evidence_view('coverage_review',coverage_view)
                     try:
                         review=decode_review(self._call_model(model,REVIEW_PROMPT,json.dumps(review_payload,ensure_ascii=False)),
                                              answer,missing,review_payload['review_targets'])
                     except Exception as exc:
                         review={'verdict':'unavailable','issues':[], 'error_type':type(exc).__name__}
+                        if trace is not None:
+                            review['error_code'] = error_code(exc)
+                        observe_failure('coverage_review', exc, attempt=attempts)
+                    if trace is not None:
+                        summary = dict(attempt=attempts, **review_summary(review))
+                        meta['coverage_review_history'].append(summary)
+                        event('coverage_review', **summary)
+                    if enabled('MARINE_SCOPE_GATE') and review.get('issues'):
+                        from .facet_contract import build_contract
+                        from .scope_gate import gate_answer
+                        gate=gate_answer(answer,missing,build_contract(question,payload['subquestions']),
+                                         review['issues'],subquestion_coverage=part_rows)
+                        answer,missing=gate['answer'],gate['kept']
+                        meta['scope_gate']=gate
+                        removed={r['text'] for r in gate['removed']}|{r['text'].strip() for r in gate['removed_answer_units']}
+                        for p in part_rows:p['missing_information']=[m for m in p['missing_information'] if m not in removed]
+                        remaining=[i for i in review['issues'] if not(i['kind']=='unasked_gap' and i['text'].strip() in removed)]
+                        review={**review,'issues':remaining,'verdict':'revise' if remaining else 'pass'}
                     if review['verdict']=='revise' and attempts<max_attempts:
                         if all(issue['kind']=='unasked_gap' for issue in review['issues']):
                             # The factual/quote/unit gates above already passed.
@@ -1264,6 +1483,14 @@ class MarineQuestionService:
                     payload['repair_instruction'] = '使用同一份证据重写，先回答，再解释；逐项核对覆盖与引用，不增加事实或隐瞒证据缺口。'
                     continue
                 used_sources = _sources_with_selected_passages([row for row in sources if row['citation_id'] in citations],evidence,decoded)
+                if mode('MARINE_TYPED_GROUNDING') == 'shadow':
+                    from .answer_pipeline import ground
+                    from .facet_contract import build_contract
+                    try:
+                        shadow=ground(self,model,raw,evidence,build_contract(question,payload['subquestions']))
+                        meta['typed_shadow']={k:shadow.get(k) for k in ('delivery','decisions','publishable','render_mode','relation_review')}
+                    except Exception as exc:
+                        meta['typed_shadow']={'error_type':type(exc).__name__}
                 # Per-source extraction caveats remain visible in source cards;
                 # the model must still state limitations affecting its conclusion.
                 return {'answer': answer,
@@ -1282,6 +1509,10 @@ class MarineQuestionService:
                                         'external_documents_blocked': False, 'fallback': False}}
             except (ValueError, TypeError, KeyError, IndexError) as exc:
                 validation_error = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
+                if trace is not None:
+                    meta['attempt_errors'].append({'attempt':attempts,'error_code':error_code(exc),
+                                                  'error_type':type(exc).__name__})
+                observe_failure('validation', exc, attempt=attempts)
                 quantity_diagnostics=getattr(exc,'details',None)
                 # Retry formatting/grounding once with the same bounded evidence;
                 # do not send a failed model answer as a new source.
@@ -1345,11 +1576,14 @@ class MarineQuestionService:
                 _,claims=draft_claims(raw)
                 check={'question':question,'question_contract':payload['question_contract'],
                        'claims':claims,'evidence':model_evidence}
+                evidence_view('claim_grounding', model_evidence)
                 reviewed=review_claim_batches(check,lambda part:self._call_model(model,GROUND_PROMPT,json.dumps(part,ensure_ascii=False)))
                 review_raw=json.dumps(reviewed,ensure_ascii=False)
                 def decode_candidate(candidate,rows):
                     return _decode_model_answer(json.dumps(candidate,ensure_ascii=False),rows)
-                recovered=apply_attribution(raw,review_raw,evidence,decode_candidate)
+                recovered=apply_attribution(raw,review_raw,evidence,decode_candidate,
+                    audit=trace is not None,
+                    audit_sink=(lambda fields: event('claim_retention', **fields)) if trace is not None else None)
                 attribution_checked=True
                 if recovered:
                     (answer,_,citations),review=recovered
@@ -1396,6 +1630,9 @@ class MarineQuestionService:
                             part_rows=[dict(p,status='partial',citations=[],missing_information=missing[:])
                                        for p in payload['subquestions']]
                             delivery_review={'state':'unavailable','error_type':type(completeness_exc).__name__}
+                            if trace is not None:
+                                delivery_review['error_code'] = error_code(completeness_exc)
+                            observe_failure('completeness', completeness_exc)
                     used_sources=_sources_with_selected_passages([row for row in sources if row['citation_id'] in citations],
                                                                evidence,{'evidence_quotes':selections})
                     return {'answer':answer,'rag_sources':[row for row in used_sources if row.get('source_type')!='public_web'],
@@ -1492,12 +1729,16 @@ class MarineQuestionService:
             hits=[example]+hits
         return hits
 
+    @traced_answer
     def answer(self, question, **options):
         result = self._answer(question, **options)
         if getattr(self,'crag_enabled',False):
             from .crag import finalize
             result=finalize(result)
         meta = result.get('answer_meta') or {}
+        from .phase2 import mode
+        if mode('MARINE_TYPED_GROUNDING') == 'on' and meta.get('phase2'):
+            return result
         if (not self.general_explanations or not self.external_enabled or self.model_caller is None
                 or meta.get('used_mode') in {'no_question','needs_clarification'}
                 or meta.get('route') == 'model_unavailable'
@@ -1572,6 +1813,14 @@ class MarineQuestionService:
                 'conversation_context_used':plan.get('context_used', False),
                 'history_messages_used':plan.get('history_messages_used', 0)}
         meta['current_turn_question'] = question
+        from .phase2 import active
+        if active():meta['web_allowed']=bool(allow_web)
+        from .phase2 import enabled
+        if enabled('MARINE_FACET_CONTRACT'):
+            meta.update(turn_state=plan.get('turn_state'),turn_state_fingerprint=plan.get('turn_state_fingerprint'),
+                        facet_contract=plan.get('facet_contract',parts))
+            from .phase2 import set_turn_key
+            set_turn_key(plan.get('turn_state_fingerprint'))
         if system_question(normalized):
             if self.crag_enabled:
                 meta.update(route='system_capabilities',system_runtime_evidence=True)

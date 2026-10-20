@@ -1,39 +1,36 @@
 # 台风与海洋灾害知识问答系统
 
-本仓库是 2026 年 10 月 19 日 `phase1.8.3-public-evidence` 的代码交接快照，用于请 Claude 分析尚未解决的问题并设计下一阶段方案，再由 Codex 实施。原应用继续在本机运行，本快照没有修改原应用。
+当前版本：`phase1.8.4-grounded-recovery`（2026-10-20）。本次在 Claude 的 P0–P6 方案上继续修复子问归属、局部恢复、额外缺项、证据与数值校验，保留 DeepSeek、本地知识库、官方联网检索、地图和业务计算模块。
 
-**从 [Claude 交接说明](docs/CLAUDE_HANDOFF.md) 开始阅读，将 [Claude 任务说明](docs/CLAUDE_PROMPT.md) 作为提问。当前阶段只做诊断和方案设计。**
+**Claude 从 [本轮复审任务](docs/CLAUDE_FOLLOWUP_20261020.md) 开始；可直接使用 [评审提问](docs/CLAUDE_PROMPT.md)。** 原方案针对 `a6113ee`，见 [NEXT_PHASE_PLAN_FOR_CODEX.md](docs/NEXT_PHASE_PLAN_FOR_CODEX.md)。本轮请只读审查并设计下一阶段方案。
 
-## 当前功能
+## 验证状态
 
-- 在历史台风地图同一页面内提问和连续追问，保留历史台风查询与路径类比。
-- 本地文档检索、官方网页检索和正文阅读，按子问题评价证据并进行有界纠错检索。
-- 通过 DeepSeek 组织回答，进行来源、数值、版本和子问题覆盖检查。
-- 提供预报 NC、天文潮、岸段阈值、历史灾害、官方预警和空间数据的查询计算模块。
+- 完整本机代码：1485 项测试、102 项子测试通过。
+- 公开代码快照：1433 项测试、102 项子测试通过；52 项依赖本机私有录制的测试跳过。
+- 用先前 24 次真实录制做确定性阶段复核，识别错误完整标签、来源识别和缺项生命周期问题。
+- 本轮新增付费模型问答为 0，未生成新版 24 次或 160 题端到端回答；没有完整正确率或专家验收结论。
 
-这些是已有代码能力，不代表所有业务答案已经正确完整。详细失败样例和数据边界见交接说明。
+详见 [验证记录](docs/SNAPSHOT_VALIDATION.md)、[离线证据目录](evaluations/p1_p6_followup_20261020/README.md)。`evaluations/previous_160.json` 和 `evaluations/public_services_12.json` 为 10 月 19 日历史结果。新增 `prior_live_24.json` 保存首轮 P1–P6 的旧实际回答，不代表本轮代码输出。HTTP 成功、引用存在、模型 full 标签和程序测试通过分别报告。
 
-## 代码和证据入口
+## 代码入口
 
-| 内容 | 路径 |
+| 环节 | 文件 |
 |---|---|
-| HTTP 服务和统一问答接口 | `server.py`、`marine_kb/chat_api.py` |
-| 检索、生成、纠错、校验 | `marine_kb/qa.py`、`marine_kb/crag.py`、`marine_kb/claim_grounding.py` |
-| 预报查询计算 | `forecast_runtime/` |
-| 地形人口模块 | `spatial_runtime/` |
-| 台风历史与网页读取 | `typhoon/` |
-| 统一地图与对话前端 | `frontend/index.html`、`frontend/map_assistant.js` |
-| 原始 160 题需求台账 | `data/requirements/catalog.json` |
-| 较早 160 题前后实际回答 | `evaluations/previous_160.json` |
-| 最新 12 题实际回答与校验诊断 | `evaluations/public_services_12.json` |
-| 重点失败记录 | `evaluations/failures/` |
-| 本快照验证 | `docs/SNAPSHOT_VALIDATION.md` |
+| HTTP 和连续追问 | `server.py`、`marine_kb/chat_api.py`、`marine_kb/conversation.py` |
+| 本地与官方网页检索 | `marine_kb/crag.py`、`marine_kb/retrieval.py`、`marine_kb/web_supplement.py` |
+| 统一子问和文档证据 | `marine_kb/facet_contract.py`、`marine_kb/evidence_units.py` |
+| 问答调度与局部恢复 | `marine_kb/answer_pipeline.py`、`marine_kb/recovery.py` |
+| 事实、归纳与交付校验 | `marine_kb/typed_grounding.py`、`marine_kb/facet_delivery.py`、`marine_kb/relation_guard.py` |
+| 缺项范围与生命周期 | `marine_kb/scope_gate.py` |
+| 私有录制与严格回放 | `marine_kb/replay.py`、`tools/replay/README.md` |
+| 预报与地形人口计算 | `forecast_runtime/`、`spatial_runtime/` |
+| 地图统一对话前端 | `frontend/index.html`、`frontend/map_assistant.js` |
+| 160 题需求台账 | `data/requirements/catalog.json` |
 
-160 题记录早于最后一轮公开服务修复；最新版本只有 12 题专项 HTTP 记录。两者不能合并称为新版 160 题通过率。HTTP 成功、引用存在、程序测试通过和模型 full 标签都不等于业务验收。
+## 离线测试
 
-## 本地分析与测试
-
-使用 Python 3.11 或更高版本。示例命令在仓库根目录执行：
+使用 Python 3.11 或更高版本，在仓库根目录执行：
 
 ```powershell
 python -m venv .venv
@@ -43,23 +40,23 @@ $env:MARINE_FORECAST_WORKER = 'false'
 $env:MARINE_WARNING_WORKER = 'false'
 $env:MARINE_EXTERNAL_MODEL_ENABLED = 'false'
 $env:MARINE_WEB_ENABLED = 'false'
+$env:TYPHOON_WEB_SEARCH_ENABLED = 'false'
+$env:TYPHOON_WEB_READ_ENABLED = 'false'
 .\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
-上述是以临时测试数据或 mock 为主的程序测试，不发起真实模型验收。完整问答联调需要另外恢复本地业务数据并配置凭据，参见 [数据资产说明](docs/DATA_ASSETS.md)。不要把空库界面当成完整业务演示。
+这些测试使用临时数据和模拟依赖。完整业务演示还需单独恢复数据库与业务文件，见 [数据资产说明](docs/DATA_ASSETS.md)。私有录制不包含在公开仓库，相关测试按设计跳过，不提供真实 API 回退。可独立运行 `tests/test_followup_pipeline_contracts.py`、`tests/test_followup_recovery_delivery.py`、`tests/test_scope_lifecycle_followup.py` 验证本轮通用机制。
 
-需要浏览空库界面时，保持以上 worker 和联网开关关闭，另设：
+浏览空库界面时，保持以上外部调用开关关闭，设置 `APP_HOST=127.0.0.1`、`APP_PORT=8771`，再运行 `.\.venv\Scripts\python.exe .\production_server.py`。完整本地安装还提供 `start_p1_p6_followup.ps1`，沿用父目录 `.venv` 的既有目录结构。
 
-```powershell
-$env:APP_HOST = '127.0.0.1'
-$env:APP_PORT = '8770'
-.\.venv\Scripts\python.exe .\production_server.py
-```
+## 仍待解决
 
-然后打开 `http://127.0.0.1:8770/`。前端天地图需要自行配置授权密钥。示例使用独立端口，避免占用原运行服务的 8769 端口。
+受限归纳如何在首次生成时稳定提供证明、不同阶段模型审查的分歧如何裁决、通用完整交付如何超越关键词规则，仍需继续评审和新的真实模型验证。旧记录中 22 个归纳未提供证明、1 个审查记录因片段边界变化不能复用、17 次正文哈希未匹配均如实保留。
 
-## 上传范围
+SWL、MWD、L2/L5 等业务定义仍待数据方回复；时间重合不能证明 NC 由某个台风造成。地形和人口筛查不等于精细淹没或人员转移计算。
 
-仓库包含源代码、测试、需求台账、脱敏评测记录、历史技术说明，以及保持原哈希的少量公开资料测试附件与活动规则导出 fixture。真实 `.env`、API 密钥、会话标识、业务原始资料、NC、地形人口栅格、SQLite 数据库和下载缓存均未上传。清单和来源哈希见 `HANDOFF_MANIFEST.json`。
+## 公开范围
 
-原有 `docs/` 中的早期说明属于历史材料，版本、数量、试算口径以文件日期和当前交接说明共同判断。公开 PDF 仅用于来源提取及校验测试，不表示其现行效力已经核定。仓库保持私有；没有为项目新增开源许可，已有第三方许可随代码保留。
+本仓库现为公开仓库，包含源代码、测试、少量公开来源 fixture、需求台账和脱敏诊断。真实 `.env`、密钥、会话凭据、业务数据库、NC、栅格、原始模型请求响应及私有 cassette 不上传。文件清单见 `HANDOFF_MANIFEST.json`。没有为项目新增开源许可证，第三方许可保留。
+
+10 月 19 日交接与验证说明保留在 `docs/archive/`，原历史资料以其文件日期判断；旧数字和旧行号不代表本轮代码。

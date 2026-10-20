@@ -193,9 +193,29 @@ def research_focus(question):
     return [word for pattern,words in RESEARCH_FOCUS if re.search(pattern,question,re.I) for word in words]
 
 
-def primary_routes(question):
+CONNECTOR_V2_HEALTH_ROUTES = (
+ (r'蚊[子虫媒]|防蚊|灭蚊|登革热|基孔肯雅',
+  '2026年5月健康风险提示（中国疾病预防控制中心）',
+  'https://www.chinacdc.cn/jkts/202605/t20260509_1835669.html','national_guidance'),
+ (r'出血热|鼠媒|鼠类|老鼠',
+  '肾综合征出血热健康科普（中国疾病预防控制中心）',
+  'https://www.chinacdc.cn/jkkp/crb/ycr/202502/t20250220_304455.html','national_guidance'),
+ (r'乙脑|蚊[子虫媒]|防蚊',
+  '乙型脑炎健康科普（中国疾病预防控制中心）',
+  'https://www.chinacdc.cn/jkyj/mygh02/ymkyfjb/yn/202606/t20260622_1837243.html','national_guidance'),
+ (r'钩体|鼠类|鼠媒|洪涝.{0,20}(?:防疫|防病)|灾后.{0,20}(?:防疫|疾病)',
+  '自然灾害传染病防控技术指南（中国疾病预防控制中心）',
+  'https://www.chinacdc.cn/jkyj/tfggws/jswj1/201408/t20140820_301450.html','technical_reference'),
+)
+
+
+def primary_routes(question,connector_v2=False):
     rows=[{'title':title,'url':url,'_primary_scope':scope}
           for pattern,title,url,scope in PRIMARY_ROUTES if re.search(pattern,question,re.I)]
+    if connector_v2:
+        health = [{'title':title,'url':url,'_primary_scope':scope}
+                  for pattern,title,url,scope in CONNECTOR_V2_HEALTH_ROUTES if re.search(pattern,question,re.I)]
+        rows = health + rows
     if re.search(WARNING_LEVELS,question) and not re.search(WARNING_TECHNICAL,question):
         rows=[row for row in rows if row['_primary_scope']!='research_method']
     if re.search(r'历史|曾经|哪一次|哪一年',question) and re.search(r'被淹|淹没|漫堤|倒灌|最严重',question) and not re.search(r'消毒|清理|疾病|水质',question):

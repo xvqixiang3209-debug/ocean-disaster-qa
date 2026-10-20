@@ -63,6 +63,8 @@ class ParsedGridStore:
             'end': end,
             'max_distance': self._number(max_distance),
         }
+        from marine_kb.phase2 import current_turn_key
+        if current_turn_key():query['turn_state_fingerprint']=current_turn_key()
         serialized = json.dumps(query, sort_keys=True, separators=(',', ':'),
                                 ensure_ascii=False, allow_nan=False)
         key = hashlib.sha256(serialized.encode('utf-8')).hexdigest()

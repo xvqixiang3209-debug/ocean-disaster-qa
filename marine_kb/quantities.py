@@ -52,12 +52,15 @@ def quantities(text):
             continue  # NFKC turns an ordinal “①户主申请” into “1户主申请”.
         if m[2]=='节' and re.match(r'选|录|约|气|目|日|课',text[m.end():]):
             continue  # “2021节选” is a document edition, not 2021 knots.
+        if m[2]=='节' and re.search(r'第\s*(?:\d+(?:\.\d+)*\s*(?:—|–|~|至|到|-)\s*)?$',text[max(0,m.start()-30):m.start()]):
+            continue  # 第6.3节 is an ordinal document locator, never knots.
         value=Decimal(m[1])
         if value>0 and re.search(r'净(?:下降|减少|回落)\s*$',text[max(0,m.start()-8):m.start()]):
             value=-value
         rows.append((value,m[2],m.start(),m.end()))
     for m in re.finditer(r'(?<![\d.])([+-]?\d+(?:\.\d+)?)\s*(?:—|–|~|至|到|-)\s*'+TOKEN,text):
         if m[3]=='节' and re.match(r'选|录|约|气|目|日|课',text[m.end():]):continue
+        if m[3]=='节' and re.search(r'第\s*$',text[max(0,m.start()-6):m.start()]):continue
         rows.append((Decimal(m[1]),m[3],m.start(),m.end()))
     return rows
 

@@ -64,6 +64,9 @@ def requested_topics(question: str) -> set[str]:
 
 
 def source_text(item: dict[str, Any]) -> str:
+    from .phase2 import enabled
+    if enabled('MARINE_EVIDENCE_UNITS') and item.get('source_text'):
+        return str(item['source_text'])
     return str(item.get("text") or item.get("content") or "")
 
 

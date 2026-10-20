@@ -26,6 +26,8 @@ tools/_terrain_audit_deps/
 data/**
 !data/requirements/
 !data/requirements/catalog.json
+!data/domain/
+!data/domain/relation_lexicon.json
 !data/public_references/
 !data/public_references/manifest.json
 !data/public_references/ningbo_public_catastrophe_2024_2026.pdf
@@ -33,3 +35,7 @@ data/**
 !data/public_references/ningbo_public_catastrophe_2024_2026_correction_log.json
 typhoon/data/**
 !typhoon/data/jma_storm_number_sid_2001_2016.json
+# Local recording payloads and recipient-specific credentials never belong in Git.
+*.cassette.jsonl
+private_configuration/
+source_data/

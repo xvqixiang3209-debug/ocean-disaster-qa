@@ -1,0 +1,415 @@
+"""Deterministic minimum delivery, independent of a model's ``full`` label.
+
+This is a publication floor, not a factual accuracy score.  It only consumes
+already grounded atoms and never promotes an unsupported source into a fact.
+"""
+import re
+
+
+SUBSTANTIVE_TYPES = frozenset({'direct_fact', 'synthesis', 'calculation'})
+_DATE_ONLY = re.compile(r'^(?:该|本|此)?(?:方案|通知|文件|预案|办法)?.{0,12}自?\s*20\d{2}年\d{1,2}月\d{1,2}日.{0,14}(?:施行|实施|印发|发布)[。；\s]*$')
+_ACTIONS = re.compile(r'检查|加固|清理|排查|固定|撤离|转移|清除|更换|消毒|申报|申请|提交|评议|审核|审批|确定|公示|发放|报送|上报|批准|下达|通知|理赔|赔付|核定|报案|查勘|查询|查看|关注|收听|登陆|登录|翻盆倒罐|倒掉|倒空|换水|换一次水|清扫|疏通|投放|穿(?:着)?|佩戴|涂抹|喷涂|安装|装(?:好|上)?(?:纱窗|纱门)|挂(?:上)?蚊帐|使用(?:蚊帐|驱蚊|防蚊|灭蚊|杀虫)|避开')
+_IDENTITY = re.compile(r'《[^》]{2,100}》')
+_META_ONLY = re.compile(r'^(?:文件|机关|文号|来源|发布单位|适用地区|版本|施行日期|发布日期)[:：]')
+_TIME = re.compile(r'20\d{2}(?:[-年/]\d{1,2}(?:[-月/]\d{1,2}日?)?)?|\d{1,2}月\d{1,2}日|\d{1,2}[:：]\d{2}')
+_ACTORS = re.compile(r'(?:由|报|向)[^。；，\n]{1,35}(?:部门|机构|政府|村委会|居委会|保险公司|财政部|应急管理部|指挥部|办公室)|(?:村委会|居委会|乡镇|乡级|县级|政府|财政部|应急管理部|指挥部|保险公司|办公室|主管部门).{0,12}(?:负责|审核|批准|确定|受理|赔付|下达|提出|发布|核定)')
+_CONDITIONS = re.compile(r'符合|满足|须|需要|条件|若|如果|只有|当.{0,15}时|因灾|困难|不能仅|不能.{0,10}(?:判定|证明)|不等于|并不意味|不代表|根据|按照|依据')
+
+# These checks only reject a confirmed object/intent conflict.  They do not
+# establish evidence support or infer missing facts from a source title.
+_MARINE = re.compile(r'海洋|海浪|巨浪|风暴潮|海啸|赤潮|海区|海域|海况|自然资源')
+_WEATHER = re.compile(r'气象|天气|气象台|热带气旋')
+_PERSONAL = re.compile(r'叮咬|长袖|长裤|长衣|纱窗|纱门|蚊帐|驱蚊|防蚊液|驱避|裸露|暴露皮肤|户外|外出|过敏|就医')
+_BREEDING = re.compile(r'积水|孳生|滋生|花盆|花盘|水培|水缸|地漏|排水沟|轮胎|翻盆倒罐|瓶罐|水桶')
+_INSURANCE = re.compile(r'保险|投保|承保|理赔|赔付|获赔|保单|报案|定损|索赔|保险合同')
+_INFECTION_OUTCOME = re.compile(r'疾病|病原|病毒|感染|传染|登革热|基孔肯雅|乙脑|疟疾|寨卡|出血热|钩体病|疫情|暴发|爆发|发病|传播')
+_RISK_OUTCOME = re.compile(r'风险|灾害|险情|淹没|' + _INFECTION_OUTCOME.pattern)
+
+
+def _question(facet):
+    return str(facet.get('question') or facet.get('text') or '')
+
+
+def _risk_outcome(text, facet):
+    question = _question(facet) + ' ' + ' '.join(facet.get('objects') or [])
+    # Allergy is a different outcome from an infectious disease. Generic
+    # "risk" in an allergy instruction must not answer infection questions.
+    asked_infection = bool(re.search(r'传染|感染|疾病|疫情|病原|病毒|暴发|会得病|会传什么病', question))
+    return bool((_INFECTION_OUTCOME if asked_infection else _RISK_OUTCOME).search(text))
+
+
+def semantic_match(atom, facet, registry=None):
+    """False means a known foreign object/intent, not merely omitted words.
+
+    The immutable registry is important even when only one facet is being
+    repaired: a fact explicitly about another sibling cannot become local by
+    being assigned that remaining fid. Heading text is never evidence.
+    """
+    facet = _facet(facet)
+    text = clean_text(atom.get('text', ''))
+    question = _question(facet)
+    objects = [str(o) for o in facet.get('objects', []) if str(o)]
+    registry = [_facet(f) for f in (registry or [])]
+    if objects and registry:
+        own_hit = any(o in text for o in objects)
+        foreign_objects = {str(o) for f in registry if str(f.get('fid') or f.get('id')) != str(facet.get('fid') or facet.get('id'))
+                           for o in f.get('objects', []) if str(o) and o not in objects}
+        if not own_hit and any(o in text for o in foreign_objects):
+            return False
+    kind = facet.get('kind')
+    if kind == 'channel':
+        requested = question + ' ' + ' '.join(objects)
+        marine = bool(_MARINE.search(requested))
+        weather = bool(_WEATHER.search(requested) or ('台风预警' in requested and not marine))
+        if weather and not marine and _MARINE.search(text) and not _WEATHER.search(text):
+            return False
+        if marine and not weather and _WEATHER.search(text) and not _MARINE.search(text):
+            return False
+    if kind in {'method_steps', 'procedure'}:
+        # Specific personal-protection questions do not ask for habitat cleanup.
+        if re.search(r'防(?:止)?叮咬|避免.{0,8}叮咬|预防.{0,8}叮咬', question):
+            if _BREEDING.search(text) and not _PERSONAL.search(text):
+                return False
+        # Conversely, a cleanup facet cannot be delivered using clothing alone.
+        if _BREEDING.search(question) and re.search(r'清理|清除|处理|清扫', question):
+            if _PERSONAL.search(text) and not _BREEDING.search(text):
+                return False
+        if _INSURANCE.search(question) and not _INSURANCE.search(text):
+            if re.search(r'网箱|池塘|锚链|锚泊|框架|堤埂|网衣|缆绳', text) and _ACTIONS.search(text):
+                return False
+    if kind == 'eligibility' and (_INSURANCE.search(question) or re.search(r'能赔|赔吗|获赔|赔偿', question)) and not _INSURANCE.search(text):
+        if re.search(r'网箱|池塘|锚链|锚泊|框架|堤埂|网衣|缆绳', text) and _ACTIONS.search(text):
+            return False
+    if kind == 'risk_relation' and not _risk_outcome(text, facet):
+        if _PERSONAL.search(text) or _BREEDING.search(text):
+            return False
+    return True
+
+
+def _channel_parts(facet, facts):
+    """A named matching service and an actual way in are separate outputs."""
+    question = _question(facet) + ' ' + ' '.join(facet.get('objects') or [])
+    marine = bool(_MARINE.search(question))
+    weather = bool(_WEATHER.search(question) or ('台风预警' in question and not marine))
+    texts = [clean_text(a.get('text', '')) for a in facts]
+    named = re.compile(r'https?://[^\s]+|[\u4e00-\u9fffA-Za-z0-9]{2,30}(?:公众号|网站|官网|平台|热线|气象台|预报台|天气网|预报网|服务网)|“[^”]{2,35}”(?:栏目|公众号|平台|网站)?')
+    def concrete_name(text):
+        for match in named.finditer(text):
+            value = match.group(0)
+            if value.startswith(('http://', 'https://', '“')):
+                return True
+            value = re.sub(r'^(?:(?:可以|可|请|通过|到|在|从|进入|打开|登录|登陆|查询|查看|访问|关注|搜索|渠道|是|一个|相关|该|本|此|的|官方网站|官网|网站|平台|公众号|有关|服务|官方))+', '', value)
+            if re.sub(r'公众号|网站|官网|平台|热线|气象台|预报台|天气网|预报网|服务网', '', value):
+                return True
+        return False
+    compatible = [t for t in texts if (not marine and not weather) or
+                  (marine and _MARINE.search(t)) or (weather and _WEATHER.search(t))]
+    has_name = any(concrete_name(t) for t in compatible)
+    # A URL, page/menu, platform search or concrete named portal gives a way in;
+    # an isolated "网站/平台" or generic "应急管理" cannot fill both slots.
+    access = any(re.search(r'https?://|栏目|入口|板块|菜单|公众号|热线|打开|进入|登录|登陆|搜索', t) or
+                 (re.search(r'到|在|通过|访问|查询|查看|关注', t) and concrete_name(t)) for t in texts)
+    return has_name, bool(has_name and access)
+
+
+def _action_count(facts):
+    # Repeated copies are not separate steps; different objects/actions are.
+    seen = set()
+    count = 0
+    for atom in facts:
+        text = re.sub(r'^\s*\d+(?:[.．](?!\d)|、)\s*', '', clean_text(atom.get('text', '')))
+        key = re.sub(r'[\s。；;，,]', '', text)
+        if key in seen:
+            continue
+        seen.add(key)
+        count += len(_ACTIONS.findall(text))
+    return count
+
+
+def _has_refs(atom):
+    return any(type(row.get('citation')) is int and row['citation'] > 0 and
+               row.get('passage_id', 1) != 0 and row.get('quote')
+               for row in atom.get('evidence_quotes', []))
+
+
+def _place_present(text, facet):
+    from .evidence_applicability import leaf_places
+    wanted = facet.get('places') or []
+    if wanted:
+        return all(place in text for place in wanted)
+    return bool(leaf_places(text) or re.search(r'中国|全国|我国|全球|(?<!该)(?<!本)[\u4e00-\u9fff]{2,12}(?:站|岸段|海域|码头)', text))
+
+
+def _numeric_rows(facts, facet):
+    """A value is not a complete tuple without its own grounded scope.
+
+    Never assemble place from one unrelated atom and time/value from another.
+    Tables remain one validated atom, preserving column positions.
+    """
+    from .quantities import quantities
+    rows = []
+    for atom in facts:
+        text = clean_text(atom.get('text', ''))
+        values = quantities(text)
+        counts = re.findall(r'(?<!\d)\d+(?:\.\d+)?\s*(?:个|条|艘|家|处|座)(?!月)', text)
+        if values or counts:
+            rows.append({'value': True, 'unit': True, 'place': _place_present(text, facet),
+                         'time': bool(_TIME.search(text)), 'provenance': _has_refs(atom)})
+    return rows
+
+
+def _facet(row):
+    if hasattr(row, 'to_dict'):
+        return row.to_dict()
+    if hasattr(row, '__dict__'):
+        return dict(vars(row))
+    return row
+
+
+def clean_text(text):
+    return re.sub(r'\[资料\d+\]', '', str(text)).strip(' \t\n#*-。')
+
+
+def substantive(atom):
+    """A date, citation, title, or version disclaimer alone is not an answer."""
+    if atom.get('type') not in SUBSTANTIVE_TYPES:
+        return False
+    text = clean_text(atom.get('text', ''))
+    if len(text) < 2 or _DATE_ONLY.fullmatch(text) or _META_ONLY.match(text):
+        return False
+    if re.fullmatch(r'(?:该|本|此)?(?:方案|通知|文件|预案|办法)?.{0,10}(?:现行有效性|版本|适用性).{0,10}(?:未核实|待核实|尚未核实)', text):
+        return False
+    return True
+
+
+def covered_outputs(facet, own, *, registry=None):
+    """Kind-specific delivery floors; model role labels are never enough."""
+    facet = _facet(facet)
+    facts = [a for a in own if substantive(a) and semantic_match(a, facet, registry)]
+    text = '\n'.join(clean_text(a.get('text', '')) for a in facts)
+    kind = facet.get('kind', 'explanation')
+    required = list(facet.get('required_outputs') or ['explanation'])
+    output = set()
+    identities = any(a.get('type') == 'document_identity' for a in own)
+    body_identity = bool(_IDENTITY.search(text))
+    steps = _action_count(facts)
+    numeric = _numeric_rows(facts, facet)
+    refs = any(_has_refs(atom) for atom in facts)
+    complete_tuple_required = all(field in required for field in ('value', 'unit', 'place', 'time', 'provenance'))
+    channel_name, access_path = _channel_parts(facet, facts)
+    for name in required:
+        if name in {'verdict', 'distinction', 'comparison'}:
+            ok = any(a.get('type') == 'synthesis' for a in facts) or bool(re.search(r'不是一回事|不是同一|并非同一|不能等同|不可等同|不同之处|区别在于|二者不同|三者不同|分别是', text))
+        elif name in {'document_identity', 'document', 'document_name'}:
+            ok = identities or body_identity
+        elif name in {'per_object_basis', 'basis', 'basis_document'}:
+            ok = ((identities or body_identity) and bool(facts) and
+                  bool(_ACTIONS.search(text) or re.search(r'用于|属于|适用于|规定|条件|救助对象|保险责任', text)))
+        elif name == 'basis_content':
+            ok = bool(facts) and bool(_ACTIONS.search(text) or re.search(r'用于|属于|适用于|规定|条件|救助对象|保险责任', text))
+        elif name == 'definition':
+            ok = bool(facts) and len(text) >= 8 and bool(re.search(r'是|指|表示|称为|定义为|属于', text))
+        elif name in {'actors', 'actor', 'responsible_actor'}:
+            ok = bool(_ACTORS.search(text))
+        elif name in {'conditions', 'condition'}:
+            if kind == 'risk_relation':
+                ok = bool(_risk_outcome(text, facet) and re.search(
+                    r'不能.{0,18}(?:判定|证明|认定)|不等于|并不意味|不代表|并非|不一定|取决于|'
+                    r'携带.{0,12}(?:病原|病毒)|感染.{0,12}蚊|病媒|带毒|若|如果|只有|当.{0,15}时|'
+                    r'叮咬.{0,15}(?:传播|感染)|(?:传播|感染).{0,15}叮咬', text))
+            else:
+                ok = bool(_CONDITIONS.search(text))
+        elif name in {'steps', 'method_steps', 'procedure'}:
+            ok = steps >= 2
+        elif name in {'value', 'numeric_value', 'calculation', 'number'}:
+            ok = bool(numeric)
+        elif name in {'unit', 'place', 'time', 'valid_time', 'provenance'}:
+            if kind in {'numeric_value', 'calculation'} and numeric:
+                ok = any(row.get('time' if name == 'valid_time' else name) for row in numeric)
+                if complete_tuple_required:
+                    ok = any(all(row.values()) for row in numeric)
+            elif name == 'unit':
+                ok = False
+            elif name == 'place':
+                ok = _place_present(text, facet)
+            elif name in {'time', 'valid_time'}:
+                ok = bool(_TIME.search(text))
+            else:
+                ok = refs
+        elif name == 'application_path':
+            ok = bool(re.search(r'(?:向|找|到|联系).{1,35}(?:村委会|居委会|乡镇|政府|部门|机构|保险公司|承保|窗口)', text)) and bool(re.search(r'申请|提交|受理|报案|申报|理赔|核定|咨询', text))
+        elif name in {'channel_name', 'channel', 'access_path'}:
+            ok = access_path if name == 'access_path' else channel_name
+        elif name in {'relation', 'risk_relation'}:
+            # "可能进入住宅" is not a disease relation. Disease/risk must be
+            # the actual outcome and be connected by a relational predicate.
+            ok = bool(_risk_outcome(text, facet) and re.search(
+                r'传播|传染|媒介|感染|病媒|不能.{0,18}(?:判定|证明|认定)|不等于|并不意味|不代表|'
+                r'(?:增加|升高|提高|降低|存在|有).{0,12}(?:风险|概率)|'
+                r'(?:风险|概率).{0,12}(?:增加|升高|提高|降低)|由.{1,20}引起', text))
+        elif name in {'status', 'status_at_time', 'current_status'}:
+            ok = bool(re.search(r'已发布|生效|解除|开放|关闭|停运|复航|启动|终止|正在|有效|未发布', text)) and bool(_TIME.search(text))
+        elif name == 'formula':
+            ok = bool(re.search(r'=|＝|\+|相加|相减|相乘|乘以|除以|之和|之差|公式', text))
+        elif name == 'inputs':
+            ok = bool(re.search(r'输入|参数|变量|需要|依赖|采用|单位|基准', text))
+        elif name == 'result_or_input_gap':
+            ok = bool(numeric)
+        elif name in {'fact', 'answer', 'explanation'}:
+            ok = bool(facts)
+        elif name == 'event_time':
+            ok = bool(_TIME.search(text))
+        elif name == 'support':
+            ok = refs
+        else:
+            ok = False
+        if ok:
+            output.add(name)
+    if not facts:
+        output.clear()
+    return output
+
+
+def evaluate_delivery(facets, accepted):
+    rows = []
+    for original in facets:
+        f = _facet(original)
+        fid = str(f.get('fid') or f.get('id'))
+        own = [a for a in accepted if fid in a.get('facet_ids', [])]
+        facts = [a for a in own if substantive(a) and semantic_match(a, f, facets)]
+        gaps = [a for a in own if a.get('type') == 'gap' and a.get('gap_type') in f.get('allowed_gaps', [])]
+        covered = covered_outputs(f, own, registry=facets)
+        required = set(f.get('required_outputs') or ['explanation'])
+        state = 'full' if facts and required <= covered and not gaps else 'partial' if facts or gaps else 'missing'
+        rows.append({'fid': fid, 'id': f.get('id'), 'kind': f.get('kind'), 'status': state,
+                     'covered_outputs': sorted(covered), 'missing_outputs': sorted(required - covered),
+                     'atom_ids': [a['aid'] for a in own], 'substantive_atom_ids': [a['aid'] for a in facts],
+                     'object_conflict_atom_ids': [a['aid'] for a in own if substantive(a) and not semantic_match(a, f, facets)],
+                     'allowed_gap_atom_ids': [a['aid'] for a in gaps]})
+    return rows
+
+
+def publishable(facets, rows):
+    """No date-only fragments, and no silent omission of the core question."""
+    normalized = [_facet(f) for f in facets]
+    if not normalized:
+        return False
+    by_fid = {r['fid']: r for r in rows}
+    core = [f for f in normalized if f.get('kind') in {'distinction', 'numeric_value', 'status_at_time', 'calculation'}] or normalized[:1]
+    has_content = lambda f: bool(by_fid.get(str(f.get('fid') or f.get('id')), {}).get('substantive_atom_ids'))
+    for f in core:
+        row = by_fid.get(str(f.get('fid') or f.get('id')), {})
+        if f.get('kind') in {'numeric_value', 'status_at_time', 'calculation'} and row.get('status') != 'full':
+            return False
+    return all(has_content(f) for f in core) and sum(has_content(f) for f in normalized) * 2 >= len(normalized)
+
+
+_PATHS = {
+    'business_data_missing': '接入对应业务单位的原始数据、台账或正式通报。',
+    'calculation_input_missing': '补齐原始格网、站点、单位、基准和目标时段后重新计算。',
+    'live_status_not_available': '查询目标日期的主管部门、现场管理单位正式公告或归档记录。',
+    'individual_determination_required': '向当地主管部门或承保机构提交个人材料、核定记录和合同。',
+    'jurisdiction_rule_not_found': '补充该地区主管部门的适用文件及版本依据。',
+    'evidence_not_found': '补查对应主管部门正文、附件或带出处的原始记录。',
+}
+
+
+def render_answer(facets, accepted):
+    """Render by immutable facet ownership, never by surviving heading position."""
+    blocks = []
+    for f in map(_facet, facets):
+        fid = str(f.get('fid') or f.get('id'))
+        own = [a for a in accepted if fid in a.get('facet_ids', []) and semantic_match(a, f, facets)]
+        if not own:
+            continue
+        title = str(f.get('question') or f.get('text') or fid)
+        lines = []
+        seen = set()
+        for atom in own:
+            text = str(atom.get('display_text') or atom.get('text', '')).strip()
+            key_text = re.sub(r'^\s*\d+(?:[.．](?!\d)|、)\s*', '', clean_text(atom.get('text') or text))
+            key = (re.sub(r'\s+', '', key_text).strip('。；;'), atom.get('type'),
+                   tuple(sorted(atom.get('context_subject') or [])))
+            if text and key not in seen:
+                seen.add(key)
+                header = atom.get('table_header')
+                if header:
+                    text = header + '\n|' + '---|' * len(header.strip('|').split('|')) + '\n' + text
+                lines.append(text)
+        blocks.append('**' + title.rstrip('？?。') + '**\n\n' + '\n\n'.join(lines))
+    return '\n\n'.join(blocks)
+
+
+_OUTPUT_LABELS = {
+    'verdict': '对核心问题的明确结论', 'distinction': '各对象的区别',
+    'comparison': '按相同维度逐项比较的依据', 'document_identity': '依据文件及身份信息',
+    'document': '依据文件', 'document_name': '依据文件名称', 'per_object_basis': '各对象对应的文件与条款',
+    'basis': '适用依据', 'basis_document': '适用文件', 'basis_content': '相关正文条款',
+    'definition': '概念定义', 'actors': '提出、受理或批准的责任主体', 'actor': '责任主体',
+    'responsible_actor': '责任主体', 'conditions': '适用条件或判断边界', 'condition': '适用条件',
+    'steps': '针对本对象的具体操作步骤', 'method_steps': '具体操作步骤', 'procedure': '办理程序',
+    'value': '具体数值', 'numeric_value': '具体数值', 'calculation': '计算结果', 'number': '数量',
+    'unit': '计量单位', 'place': '适用地点或海域', 'time': '对应日期和时刻', 'valid_time': '有效时段',
+    'provenance': '原始出处', 'application_path': '申请或办理渠道', 'channel_name': '对应业务的具体渠道名称',
+    'channel': '具体查询渠道', 'access_path': '可操作的访问入口', 'relation': '对象与风险之间的关系',
+    'risk_relation': '风险关系', 'status': '目标时点的实际状态', 'status_at_time': '目标时点的实际状态',
+    'current_status': '当前状态', 'formula': '计算公式', 'inputs': '计算输入数据',
+    'result_or_input_gap': '计算结果或明确的输入缺口', 'fact': '所问事实', 'answer': '本子问的实质回答',
+    'explanation': '具体解释', 'event_time': '事件发生时间', 'support': '支持结论的原文',
+}
+
+
+def output_label(name):
+    return _OUTPUT_LABELS.get(name, '本子问所需的实质依据')
+
+
+def output_labels(names):
+    return [output_label(name) for name in names]
+
+
+def format_time_scope(value):
+    if not isinstance(value, dict):
+        return str(value or '')
+    start, end, as_of = (value.get(k) for k in ('start', 'end', 'as_of'))
+    if start and end:
+        return str(start) if start == end else f'{start}至{end}'
+    return ('截至' + str(as_of)) if as_of else str(start or end or '')
+
+
+def render_with_gaps(facets, accepted, evidence=None, *, rows=None, gap_reasons=None):
+    """Explicit incomplete delivery with acquired/needed/acquisition-path fields.
+
+    Document cards prove only what was acquired. They do not prove the missing
+    fact or license a current-policy, calculation, or personal-eligibility claim.
+    """
+    rows = rows or evaluate_delivery(facets, accepted)
+    by_fid = {r['fid']: r for r in rows}
+    text = render_answer(facets, accepted)
+    card_lines = []
+    for e in evidence or []:
+        card = e.get('doc_card') or {}
+        if hasattr(card, 'to_dict'):
+            card = card.to_dict()
+        n = e.get('citation')
+        title = str(card.get('title') or e.get('title') or '').replace('\n', ' ')[:160]
+        if title:
+            card_lines.append(title + (f'[资料{n}]' if type(n) is int and n > 0 else ''))
+    acquired = '；'.join(card_lines[:6]) or '本次尚未取得可核对的正文或业务数据。'
+    gaps = []
+    for f in map(_facet, facets):
+        fid = str(f.get('fid') or f.get('id'))
+        row = by_fid.get(fid, {})
+        if row.get('status') == 'full':
+            continue
+        allowed = list(f.get('allowed_gaps') or ['evidence_not_found'])
+        reason = (gap_reasons or {}).get(fid, {})
+        gap_type = reason.get('gap_type')
+        if gap_type not in allowed:
+            gap_type = 'evidence_not_found' if 'evidence_not_found' in allowed else allowed[0]
+        objects = '、'.join(f.get('objects') or [])
+        places = '、'.join(f.get('places') or [])
+        scope = '，'.join(x for x in (objects, places, format_time_scope(f.get('time'))) if x)
+        title = str(f.get('question') or f.get('text') or fid).rstrip('？?。')
+        needed = '、'.join(output_label(name) for name in row.get('missing_outputs', [])) or '本子问的实质依据'
+        gaps.append(f'**待补齐：{title}**\n\n已取得：{acquired}\n\n还缺：{scope + "的" if scope else ""}{needed}，尚未形成可核对的完整交付。\n\n补齐路径：{_PATHS.get(gap_type, _PATHS["evidence_not_found"])}')
+    return '\n\n'.join(x for x in (text, *gaps) if x)

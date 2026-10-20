@@ -1,0 +1,1099 @@
+{
+  "provenance": "P0 24 recorded transactions p0_20261020_005001_b167cdca; actual questions, missing items and reviewer issues only. These are fixtures, not correctness labels.",
+  "cases": [
+    {
+      "case_id": "M1",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "灾后蚊子特别多会不会传染病？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "灾后蚊子特别多怎么防？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "M2",
+      "question": "台风暴雨后舟山家里花盆和院子有积水，蚊虫很多，怎么清理孳生地和防叮咬？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            3
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "台风暴雨后舟山家里花盆有积水，怎么清理蚊虫孳生地？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "台风暴雨后舟山院子里有积水，怎么清理蚊虫孳生地？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "台风暴雨后舟山家里蚊虫很多，怎么防叮咬？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "M3",
+      "question": "洪水退后宁波蚊虫变多，是否就说明当地已经暴发登革热？应该如何防蚊？",
+      "http_status": 200,
+      "missing_information": [
+        "宁波当地蚊媒监测数据和登革热病例、疫情信息，现有资料未覆盖，无法据此判断当地是否暴发。"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [
+            "宁波当地蚊媒监测数据和登革热病例、疫情信息，现有资料未覆盖。"
+          ],
+          "question": "洪水退后宁波蚊虫变多，是否就说明当地已经暴发登革热？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "洪水退后宁波应该如何防蚊？",
+          "status": "full"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户问的是蚊虫变多是否等于暴发以及如何防蚊，属于概念与方法问题，并未要求宁波当地实时疫情或监测实况；回答已用通用资料说明风险提示不等于暴发，把当地监测和病例信息列为缺项属于额外要求当前实况。",
+          "text": "宁波当地蚊媒监测数据和登革热病例、疫情信息，现有资料未覆盖，无法据此判断当地是否暴发。"
+        }
+      ]
+    },
+    {
+      "case_id": "C1",
+      "question": "浙江有哪些官方渠道可以查台风和海洋预警？",
+      "http_status": 200,
+      "missing_information": [
+        "各渠道当前是否正常运行及完整预警产品清单，现有资料未完整覆盖"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            2,
+            4
+          ],
+          "id": 1,
+          "missing_information": [
+            "浙江天气网台风预警栏目的具体产品清单及当前运行状态"
+          ],
+          "question": "浙江有哪些官方渠道可以查台风预警？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            3,
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "浙江海洋预报网当前运行状态及完整预警产品清单"
+          ],
+          "question": "浙江有哪些官方渠道可以查海洋预警？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问有哪些官方渠道，未要求当前运行实况或完整产品清单；把这两项列为缺项属于额外要求当前实况和完整名单。",
+          "text": "各渠道当前是否正常运行及完整预警产品清单，现有资料未完整覆盖"
+        }
+      ]
+    },
+    {
+      "case_id": "C2",
+      "question": "宁波居民想查询气象部门的台风预警和海洋部门的海浪警报，分别去哪里查？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "宁波居民查询气象部门的台风预警去哪里查？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            2
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "宁波居民查询海洋部门的海浪警报去哪里查？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "C3",
+      "question": "浙江海洋预报网上有台风路径，是不是就能替代气象台发布的台风预警？我应怎样查询两类信息？",
+      "http_status": 200,
+      "missing_information": [
+        "现有资料未直接说明浙江海洋预报网台风路径与气象台台风预警之间的替代关系或效力层级"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [
+            "现有资料未直接说明两者的替代关系或效力层级"
+          ],
+          "question": "浙江海洋预报网上的台风路径能否替代气象台发布的台风预警？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "应怎样查询浙江海洋预报网的台风路径信息？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            2,
+            3,
+            4
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "应怎样查询气象台发布的台风预警信息？",
+          "status": "full"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户问的是两类信息能否替代及如何查询，属概念与方法问题；正文已依据资料1、2说明二者是不同信息产品、路径页面未被赋予替代预警的效力，并给出查询途径。把“替代关系或效力层级”的正式说明列为缺项，属于额外要求正式效力层级，并非用户所问且已可回答。",
+          "text": "现有资料未直接说明浙江海洋预报网台风路径与气象台台风预警之间的替代关系或效力层级"
+        }
+      ]
+    },
+    {
+      "case_id": "A1",
+      "question": "我是象山县养殖户，台风前怎么加固网箱和池塘？损失了能赔吗？",
+      "http_status": 200,
+      "missing_information": [
+        "象山县当地养殖保险的具体承保范围、理赔标准、报案和定损办理渠道"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "台风前怎么加固网箱？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "台风前怎么加固池塘？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 3,
+          "missing_information": [
+            "象山县当地养殖保险的具体承保范围、理赔标准、报案和定损办理渠道"
+          ],
+          "question": "损失了能赔吗？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问损失能否获赔，属于一般办理流程问题；回答已依据保险法说明投保与合同约定、理赔材料及联系保险公司定损，把象山县当地具体承保范围、理赔标准和办理渠道列为缺项，属于额外要求地方专用标准。",
+          "text": "象山县当地养殖保险的具体承保范围、理赔标准、报案和定损办理渠道"
+        }
+      ]
+    },
+    {
+      "case_id": "A2",
+      "question": "温州海上重力式网箱台风前要检查哪些缆绳、框架和网衣部位？请给有出处的技术步骤。",
+      "http_status": 200,
+      "missing_information": [
+        "温州地方专用重力式网箱台风前检查规程或当地主管部门的现行要求（现有资料仅为通用技术手册，未明确覆盖温州）"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 4,
+          "missing_information": [],
+          "question": "请给有出处的技术步骤。",
+          "status": "full"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只要求给出有出处的通用技术步骤，并未要求温州地方专用规程或当地主管部门现行要求；回答已依据手册给出模块与流程，把地方专用规程列为缺项属于额外增加未要求的当前实况/地方专用标准。",
+          "text": "温州地方专用重力式网箱台风前检查规程或当地主管部门的现行要求（现有资料仅为通用技术手册，未明确覆盖温州）"
+        }
+      ]
+    },
+    {
+      "case_id": "A3",
+      "question": "台州海水养殖池塘防台风时，堤埂、进排水设施和备用设备怎么检查加固？",
+      "http_status": 200,
+      "missing_information": [
+        "台州市针对海水养殖池塘防台风堤埂、进排水设施和备用设备检查加固的地方现行规定或技术指引"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [
+            "台州地方专用堤埂检查加固规定"
+          ],
+          "question": "台州海水养殖池塘防台风时，堤埂怎么检查加固？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "台州地方专用进排水设施检查加固规定"
+          ],
+          "question": "台州海水养殖池塘防台风时，进排水设施怎么检查加固？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 3,
+          "missing_information": [
+            "台州地方专用备用设备检查加固规定"
+          ],
+          "question": "台州海水养殖池塘防台风时，备用设备怎么检查加固？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问检查加固的方法，未要求台州地方专用规定或技术指引；回答已按通用技术方法给出模块化步骤，把地方现行规定列为缺项属于额外要求。",
+          "text": "台州市针对海水养殖池塘防台风堤埂、进排水设施和备用设备检查加固的地方现行规定或技术指引"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "方法题允许依据资料归纳通用方案，用户未要求地方专用规定；正文主动声明未覆盖台州地方规定，构成对未要求实况的额外缺项提示。",
+          "text": "可以按台风前检查加固的一般技术方法处理，但现有资料未明确覆盖台州地方专用规定。"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "用户未要求台州地方现行规定或指引，回答已给出通用检查加固方法，此处额外强调地方文件缺失属于未要求的缺项。",
+          "text": "以上为海水鱼养殖防灾减灾技术手册中的通用做法，并非台州地方现行规定；台州当地如有另行发布的防台风技术指引或通知，应以当地现行文件为准。"
+        }
+      ]
+    },
+    {
+      "case_id": "G1",
+      "question": "假设宁波市鄞州区家里因台风受灾严重，能申请什么政府救助？",
+      "http_status": 200,
+      "missing_information": [
+        "宁波市鄞州区地方因灾倒损住房恢复重建救助和冬春生活救助的具体申请入口、补助标准、受理期限及当前受理状态"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            3,
+            4
+          ],
+          "id": 1,
+          "missing_information": [
+            "宁波市鄞州区地方具体的申请入口、补助标准、受理期限及当前受理状态"
+          ],
+          "question": "假设宁波市鄞州区家里因台风受灾严重，能申请什么政府救助",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户为假设情景询问可申请什么政府救助，未要求地方专用标准、精确金额或当前受理实况；回答已依据全国规范给出救助类别和办理流程，将地方申请入口、补助标准、受理期限及当前受理状态列为缺项属于额外要求。",
+          "text": "宁波市鄞州区地方因灾倒损住房恢复重建救助和冬春生活救助的具体申请入口、补助标准、受理期限及当前受理状态"
+        }
+      ]
+    },
+    {
+      "case_id": "G2",
+      "question": "台风把家里住房损坏，想申请政府倒损住房恢复重建救助，应该先向村里还是保险公司申请，程序是什么？",
+      "http_status": 200,
+      "missing_information": [
+        "你所在地区当前具体的申请材料清单、受理时限和补助标准，现有资料未提供",
+        "所引文件的现行有效性尚未核实，本子项仅按所引版本解释。"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [
+            "所引文件的现行有效性尚未核实，本子项仅按所引版本解释。"
+          ],
+          "question": "台风导致家里住房损坏，申请政府倒损住房恢复重建救助应该先向村里还是保险公司申请？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "所引文件的现行有效性尚未核实，本子项仅按所引版本解释。"
+          ],
+          "question": "申请政府倒损住房恢复重建救助的程序是什么？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问先向村里还是保险公司申请及一般程序，未要求地方专用材料清单、受理时限或补助标准；回答已据资料给出申请材料和办理流程，把这些地方具体口径列为缺项属于额外要求。",
+          "text": "你所在地区当前具体的申请材料清单、受理时限和补助标准，现有资料未提供"
+        }
+      ]
+    },
+    {
+      "case_id": "G3",
+      "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+      "http_status": 200,
+      "missing_information": [
+        "《国家自然灾害救助应急预案》中冬春救助章节的具体办理程序原文",
+        "专门的巨灾保险条款或地方巨灾保险实施方案（现有资料仅为保险合同和《保险法》一般规定）",
+        "所引文件的现行有效性尚未核实，本子项仅按所引版本解释。"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [
+            "所引文件的现行有效性尚未核实，本子项仅按所引版本解释。"
+          ],
+          "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "所引文件的现行有效性尚未核实，本子项仅按所引版本解释。"
+          ],
+          "question": "台风后过渡期生活救助依据什么办理？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1,
+            3
+          ],
+          "id": 3,
+          "missing_information": [
+            "《国家自然灾害救助应急预案》冬春救助章节的具体办理程序原文；发布会材料的发布日期未标明，不能确认其为现行统一程序"
+          ],
+          "question": "台风后冬春救助依据什么办理？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            2
+          ],
+          "id": 4,
+          "missing_information": [
+            "专门的巨灾保险条款或地方巨灾保险实施方案"
+          ],
+          "question": "台风后巨灾保险赔付依据什么办理？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问冬春救助依据什么办理，属于概念与一般办理依据问题；回答已依据资料1说明其属于预案规定的政府救助事项，并依据资料3给出“户报、村评、乡审、县定”的申报审批程序。把预案该章节的逐字原文列为缺项，属于额外要求正式文件原文，超出用户所问。",
+          "text": "《国家自然灾害救助应急预案》中冬春救助章节的具体办理程序原文"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "用户未要求地方专用巨灾保险方案或具体保险条款；回答已依据资料2说明巨灾保险赔付按保险合同及《保险法》一般规定办理，并提示具体赔付范围以对应合同为准。将缺少专门条款或地方实施方案列为缺项，属于额外要求地方专用标准。",
+          "text": "专门的巨灾保险条款或地方巨灾保险实施方案（现有资料仅为保险合同和《保险法》一般规定）"
+        }
+      ]
+    },
+    {
+      "case_id": "G3_extra_1",
+      "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+      "http_status": 200,
+      "missing_information": [
+        "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+      ],
+      "subquestion_coverage": [
+        {
+          "answer_spans": [
+            "过渡期生活救助和冬春救助属于政府自然灾害救助的不同环节，巨灾保险赔付属于保险合同项下的保险理赔，三者依据不同[资料1][资料2]。\n\n1. 是否一回事：不是[资料1][资料2]。\n\n过渡期生活救助资金由财政部会同应急管理部按相关政策规定下达，应急管理部指导做好人员核定、资金发放，并督促保障受灾群众过渡期基本生活；冬春救助在《国家自然灾害救助应急预案》中单列，其对象摸排按“户报、村评、乡审、县定”程序、通过国家自然灾害救助资金管理系统申报审批；保险赔付则依保险合同，由保险人对合同约定事故造成的财产损失承担赔偿保险金责任[资料1][资料2][资料3]。"
+          ],
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 1,
+          "missing_information": [
+            "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+          ],
+          "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？",
+          "status": "partial"
+        },
+        {
+          "answer_spans": [
+            "2. 过渡期生活救助依据：依据《国家自然灾害救助应急预案》办理[资料1]。\n\n根据省级财政、应急管理部门的资金申请以及需救助人员规模，财政部会同应急管理部按相关政策规定下达过渡期生活救助资金；应急管理部指导人员核定、资金发放，督促做好受灾群众过渡期基本生活保障[资料1]。\n\n该预案适用于我国境内遭受重特大自然灾害时国家层面开展的灾害救助等工作[资料1]。"
+          ],
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+          ],
+          "question": "台风后过渡期生活救助依据什么办理？",
+          "status": "partial"
+        },
+        {
+          "answer_spans": [
+            "3. 冬春救助依据：依据《国家自然灾害救助应急预案》中冬春救助的规定办理[资料1]。\n\n实际操作中，在广泛宣传救助政策基础上走村入户摸排，按照“户报、村评、乡审、县定”的工作程序，通过国家自然灾害救助资金管理系统进行申报和审批；救助对象规模确定后，根据地方救助需求，积极会同财政部力争尽早安排下达中央冬春救助资金[资料3]。"
+          ],
+          "citations": [
+            1,
+            3
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "台风后冬春救助依据什么办理？",
+          "status": "full"
+        },
+        {
+          "answer_spans": [
+            "4. 巨灾保险赔付依据：依据保险合同及《保险法》办理[资料2]。\n\n保险事故发生后，投保人、被保险人或者受益人应按保险合同请求赔偿或给付保险金，并提供与确认保险事故性质、原因、损失程度等有关的证明和资料；保险人收到请求后应及时核定，情形复杂的应在三十日内作出核定（合同另有约定的除外），属于保险责任的，在达成协议后十日内履行赔偿或给付义务[资料2]。"
+          ],
+          "citations": [
+            2
+          ],
+          "id": 4,
+          "missing_information": [
+            "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+          ],
+          "question": "台风后巨灾保险赔付依据什么办理？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "G3_extra_2",
+      "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+      "http_status": 200,
+      "missing_information": [
+        "所引证据尚未完整匹配本子问的适用范围或版本状态。",
+        "正文未交付冬春救助的具体办理依据（如依据哪部预案、办法或通知，以及申报审批程序等），仅提及冬春救助属于政府自然灾害救助制度中的不同救助安排，未说明其依据什么办理。"
+      ],
+      "subquestion_coverage": [
+        {
+          "answer_spans": [
+            "过渡期生活救助和冬春救助属于政府自然灾害救助制度中的不同救助安排，巨灾保险赔付属于保险理赔，三者性质、办理依据和程序不同[资料1][资料2][资料3]。"
+          ],
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 1,
+          "missing_information": [
+            "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+          ],
+          "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？",
+          "status": "partial"
+        },
+        {
+          "answer_spans": [
+            "1. 过渡期生活救助：依据《国家自然灾害救助应急预案》办理[资料1]。\n\n该预案规定，根据省级财政、应急管理部门的资金申请以及需救助人员规模，财政部会同应急管理部按相关政策规定下达过渡期生活救助资金；应急管理部指导做好人员核定、资金发放等工作，督促做好受灾群众过渡期基本生活保障[资料1]。",
+            "办理时，基层按“户报、村评、乡审、县定”的工作程序，通过国家自然灾害救助资金管理系统进行申报和审批[资料2]。"
+          ],
+          "citations": [
+            1,
+            2
+          ],
+          "id": 2,
+          "missing_information": [
+            "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+          ],
+          "question": "台风后政府的过渡期生活救助依据什么办理？",
+          "status": "partial"
+        },
+        {
+          "answer_spans": [],
+          "citations": [],
+          "id": 3,
+          "missing_information": [
+            "正文未交付冬春救助的具体办理依据（如依据哪部预案、办法或通知，以及申报审批程序等），仅提及冬春救助属于政府自然灾害救助制度中的不同救助安排，未说明其依据什么办理。"
+          ],
+          "question": "台风后政府的冬春救助依据什么办理？",
+          "status": "insufficient"
+        },
+        {
+          "answer_spans": [
+            "3. 巨灾保险赔付：属于保险理赔，不是政府救助[资料3]。\n\n依据保险合同和《中华人民共和国保险法》办理：保险事故发生后，投保人、被保险人或者受益人应向保险人提供与确认保险事故性质、原因、损失程度等有关的证明和资料；保险人认为材料不完整的，应及时一次性通知补充；收到赔偿或给付请求后应及时核定，情形复杂的应在三十日内处理[资料3]。",
+            "在灾害救助工作中，金融监管总局指导做好受灾地区保险理赔和金融支持服务[资料1]。"
+          ],
+          "citations": [
+            1,
+            3
+          ],
+          "id": 4,
+          "missing_information": [
+            "所引证据尚未完整匹配本子问的适用范围或版本状态。"
+          ],
+          "question": "台风后政府的巨灾保险赔付依据什么办理？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "G3_extra_3",
+      "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+      "http_status": 503,
+      "missing_information": [],
+      "subquestion_coverage": [],
+      "review_issues": []
+    },
+    {
+      "case_id": "A2_extra_1",
+      "question": "温州海上重力式网箱台风前要检查哪些缆绳、框架和网衣部位？请给有出处的技术步骤。",
+      "http_status": 200,
+      "missing_information": [
+        "温州地方针对海上重力式网箱台风前检查的专用技术标准或现行检查表"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 4,
+          "missing_information": [],
+          "question": "请给有出处的技术步骤。",
+          "status": "full"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户仅要求给出有出处的技术步骤，未要求温州地方专用标准或现行检查表；回答已依据通用技术手册给出模块与流程，将地方专用标准列为缺项属于额外要求。",
+          "text": "温州地方针对海上重力式网箱台风前检查的专用技术标准或现行检查表"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "正文已按手册归纳出检查与加固步骤，用户未要求地方专用标准或管控要求；此处再次把地方专用标准列为未覆盖缺项，属于unasked_gap。",
+          "text": "温州当地是否另有专用标准、检查表或台风前管控要求，现有资料未覆盖[资料1]。"
+        }
+      ]
+    },
+    {
+      "case_id": "A2_extra_2",
+      "question": "温州海上重力式网箱台风前要检查哪些缆绳、框架和网衣部位？请给有出处的技术步骤。",
+      "http_status": 200,
+      "missing_information": [
+        "温州地方针对海上重力式网箱台风前检查的专用技术标准或现场检查表"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 4,
+          "missing_information": [],
+          "question": "请给有出处的技术步骤。",
+          "status": "full"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户仅要求给出有出处的通用技术步骤，未要求温州地方专用标准或现场检查表；回答已依据手册给出模块与流程，将地方专用标准列为缺项属于额外要求。",
+          "text": "温州地方针对海上重力式网箱台风前检查的专用技术标准或现场检查表"
+        }
+      ]
+    },
+    {
+      "case_id": "A2_extra_3",
+      "question": "温州海上重力式网箱台风前要检查哪些缆绳、框架和网衣部位？请给有出处的技术步骤。",
+      "http_status": 200,
+      "missing_information": [
+        "温州地方针对海上重力式网箱台风前检查的专用技术规定或地方指南"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些缆绳部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些框架部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "温州海上重力式网箱台风前要检查哪些网衣部位？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 4,
+          "missing_information": [],
+          "question": "请给有出处的技术步骤。",
+          "status": "full"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只要求给出有出处的技术步骤，并未要求温州地方专用规定或地方指南；回答已依据通用技术手册给出模块与流程，把地方专用规定列为缺项属于额外增加未要求的当前实况或地方专用标准。",
+          "text": "温州地方针对海上重力式网箱台风前检查的专用技术规定或地方指南"
+        }
+      ]
+    },
+    {
+      "case_id": "C3_extra_1",
+      "question": "浙江海洋预报网上有台风路径，是不是就能替代气象台发布的台风预警？我应怎样查询两类信息？",
+      "http_status": 200,
+      "missing_information": [
+        "浙江海洋预报网“台风路径”栏目的具体页面路径及当前页面状态",
+        "气象台台风预警的完整查询渠道清单及当前预警实况"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [
+            "资料未直接说明浙江海洋预报网台风路径与气象台台风预警之间的替代关系，仅能依据两者信息性质判断不能替代"
+          ],
+          "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "浙江海洋预报网“台风路径”栏目的具体页面路径及当前页面状态"
+          ],
+          "question": "应怎样查询浙江海洋预报网上的台风路径？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            3,
+            4
+          ],
+          "id": 3,
+          "missing_information": [
+            "气象台台风预警的完整查询渠道清单及当前预警实况"
+          ],
+          "question": "应怎样查询气象台发布的台风预警？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问怎样查询台风路径，回答已依据资料给出网站名称和栏目名称，属于方法性指引；具体页面路径和当前页面状态并非用户明确要求的当前实况或完整名单，不应额外列为缺项。",
+          "text": "浙江海洋预报网“台风路径”栏目的具体页面路径及当前页面状态"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问怎样查询台风预警，回答已给出浙江天气网和中央气象台两个查询入口；完整渠道清单和当前预警实况属于用户未要求的完整名单与当前实况，不应列为缺项。",
+          "text": "气象台台风预警的完整查询渠道清单及当前预警实况"
+        }
+      ]
+    },
+    {
+      "case_id": "C3_extra_2",
+      "question": "浙江海洋预报网上有台风路径，是不是就能替代气象台发布的台风预警？我应怎样查询两类信息？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "answer_spans": [
+            "浙江海洋预报网设有“台风路径”板块，但气象灾害预警信号是由各级气象主管机构所属气象台站向社会公众发布的预警信息；台风路径信息与气象台发布的台风预警属于不同信息，前者不能替代后者[资料1][资料3]。"
+          ],
+          "citations": [
+            1,
+            3
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "浙江海洋预报网上的台风路径能否替代气象台发布的台风预警？",
+          "status": "full"
+        },
+        {
+          "answer_spans": [
+            "查询浙江海洋预报网台风路径：可访问浙江海洋预报网（www.zjocean.org.cn），进入“台风路径”板块查询[资料1]。"
+          ],
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "应怎样查询浙江海洋预报网上的台风路径？",
+          "status": "full"
+        },
+        {
+          "answer_spans": [
+            "查询气象台台风预警：可访问浙江天气网“天气预警”栏目（https://www.weather.com.cn/zhejiang/tqyj/index.shtml），或中央气象台“预警信号”页面（https://www.nmc.cn/f/alarm.html）[资料4][资料5]。",
+            "台风来临时，气象部门会按台风距离和影响时间发布台风消息、台风警报或台风紧急警报，电台、电视台等媒体也会播报[资料2]。"
+          ],
+          "citations": [
+            2,
+            4,
+            5
+          ],
+          "id": 3,
+          "missing_information": [],
+          "question": "应怎样查询气象台发布的台风预警？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "C3_extra_3",
+      "question": "浙江海洋预报网上有台风路径，是不是就能替代气象台发布的台风预警？我应怎样查询两类信息？",
+      "http_status": 200,
+      "missing_information": [
+        "浙江海洋预报网“台风路径”板块当前的具体操作步骤和页面布局",
+        "浙江天气网和中央气象台查询页面在查询时的实时预警内容及入口有效性"
+      ],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2,
+            5
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "浙江海洋预报网上的台风路径是不是就能替代气象台发布的台风预警？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1
+          ],
+          "id": 2,
+          "missing_information": [
+            "浙江海洋预报网“台风路径”板块当前的具体操作步骤和页面布局"
+          ],
+          "question": "应怎样查询浙江海洋预报网上的台风路径？",
+          "status": "partial"
+        },
+        {
+          "citations": [
+            3,
+            4
+          ],
+          "id": 3,
+          "missing_information": [
+            "查询页面在查询时的实时预警内容及入口有效性"
+          ],
+          "question": "应怎样查询气象台发布的台风预警？",
+          "status": "partial"
+        }
+      ],
+      "review_issues": [
+        {
+          "kind": "unasked_gap",
+          "reason": "用户只问“应怎样查询”，属于方法题；回答已依据资料给出访问网站并选择“台风路径”板块的查询方法，把当前具体操作步骤和页面布局列为缺项，属于额外要求当前实况，应删除。",
+          "text": "浙江海洋预报网“台风路径”板块当前的具体操作步骤和页面布局"
+        },
+        {
+          "kind": "unasked_gap",
+          "reason": "用户未要求当前实时预警状态或入口有效性，只问查询方法；回答已给出查询入口，把实时预警内容和入口有效性列为缺项属于额外要求当前实况，应删除。",
+          "text": "浙江天气网和中央气象台查询页面在查询时的实时预警内容及入口有效性"
+        }
+      ]
+    },
+    {
+      "case_id": "M1_extra_1",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "灾后蚊子特别多，会不会传染病？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "灾后蚊子特别多，怎么防？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "M1_extra_2",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "灾后蚊子特别多会不会传染病？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            2,
+            3
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "灾后蚊子特别多怎么防？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    },
+    {
+      "case_id": "M1_extra_3",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "http_status": 200,
+      "missing_information": [],
+      "subquestion_coverage": [
+        {
+          "citations": [
+            1,
+            2,
+            4
+          ],
+          "id": 1,
+          "missing_information": [],
+          "question": "灾后蚊子特别多会不会传染病？",
+          "status": "full"
+        },
+        {
+          "citations": [
+            1,
+            3,
+            4
+          ],
+          "id": 2,
+          "missing_information": [],
+          "question": "灾后蚊子特别多怎么防？",
+          "status": "full"
+        }
+      ],
+      "review_issues": []
+    }
+  ]
+}

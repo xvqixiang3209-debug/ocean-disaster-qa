@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "type": "selected_public_source_stage_examples",
+  "model_calls": 0,
+  "network_calls": 0,
+  "examples": [
+    {
+      "case_id": "M1",
+      "category": "canonical_health_source",
+      "label": "可信卫生来源结构迁移导致合法关系被误删",
+      "question": "灾后蚊子特别多，会不会传染病？怎么防？",
+      "recorded_generation_atom": {
+        "aid": "c3a1",
+        "text": "其中登革热、基孔肯雅热、寨卡病毒病属于蚊媒传染病，气温回升、蚊子活动增多时登革热、基孔肯雅热传播风险上升，寨卡病毒病输入风险也有所升高[资料2]。",
+        "text_sha256": "f4d811415ec7f66a12024174c557f16087feb73c4c870f277af24dcd6a6c1de7"
+      },
+      "recorded_judge_status": "supported",
+      "old_recorded_publication_decisions": [
+        {
+          "retained": true,
+          "status": "supported",
+          "type": "direct_fact",
+          "drop_rule": null
+        },
+        {
+          "retained": false,
+          "status": null,
+          "type": null,
+          "drop_rule": "relation_guard_recheck_required"
+        }
+      ],
+      "old_model_answer": {
+        "sha256": "7ccaff757ff37eee33b3591fff0c9302df6702b1d232b6ebef9e1c2224065b27",
+        "full_text_included": false,
+        "atom_text_present_in_published_answer": false,
+        "note": "This is the actual historical final answer, identified by hash; omitted to avoid mixing nonpublic corpus excerpts."
+      },
+      "new_stage_replay": {
+        "aid": "c3a1",
+        "retained": true,
+        "type": "direct_fact",
+        "drop_rule": null,
+        "facet_ids": [
+          "f1",
+          "f2"
+        ],
+        "is_new_model_answer": false,
+        "note": "Only the identical recorded atom is revalidated by current deterministic rules.",
+        "relation_guard_alarm_codes": []
+      },
+      "public_sources": [
+        {
+          "title": "中国疾病预防控制中心",
+          "url": "https://www.chinacdc.cn/jkts/202605/t20260509_1835669.html",
+          "body_sha256": "cd9c228a18e8bca0522a9a87462d20042f2439fe5e66435d14c5f8fbb7aa6019",
+          "passage_id": 13,
+          "passage_sha256": "be2e4f9b79cbf299201208d6177c3672f00efcca697d7e2f5a13e5dd653a3381"
+        }
+      ]
+    },
+    {
+      "case_id": "C2",
+      "category": "short_navigation",
+      "label": "四字菜单被统一引用长度门槛误删",
+      "question": "宁波居民想查询气象部门的台风预警和海洋部门的海浪警报，分别去哪里查？",
+      "recorded_generation_atom": {
+        "aid": "c1a1",
+        "text": "宁波居民查询气象部门台风预警，可到浙江天气网的“天气预警”栏目，该页设有“台风发布”入口，并标注为“浙江省气象灾害预警发布平台”[资料1]。",
+        "text_sha256": "09ad230a4e8e3759647a6d6d5b245aab8fe7510251ae088aecd6c6593bdc2682"
+      },
+      "recorded_judge_status": "supported",
+      "old_recorded_publication_decisions": [
+        {
+          "retained": false,
+          "status": "supported",
+          "type": "direct_fact",
+          "drop_rule": "invalid_evidence_quote"
+        }
+      ],
+      "old_model_answer": {
+        "sha256": "c36e7b399fa73ac066105a89c92c791696896ae5288e4a1534ba2f2de634fc1b",
+        "full_text_included": false,
+        "atom_text_present_in_published_answer": false,
+        "note": "This is the actual historical final answer, identified by hash; omitted to avoid mixing nonpublic corpus excerpts."
+      },
+      "new_stage_replay": {
+        "aid": "c1a1",
+        "retained": true,
+        "type": "direct_fact",
+        "drop_rule": null,
+        "facet_ids": [
+          "f1"
+        ],
+        "is_new_model_answer": false,
+        "note": "Only the identical recorded atom is revalidated by current deterministic rules."
+      },
+      "public_sources": [
+        {
+          "title": "天气预警 - 浙江天气网",
+          "url": "https://www.weather.com.cn/zhejiang/tqyj/index.shtml",
+          "body_sha256": "2f90b0ea7b0db4f308a3b86451a87d289bc459544b88b8c8050b79e2446fb5bb",
+          "passage_id": 7,
+          "passage_sha256": "b4bd74808c1c92ccd60df279172462f8869721cc34f50a4a15cd5a4b7ce2bb51"
+        },
+        {
+          "title": "天气预警 - 浙江天气网",
+          "url": "https://www.weather.com.cn/zhejiang/tqyj/index.shtml",
+          "body_sha256": "2f90b0ea7b0db4f308a3b86451a87d289bc459544b88b8c8050b79e2446fb5bb",
+          "passage_id": 8,
+          "passage_sha256": "e7a850d9e98da343e9dab7d9ef41ce9f355db7ef1e0a0c35ee2171ebe1c68317"
+        },
+        {
+          "title": "天气预警 - 浙江天气网",
+          "url": "https://www.weather.com.cn/zhejiang/tqyj/index.shtml",
+          "body_sha256": "2f90b0ea7b0db4f308a3b86451a87d289bc459544b88b8c8050b79e2446fb5bb",
+          "passage_id": 84,
+          "passage_sha256": "862cbe9d3eb1f3fc5cc07ec4cb9a978ef6c8a97780bb0324450df696482ec6ce"
+        }
+      ]
+    },
+    {
+      "case_id": "G3",
+      "category": "section_locator",
+      "label": "条款定位符被误判为节单位风速",
+      "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+      "recorded_generation_atom": {
+        "aid": "c8a1",
+        "text": "同样依据《国家自然灾害救助应急预案》第6.3节办理[资料1]。",
+        "text_sha256": "37681451740b841a8fdbb9792f20f0ede867e9bc5f4411ba8ea69bbbf4bd8cfe"
+      },
+      "recorded_judge_status": "supported",
+      "old_recorded_publication_decisions": [
+        {
+          "retained": false,
+          "status": "supported",
+          "type": "direct_fact",
+          "drop_rule": "quantity_unit_not_supported_by_cited_text",
+          "drop_rule_decoded_by_exact_known_code_sha256": true
+        }
+      ],
+      "old_model_answer": {
+        "sha256": "ebd164f823b941e4e0fe90b60f2eb0a954171f42556fe2e951d496c937b19559",
+        "full_text_included": false,
+        "atom_text_present_in_published_answer": false,
+        "note": "This is the actual historical final answer, identified by hash; omitted to avoid mixing nonpublic corpus excerpts."
+      },
+      "new_stage_replay": {
+        "aid": "c8a1",
+        "retained": true,
+        "type": "direct_fact",
+        "drop_rule": null,
+        "facet_ids": [
+          "f3"
+        ],
+        "is_new_model_answer": false,
+        "note": "Only the identical recorded atom is revalidated by current deterministic rules."
+      },
+      "public_sources": [
+        {
+          "title": "国务院办公厅关于印发《国家自然灾害救助应急预案》的通知_国务院文件_中国政府网",
+          "url": "https://www.gov.cn/zhengce/zhengceku/202402/content_6930039.htm",
+          "body_sha256": "768a058bf390d54461ccea6feaf720cdc822e448e6f59c34cdd1889cabe16279",
+          "passage_id": 204,
+          "passage_sha256": "5884e0a408f51fa87f70846897d04a1f5bb95939bf8745c597ed824c9e04a9eb"
+        },
+        {
+          "title": "国务院办公厅关于印发《国家自然灾害救助应急预案》的通知_国务院文件_中国政府网",
+          "url": "https://www.gov.cn/zhengce/zhengceku/202402/content_6930039.htm",
+          "body_sha256": "768a058bf390d54461ccea6feaf720cdc822e448e6f59c34cdd1889cabe16279",
+          "passage_id": 208,
+          "passage_sha256": "300c7bc4a32e376fe78c8a5249603132d8a0c8724524107a716f0161b3b232be"
+        }
+      ]
+    },
+    {
+      "case_id": "G3",
+      "category": "missing_synthesis_proof",
+      "label": "结论仍缺可核验前提，保守不放行",
+      "question": "台风后政府的过渡期生活救助、冬春救助和巨灾保险赔付是不是一回事？分别依据什么办理？",
+      "recorded_generation_atom": {
+        "aid": "c1a1",
+        "text": "不是一回事。",
+        "text_sha256": "2fd6d8aacddc3f9a83f7037783729ad368d37a107450dfb039ab4dc6773a5f59"
+      },
+      "recorded_judge_status": "synthesis",
+      "old_recorded_publication_decisions": [
+        {
+          "retained": false,
+          "status": "synthesis",
+          "type": "synthesis",
+          "drop_rule": "synthesis_invalid_premises"
+        }
+      ],
+      "old_model_answer": {
+        "sha256": "ebd164f823b941e4e0fe90b60f2eb0a954171f42556fe2e951d496c937b19559",
+        "full_text_included": false,
+        "atom_text_present_in_published_answer": false,
+        "note": "This is the actual historical final answer, identified by hash; omitted to avoid mixing nonpublic corpus excerpts."
+      },
+      "new_stage_replay": {
+        "aid": "c1a1",
+        "retained": false,
+        "type": "synthesis",
+        "drop_rule": "synthesis_unchecked_relation",
+        "facet_ids": [
+          "f1"
+        ],
+        "is_new_model_answer": false,
+        "note": "Only the identical recorded atom is revalidated by current deterministic rules."
+      },
+      "public_sources": [],
+      "proof_fields_present": {
+        "premises": false,
+        "inference": false
+      },
+      "note": "An old model verdict is not treated as proof. No new premise or model opinion is fabricated."
+    },
+    {
+      "case_id": "G1",
+      "category": "quoted_formula_boundary",
+      "label": "引号内分号恢复为完整原子，但原judge不能复用",
+      "question": "假设宁波市鄞州区家里因台风受灾严重，能申请什么政府救助？",
+      "recorded_generation_atoms": [
+        {
+          "aid": "c5a1",
+          "text": "补助资金采取“自主申请、不建不补；",
+          "text_sha256": "40b93c886816de1b5f4e62f18a381e4e1e4d79e22f52e62f7e32bec8722c81e5"
+        },
+        {
+          "aid": "c5a2",
+          "text": "逐户统计、发放到户”的方式管理[资料2]。",
+          "text_sha256": "6fa40ec751a821cdd3c162bda72b000d2a49fc5ecff67b8bba7dbda142c36555"
+        }
+      ],
+      "new_stage_replay": {
+        "status": "needs_new_judge",
+        "reason": "parser_changed_exact_atom_boundaries",
+        "candidate_exact_text": "补助资金采取“自主申请、不建不补；逐户统计、发放到户”的方式管理[资料2]。",
+        "candidate_exact_text_sha256": "4852fdf81c9548f13594acb3ea3c4da3afeb6f4f68457cacb7d1cbf383eb9b91",
+        "approved": false,
+        "is_new_model_answer": false
+      },
+      "public_sources": [
+        {
+          "title": "应急管理部 财政部关于印发《因灾倒塌、损坏住房恢复重建救助工作规范》的通知",
+          "url": "https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/202307/t20230719_456671.shtml",
+          "body_sha256": "4919e898c84acc555629ac9461111b424b95d45c826ec2d37b3b26e1b403cb1e"
+        }
+      ],
+      "note": "This parser improvement changes the atom span; the previous opinions on two fragments cannot approve their merged statement."
+    }
+  ]
+}

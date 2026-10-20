@@ -86,30 +86,65 @@ def _reviewed_archive_page(row):
 
 class PublicReferenceReader:
     REFERENCE_SCOPES={'general_safety','versioned_standard','research_method','technical_reference','annual_statistics'}
-    def __init__(self,reader,root,max_age_seconds=3600):
+    def __init__(self,reader,root,max_age_seconds=3600,connector_v2=None):
         self.reader,self.root,self.max_age_seconds=reader,Path(root),max_age_seconds
         self.root.mkdir(parents=True,exist_ok=True)
+        self.connector_v2 = (os.getenv('MARINE_CONNECTOR_V2','false').lower() in {'1','true','on'}
+                             if connector_v2 is None else bool(connector_v2))
+
+    def _capture(self, page):
+        """Local immutable extracted-body snapshot, addressed by URL/hash/date.
+
+        Includes the reader's complete bounded result before downstream excerpt
+        selection. It never overrides acquisition time with cache access time.
+        """
+        from .web_supplement import trusted_url
+        url = page.get('url','')
+        body = str(page.get('content') or '')
+        if (not self.connector_v2 or page.get('read_status') not in {'success','partial'}
+                or not trusted_url(page.get('final_url') or url,True,allow_health=True) or len(body)<30):
+            return
+        acquired = str(page.get('read_at') or datetime.now(timezone.utc).isoformat())
+        record = {'schema_version':1,'url':url,'retrieved_at':acquired,
+                  'body_sha256':hashlib.sha256(body.encode()).hexdigest(),
+                  'page':page,'scope':'bounded_extracted_body_not_entire_site'}
+        url_key = hashlib.sha256(url.encode()).hexdigest()
+        stamp = hashlib.sha256(acquired.encode()).hexdigest()[:16]
+        path = self.root / 'snapshots' / url_key / (record['body_sha256']+'_'+stamp+'.json')
+        try:
+            path.parent.mkdir(parents=True,exist_ok=True)
+            # Exclusive create preserves the first acquired record for a key.
+            with path.open('x',encoding='utf8') as stream:
+                json.dump(record,stream,ensure_ascii=False)
+        except (OSError,TypeError,ValueError):
+            pass
 
     def _path(self,url):return self.root/(hashlib.sha256(url.encode()).hexdigest()+'.json')
+
+    def _cacheable(self,page):
+        scope = page.get('_primary_scope')
+        return (scope in self.REFERENCE_SCOPES or self.connector_v2 and
+                scope in {'national_guidance','national_framework'})
 
     def enrich(self,rows):
         from .web_supplement import trusted_url
         output={};pending=[]
         for row in rows:
             url=row.get('url','')
-            cacheable=row.get('_primary_scope') in self.REFERENCE_SCOPES
-            archived = _reviewed_archive_page(row) if cacheable and trusted_url(url,True) else None
+            cacheable=self._cacheable(row)
+            archived = _reviewed_archive_page(row) if cacheable and trusted_url(url,True,allow_health=self.connector_v2) else None
             if archived:
                 output[url] = archived
+                self._capture(archived)
                 continue
             cached=None
-            if cacheable and trusted_url(url,True):
+            if cacheable and trusted_url(url,True,allow_health=self.connector_v2):
                 try:
                     cached=json.loads(self._path(url).read_text(encoding='utf8'))
                     age=(datetime.now(timezone.utc)-datetime.fromisoformat(cached['saved_at'])).total_seconds()
                     body=cached['page']['content']
                     if not (0<=age<=self.max_age_seconds and cached['url']==url
-                            and trusted_url(cached['page'].get('final_url') or url,True)
+                            and trusted_url(cached['page'].get('final_url') or url,True,allow_health=self.connector_v2)
                             and hashlib.sha256(body.encode()).hexdigest()==cached['body_sha256']):cached=None
                 except (OSError,ValueError,TypeError,KeyError):cached=None
             if cached:
@@ -118,9 +153,10 @@ class PublicReferenceReader:
         if pending:
             for page in self.reader.enrich(pending):
                 url=page['url'];output[url]=page
-                if (page.get('_primary_scope') not in self.REFERENCE_SCOPES
+                self._capture(page)
+                if (not self._cacheable(page)
                         or page.get('read_status') not in {'success','partial'}
-                        or not trusted_url(page.get('final_url') or url,True)
+                        or not trusted_url(page.get('final_url') or url,True,allow_health=self.connector_v2)
                         or len(page.get('content',''))<30):continue
                 record={'url':url,'saved_at':datetime.now(timezone.utc).isoformat(),
                         'body_sha256':hashlib.sha256(page['content'].encode()).hexdigest(),'page':page}

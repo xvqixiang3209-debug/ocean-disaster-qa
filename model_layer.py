@@ -22,10 +22,12 @@ def call_model(
     thinking=None,
     response_format=None,
     max_tokens=None,
+    return_usage=False,
 ):
     """
     调用指定模型进行对话
-    返回: generator (stream=True) 或 str (stream=False)
+    返回: generator (stream=True) 或 str (stream=False)。return_usage=True 时返回
+    (原返回值, usage)，无法取得的 token 用量保持 None；流式 usage 在迭代时更新。
     """
     model_config = MODELS.get(model_name)
     if not model_config:
@@ -63,6 +65,8 @@ def call_model(
         extra_body["thinking"] = {"type": thinking}
 
     if stream:
+        if return_usage:
+            completion_options['stream_options'] = {'include_usage': True}
         response = client.chat.completions.create(
             model=model_config["code"],
             messages=messages,
@@ -72,6 +76,9 @@ def call_model(
             extra_body=extra_body if extra_body else None,
             **completion_options,
         )
+        if return_usage:
+            usage = _usage_dict(None)
+            return _stream_generator(response, usage), usage
         return _stream_generator(response)
     else:
         response = client.chat.completions.create(
@@ -83,12 +90,24 @@ def call_model(
             extra_body=extra_body if extra_body else None,
             **completion_options,
         )
-        return response.choices[0].message.content
+        text = response.choices[0].message.content
+        return (text, _usage_dict(getattr(response, 'usage', None))) if return_usage else text
 
 
-def _stream_generator(response):
+def _usage_dict(usage):
+    """Use only provider-supplied integer counts; never estimate missing usage."""
+    result = {}
+    for name in ('prompt_tokens', 'completion_tokens', 'total_tokens'):
+        value = usage.get(name) if isinstance(usage, dict) else getattr(usage, name, None)
+        result[name] = value if type(value) is int and value >= 0 else None
+    return result
+
+
+def _stream_generator(response, usage=None):
     """将流式响应转换为文本生成"""
     for chunk in response:
+        if usage is not None and getattr(chunk, 'usage', None) is not None:
+            usage.update(_usage_dict(chunk.usage))
         if chunk.choices and chunk.choices[0].delta.content:
             yield chunk.choices[0].delta.content
 

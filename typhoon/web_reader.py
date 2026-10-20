@@ -13,6 +13,8 @@ import http.client
 import ipaddress
 import json
 import io
+import os
+from pathlib import Path
 import re
 import socket
 import ssl
@@ -404,15 +406,47 @@ def _decode(body: bytes, content_type: str) -> str:
 class WebPageReader:
     def __init__(self, *, enabled: bool = True, timeout_seconds: float = 12.0,
                  max_pages: int = 3, max_chars: int = 48000, max_bytes: int = 2000000,
-                 allow_official_documents: bool = False):
+                 allow_official_documents: bool = False, capture_root=None, connector_v2=None):
         self.enabled = bool(enabled)
         self.timeout_seconds = max(0.1, min(float(timeout_seconds), 60.0))
         self.max_pages = max(1, min(int(max_pages), 10))
         self.max_chars = max(1, min(int(max_chars), 250000))
         self.max_bytes = max(128, min(int(max_bytes), 4000000))
         self.allow_official_documents = bool(allow_official_documents)
+        self.connector_v2 = (os.getenv('MARINE_CONNECTOR_V2','false').lower() in {'1','true','on'}
+                             if connector_v2 is None else bool(connector_v2))
+        self.capture_root = (Path(capture_root) if capture_root else
+                             Path(os.environ['MARINE_PUBLIC_CAPTURE_DIR'])
+                             if os.getenv('MARINE_PUBLIC_CAPTURE_DIR') else None)
         self._robots_cache: dict[str, tuple[float, RobotFileParser | bool]] = {}
         self._robots_lock = threading.Lock()
+
+    def _capture_public_response(self, downloaded, result):
+        """Opt-in local raw capture after access/body checks; never bypass login."""
+        if (self.capture_root is None or result.get('read_status') not in {'success','partial'}
+                or not self._official({'url': downloaded.url},allow_health=self.connector_v2)):
+            return
+        raw_hash = hashlib.sha256(downloaded.body).hexdigest()
+        acquired = result['read_at']
+        url_hash = hashlib.sha256(downloaded.url.encode()).hexdigest()
+        key = raw_hash+'_'+hashlib.sha256(acquired.encode()).hexdigest()[:16]
+        root = self.capture_root / url_hash
+        try:
+            root.mkdir(parents=True,exist_ok=True)
+            with (root/(key+'.bin')).open('xb') as stream:
+                stream.write(downloaded.body)
+            record = {'schema_version':1,'url':downloaded.url,'retrieved_at':acquired,
+                      'response_sha256':raw_hash,'response_bytes':len(downloaded.body),
+                      'http_status':downloaded.status,'download_truncated':downloaded.truncated,
+                      'body_sha256':result.get('content_sha256'),
+                      'scope':'bounded_public_http_response','reader_result':result}
+            with (root/(key+'.json')).open('x',encoding='utf8') as stream:
+                json.dump(record,stream,ensure_ascii=False)
+            result['capture_response_sha256'] = raw_hash
+        except (OSError,TypeError,ValueError):
+            # Capture failure must not convert an otherwise valid body to a
+            # fabricated success, nor interfere with normal bounded reads.
+            pass
 
     def status(self) -> dict:
         return {"enabled": self.enabled, "timeout_seconds": self.timeout_seconds,
@@ -424,6 +458,7 @@ class WebPageReader:
         parsed = urlsplit(url)
         host = (parsed.hostname or '').lower()
         trusted=(host == 'gov.cn' or host.endswith('.gov.cn') or host.endswith('.noaa.gov')
+                or self.connector_v2 and (host == 'chinacdc.cn' or host.endswith('.chinacdc.cn'))
                 or host in {'arxiv.org','aclanthology.org','nhess.copernicus.org','gmd.copernicus.org','nora.nerc.ac.uk'})
         attachment=bool(re.search(r'\.(?:pdf|docx)$',parsed.path,re.I))
         # JCMS government attachments use an opaque filename on one fixed
@@ -465,12 +500,12 @@ class WebPageReader:
             return '\n\n'.join(''.join(node.itertext()) for node in root.findall('.//w:p', ns))
 
     @staticmethod
-    def _official(item: dict) -> bool:
+    def _official(item: dict, allow_health=False) -> bool:
         try:
             host = (urlsplit(str(item.get("url") or "")).hostname or "").lower()
             return any(host == domain or host.endswith("." + domain) for domain in (
                 "gov.cn", "gov", "nmc.cn", "weather.com.cn", "jma.go.jp", "wmo.int",
-                "zjocean.org.cn", "hxzs.com.cn"))
+                "zjocean.org.cn", "hxzs.com.cn")+(('chinacdc.cn',) if allow_health else ()))
         except ValueError:
             return False
 
@@ -479,15 +514,16 @@ class WebPageReader:
         output = [dict(item, read_status="not_attempted" if self.enabled else "disabled",
                        read_error=None, content="", content_chars=0, content_sha256=None,
                        final_url=None, page_title=None, read_at=None, truncated=False,
-                       extraction_method=None, coverage_caveat="尚未提取网页正文" if self.enabled else "网页正文读取已关闭")
+                       extraction_method=None, http_status=None, coverage_caveat="尚未提取网页正文" if self.enabled else "网页正文读取已关闭")
                   for item in results]
         for item in output:
             item.setdefault("published_at", None)
         if not self.enabled or not output:
             return output
-        selected = sorted(range(len(output)), key=lambda index: (not self._official(output[index]), index))[:self.max_pages]
+        selected = sorted(range(len(output)), key=lambda index: (not self._official(output[index],allow_health=self.connector_v2), index))[:self.max_pages]
         with ThreadPoolExecutor(max_workers=min(3, len(selected)), thread_name_prefix="web-reader") as executor:
-            futures = {index: executor.submit(self._read_page, output[index].get("url", "")) for index in selected}
+            from contextvars import copy_context
+            futures = {index: executor.submit(copy_context().run, self._read_page, output[index].get("url", "")) for index in selected}
             for index, future in futures.items():
                 result = future.result()
                 if not result.get("published_at"):
@@ -638,10 +674,21 @@ class WebPageReader:
                   "read_error": None, "content": "", "content_chars": 0,
                   "content_sha256": None, "final_url": None, "page_title": None,
                   "published_at": None, "truncated": False, "extraction_method": None,
+                  "http_status": None,
                   "coverage_caveat": "未取得网页正文；搜索摘要不代表网页内容"}
         # Official PDF/DOCX files can contain images and download more slowly
         # than an HTML article. Keep their separate budget bounded at 20s.
         budget = max(self.timeout_seconds, 20) if self._document_url_allowed(url) else self.timeout_seconds
+        # Context follows each worker, so a new connection cannot restart the
+        # question's total wall-clock allowance. In-flight request limits are
+        # still enforced by the existing deadline socket guard.
+        from marine_kb.phase2 import current_budget
+        answer_budget = current_budget()
+        if answer_budget is not None:
+            budget = min(budget,answer_budget.remaining())
+            if budget <= 0:
+                result.update(read_error='answer_time_budget_exceeded')
+                return result
         deadline = time.monotonic() + budget
         guard = _DeadlineGuard(deadline)
         try:
@@ -649,6 +696,7 @@ class WebPageReader:
             result["final_url"] = safe
             downloaded = self._fetch(safe, deadline, guard, limit=self.max_bytes)
             result["final_url"] = downloaded.url
+            result['http_status'] = downloaded.status
             original, final = urlsplit(safe), urlsplit(downloaded.url)
             if (original.path not in {"", "/"} and final.path in {"", "/"} and
                     original.netloc == final.netloc and not final.query):
@@ -673,6 +721,7 @@ class WebPageReader:
                               truncated=len(content) > self.max_chars,
                               extraction_method='official_pdf_text' if is_pdf else 'official_docx_text',
                               coverage_caveat='仅提取附件文字；未识别图片、图表或外部链接。')
+                self._capture_public_response(downloaded,result)
                 return result
             if (mime not in {"", "text/html", "application/xhtml+xml", "text/plain"} or
                     downloaded.body.lstrip().startswith((b"%PDF", b"PK\x03\x04"))):
@@ -726,6 +775,7 @@ class WebPageReader:
                                           ("；" + "；".join(caveats) if caveats else ""))
             result["content_chars"] = len(result["content"])
             result["content_sha256"] = hashlib.sha256(result["content"].encode("utf-8")).hexdigest()
+            self._capture_public_response(downloaded,result)
         except _ReadFailure as exc:
             result.update(read_status=exc.status, read_error=exc.message)
         except Exception:

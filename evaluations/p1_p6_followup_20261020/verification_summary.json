@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "source_reports": {
+    "grounding_replay.json": "db13ae003d0b71f3ccffd5d3b8034df76e5f18ce0124363f901dd29ba2623565",
+    "delivery_replay.json": "941fa2cdd850b3608df12d27238f13a07d4b4492a5620eacaf23c57ddfe1f94b",
+    "scope_replay.json": "0b01b491c2de1d0577166f4f1400c6d8e5b18e88d9932393864664b4ace83835"
+  },
+  "validation": {
+    "source": "validation_final.xml",
+    "source_sha256": "fae71b73f2d55abdcdf48c054c1b92556f1cb20d896ce84a4f1e2e2d262ae3a7",
+    "junit_tests_including_subtests": 1587,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 13.409,
+    "pytest_items": 1485,
+    "successful_subtests": 102
+  },
+  "runtime_sha256": {
+    "marine_kb/typed_grounding.py": "a80ed8e8df94c41a648963783860c3d4b31a4dcebb4b8b11c1958c59e9698f98",
+    "marine_kb/relation_guard.py": "2f01c58d9f504f4666c7ada2076ea1b77a44d01c6a911522f76b79e7aa21f1bd",
+    "marine_kb/quantities.py": "672016a0b4587d848e287725bd5335143f4e30bade99441734609aaede05cb7f",
+    "marine_kb/qa.py": "c0c3347b5635ab18a3030de774471a1f985f1636514a6b7f97255d923976a4bd",
+    "marine_kb/facet_delivery.py": "ddd766b36a61c882f64e86fe90b143370fb0be5bd7483069303210b87dc41c8a",
+    "marine_kb/recovery.py": "05eb697243dfa063deb0cda73b95ef8b0e857bec38285571e5520435d1150839",
+    "marine_kb/scope_gate.py": "8bb61e0667c1abcea53f126bb62a58420d7e991a9b4d6385a5d328a46e6b3373",
+    "marine_kb/answer_pipeline.py": "d1db6a2bdf2d9199a8cb64b6de92ba8af95eed8e48eb427c549714ad0cde839f"
+  },
+  "statistics_consistency_checks": {
+    "grounding_totals_equal_sum_of_cases": true,
+    "grounding_retained_and_dropped_equal_decisions": true,
+    "scope_total_inputs_equal_rows": true,
+    "scope_initial_changes_equal_rows": true
+  }
+}

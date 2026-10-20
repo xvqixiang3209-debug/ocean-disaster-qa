@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 import re
+import os
 
 CN = timezone(timedelta(hours=8))
 # Paths describe containment, not interchangeable beaches/ports. Extend this
@@ -167,7 +168,21 @@ def question_context(question, dynamic=False, now=None):
             'as_of': availability, 'target_start': target_start, 'target_end': target_end}
 
 
-def document_kind(title, body, generic=False):
+def scope_gate_enabled():
+    return os.getenv('MARINE_SCOPE_GATE', '').strip().casefold() in {'true', '1', 'yes', 'on'}
+
+
+def document_kind(title, body, generic=False, primary_scope=None):
+    if scope_gate_enabled():
+        # A dated forecast is positive evidence of product type. The isolated
+        # conjunction 与 never converts an operational product into education.
+        dated_product = bool(re.search(r'预报|预测|警报|预警', title) and
+                             re.search(r'\d{1,2}月\d{1,2}日|20\d{2}[-/]\d{1,2}[-/]\d{1,2}|第\d+期|未来\d+小时', title))
+        educational = bool(re.search(r'科普|知识|是什么|怎么理解|预报.{0,4}防御|预报.{0,4}预警.{0,6}(?:区别|关系)|认识.{0,6}预警', title))
+        if primary_scope in {'national_guidance', 'service_directory'} and not dated_product:
+            return 'knowledge'
+        if educational and not dated_product and not re.search(POLICY, title):
+            return 'knowledge'
     if re.search(POLICY+r'|中华人民共和国.{1,20}法', title):
         return 'policy'
     if re.search(OPERATION, title) and re.search(r'公告|通知|通告|消息|安排|开放|停航|复航', title):
@@ -263,7 +278,8 @@ def assess_page(question, page, dynamic=False, now=None, subquestion=None):
     title = str(page.get('page_title') or page.get('title') or '')
     body = str(page.get('content') or page.get('text') or '')
     metadata = page.get('metadata') or {}
-    kind = document_kind(title, body, bool(page.get('_generic_scope')))
+    kind = document_kind(title, body, bool(page.get('_generic_scope')),
+                         page.get('_primary_scope') or metadata.get('primary_scope'))
     if page.get('_primary_scope') == 'service_directory' or metadata.get('primary_scope') == 'service_directory':
         # A verified service directory identifies a channel, not its current
         # alert list. status_request below still prevents live-state use.
@@ -352,12 +368,40 @@ def assess_page(question, page, dynamic=False, now=None, subquestion=None):
             and not re.search(OPERATION,subquestion or question) and not context['objects']
             and geography in {'exact','unspecified'} and temporal=='covers_target'):
         use='direct'
-    return {'kind': kind, 'use': use, 'geography': geography, 'object_match': object_match,
+    scope_note = None
+    typed_facet = None
+    if scope_gate_enabled():
+        # Import locally to avoid a module cycle: the contract uses the
+        # geographic/date extractors above, never assess_page itself.
+        from .facet_contract import build_contract
+        typed_facet = build_contract(question, [{'id': 1, 'question': subquestion or question}])[0]
+        if (typed_facet['place_role'] == 'context' and
+                typed_facet['kind'] in {'method_steps', 'definition', 'distinction', 'risk_relation', 'explanation'} and
+                kind == 'knowledge'):
+            reasons = [reason for reason in reasons if reason != '来源未明确覆盖所问地点']
+            # A national method can answer a local-background question, while
+            # its jurisdiction remains explicit in the card and diagnostics.
+            if temporal != 'after_cutoff' and object_match != 'mismatch':
+                use = 'direct'
+        current_legal = bool(re.search(r'现行|当前有效|是否有效|仍然有效|法定|必须依据|目前适用', subquestion or question))
+        if (kind == 'policy' and temporal == 'version_unverified' and
+                typed_facet['kind'] in {'basis_document', 'procedure'} and not current_legal and
+                geography not in {'other_region', 'local_example'} and object_match != 'mismatch'):
+            # This supports an explanation of the cited edition only. It is
+            # deliberately not current_verified or a permission to execute.
+            use = 'direct'
+            scope_note = 'version_unverified'
+    result = {'kind': kind, 'use': use, 'geography': geography, 'object_match': object_match,
             'named_object_match':named_match, 'source_named_objects':named,
             'requested_objects': requested, 'source_objects': actual_objects,
             'temporal': temporal, 'published_at': published.isoformat() if published else None,
             'valid_from': start.isoformat() if start else None, 'valid_to': end.isoformat() if end else None,
             'query_as_of': context['as_of'].isoformat(), 'reasons': reasons}
+    if typed_facet:
+        result.update(facet_kind=typed_facet['kind'], place_role=typed_facet['place_role'])
+    if scope_note:
+        result.update(scope_note=scope_note, support_scope='cited_edition_explanation_only')
+    return result
 
 
 def reconcile_notices(hits):

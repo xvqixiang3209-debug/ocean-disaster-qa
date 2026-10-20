@@ -1,6 +1,6 @@
 台风与海洋灾害专业问答 · 首期本地工作台
-Version: phase1.8.3-public-evidence
-Release date: 20261019
+Version: phase1.8.4-grounded-recovery
+Release date: 20261020
 Baseline: 1.4.10 (20260916), preserved in a separate directory
 Platform: Windows native (no Docker)
 API version: 1.5 (map-integrated multi-turn QA, forecast data, explicit assumption-based calculations)
@@ -11,4 +11,5 @@ Spatial pipeline: 24 ASTER GDEM tiles, source-grid 2020 population subset, point
 
 QA maintenance 20261018: valid-time interval and as-of isolation, domain routing, map analogue bridge, typed calculation delivery, explicit subquestion coverage and quantity-unit/passage checks.
 
-
+QA maintenance 20261020: full facet registry with target-only recovery; object-aware delivery floors; exact short navigation references; canonical health-source identity; quoted-clause preservation; constrained synthesis proof schema; post-rewrite scope lifecycle and review disagreement handling.
+Validation status: deterministic offline regressions on the prior 24 recordings; no new paid model answers in this maintenance run. This is not business acceptance or a new full-160 evaluation.

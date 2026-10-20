@@ -9,6 +9,8 @@ from urllib.parse import urlsplit
 
 from flask import Blueprint, current_app, jsonify, request
 from .conversation import ConversationStore, structured_case_question
+from .qa_observability import trace_request, attach_trace, observe_failure
+from .answer_trace import current_trace
 
 
 def create_chat_blueprint(qa, typhoon_components=None):
@@ -16,6 +18,10 @@ def create_chat_blueprint(qa, typhoon_components=None):
     token = secrets.token_urlsafe(32)
     conversations = ConversationStore()
     bp.conversations = conversations
+
+    def trace_fields():
+        active = current_trace()
+        return {'trace': active.to_dict()} if active is not None else {}
     root=Path(__file__).resolve().parents[1]
     tracked=('marine_kb/qa.py','marine_kb/chat_api.py','marine_kb/business_validation.py','marine_kb/quantities.py',
              'marine_kb/guidance.py','forecast_runtime/service.py','forecast_runtime/routing.py',
@@ -31,10 +37,19 @@ def create_chat_blueprint(qa, typhoon_components=None):
                      'marine_kb/version_claims.py','marine_kb/answer_completeness.py','forecast_runtime/historical_comparison.py',
                      'forecast_runtime/official_warnings.py','forecast_runtime/api.py',
                      'marine_kb/crag.py','marine_kb/history_statistics.py','marine_kb/public_service_intents.py',
+                     'marine_kb/answer_trace.py','marine_kb/qa_observability.py','marine_kb/replay.py','model_layer.py',
                      'data/public_references/manifest.json','data/public_references/ningbo_public_catastrophe_2024_2026.pdf',
                      'data/public_references/ningbo_public_catastrophe_2024_2026_excerpt.txt')
+    tracked=tracked+tuple('marine_kb/'+name+'.py' for name in ('phase2','facet_contract','scope_gate',
+        'evidence_units','typed_grounding','facet_delivery','recovery','relation_guard','answer_pipeline'))
+    tracked=tracked+('data/domain/relation_lexicon.json',)
     build={'version':(root/'VERSION.txt').read_text(encoding='utf-8').split('Version: ',1)[-1].splitlines()[0],
            'runtime_source_sha256':{name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in tracked}}
+    from .phase2 import enabled,mode
+    if any(enabled(n) for n in ('MARINE_FACET_CONTRACT','MARINE_EVIDENCE_UNITS','MARINE_SCOPE_GATE','MARINE_CONNECTOR_V2')) or mode('MARINE_TYPED_GROUNDING')!='off':
+        build['phase2']={n:enabled(n) for n in ('MARINE_FACET_CONTRACT','MARINE_EVIDENCE_UNITS','MARINE_SCOPE_GATE','MARINE_CONNECTOR_V2')}
+        build['phase2'].update(typed_grounding=mode('MARINE_TYPED_GROUNDING'),relation_guard=mode('MARINE_RELATION_GUARD'),
+                               max_model_calls=10,max_answer_seconds=60)
 
     def owner():
         cookie = request.cookies.get('marine_assistant_owner', '')
@@ -82,6 +97,7 @@ def create_chat_blueprint(qa, typhoon_components=None):
         return jsonify(cleared=True)
 
     @bp.post('/ask')
+    @trace_request
     def ask():
         if (request.content_length or 0) > 16000:
             return jsonify(error='问题太长，请控制在2000字以内。'), 413
@@ -154,12 +170,14 @@ def create_chat_blueprint(qa, typhoon_components=None):
                 code=code if re.fullmatch(r'[A-Za-z0-9_]{1,80}',code) else 'unclassified'
                 current_app.logger.warning('Assistant generation failed: %s',code)
                 return jsonify(error=result.get('answer') or 'DeepSeek暂时无法完成回答，请稍后重试。',
-                               conversation_id=conversation_id), 503
+                               conversation_id=conversation_id, **trace_fields()), 503
+            attach_trace(result)
             conversations.append(conversation, question, result)
         except KeyError:
             return jsonify(error='台风检索会话已失效，请重新检索并选择台风。'), 404
-        except Exception:
-            return jsonify(error='暂时无法完成查询，请稍后重试。'), 503
+        except Exception as exc:
+            observe_failure('request', exc)
+            return jsonify(error='暂时无法完成查询，请稍后重试。', **trace_fields()), 503
         finally:
             conversation.lock.release()
         sources = sorted(result.get('rag_sources', []) + result.get('web_sources', []),
@@ -182,11 +200,13 @@ def create_chat_blueprint(qa, typhoon_components=None):
                 'web_excluded_sources','evidence_sent_count','corrective_retrieval_attempted',
                 'corrective_new_sources','corrective_search_summary','combined_validation_error','coverage_review','general_knowledge_used',
                 'claim_attribution_recovery','numeric_supported_partial_recovery','citation_format_repairs',
-                'recovered_completeness_review','crag_audit','answer_policy','local_retrieval_executed')},
+                'recovered_completeness_review','crag_audit','answer_policy','local_retrieval_executed',
+                'phase2','scope_gate','typed_shadow','answer_budget','turn_state')},
             validation={'computed_table_fallback':bool((result.get('answer_meta') or {}).get('computed_table_fallback')),
                         'error':(result.get('answer_meta') or {}).get('validation_error'),
                         'details':(result.get('answer_meta') or {}).get('validation_diagnostics')},
             data_url=('/api/forecast/evidence/'+result['answer_meta']['business_evidence_id']) if (result.get('answer_meta') or {}).get('business_evidence_id') else None,
-            selected_sid=(result.get('answer_meta') or {}).get('sid'))
+            selected_sid=(result.get('answer_meta') or {}).get('sid'),
+            **({'trace':result['answer_meta']['trace']} if (result.get('answer_meta') or {}).get('trace') else {}))
 
     return bp

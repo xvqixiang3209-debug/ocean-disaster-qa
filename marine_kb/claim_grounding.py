@@ -4,6 +4,7 @@ The model selects source spans for existing claims; it cannot rewrite facts.
 Selected spans and quantities are checked again by the ordinary decoder.
 This is a model-assisted entailment check, not an independent truth oracle.
 """
+import hashlib
 import re
 from .model_json import model_json
 
@@ -133,8 +134,13 @@ def _selected_table_evidence(selected,evidence):
     return separate
 
 
-def apply_attribution(raw,review,evidence,decode):
-    """Return only exact draft claims with exact, selected source support."""
+def apply_attribution(raw,review,evidence,decode,*,audit=False,audit_sink=None):
+    """Return only exact draft claims with exact, selected source support.
+
+    Optional audit fields describe the existing retention rules; they do not
+    change those rules. The sink receives hashes rather than claim/source text,
+    including when no supported quote survives and the function returns None.
+    """
     from .quantities import quantities, validate_recovered_table_row
     value,claims=draft_claims(raw);by_id={c['id']:c for c in claims}
     reviewed=model_json(review)
@@ -147,6 +153,7 @@ def apply_attribution(raw,review,evidence,decode):
         seen.add(identity);status=row.get('status')
         if status not in {'supported','limitation','unsupported','irrelevant'}:raise ValueError('grounding_invalid_status')
         reference_error=None;deterministic_error=None
+        retained=False
         try:
             text=by_id[identity]['text'];selected=[];refs=row.get('refs',[])
             if isinstance(refs,dict) and {'citation','passage_id'}<=refs.keys():refs=[refs]
@@ -185,19 +192,37 @@ def apply_attribution(raw,review,evidence,decode):
                 except (ValueError,TypeError,KeyError,IndexError) as exc:
                     status='rejected_by_deterministic_check'
                     deterministic_error=str(exc) if isinstance(exc,ValueError) else type(exc).__name__
-                else:kept.append((identity,repaired,cited_header));quotes.extend(selected)
+                else:
+                    kept.append((identity,repaired,cited_header));quotes.extend(selected)
+                    retained=True
             elif status=='limitation':
                 # A missing-data statement cannot launder quantities or a citation
                 # rejected as unsupported. Keep only bounded first-person limits.
                 if not quantities(text) and re.search(r'本次|现有证据|当前证据|现有资料|当前资料',text) and re.search(r'缺少|不足|尚未|没有|未提供|不能|不代表|不等于|仅|只',text) and not re.search(r'\[资料\d+\]',text):
                     kept.append((identity,text,None))
+                    retained=True
         except (ValueError,TypeError,KeyError,IndexError) as exc:
             status='rejected_by_reference_check'
             reference_error=str(exc) if isinstance(exc,ValueError) else type(exc).__name__
-        decisions.append({'id':identity,'status':status,'reason':str(row.get('reason',''))[:200],
+        decision={'id':identity,'status':status,'reason':str(row.get('reason',''))[:200],
                           'reference_error':reference_error,'deterministic_error':deterministic_error,
                           'claim_text':by_id[identity]['text'][:1200],
-                          'table_header':by_id[identity].get('table_header','')[:300]})
+                          'table_header':by_id[identity].get('table_header','')[:300]}
+        if audit or audit_sink is not None:
+            drop_rule=None
+            if not retained:
+                if status=='rejected_by_reference_check':drop_rule='reference_check_failed'
+                elif status=='rejected_by_deterministic_check':drop_rule='deterministic_check_failed'
+                elif status=='limitation':
+                    # Order is diagnostic only. The original compound predicate
+                    # above remains the sole retention gate, without relaxation.
+                    if re.search(r'\[资料\d+\]',text):drop_rule='limitation_has_citation'
+                    elif quantities(text):drop_rule='limitation_has_quantities'
+                    elif not re.search(r'本次|现有证据|当前证据|现有资料|当前资料',text):drop_rule='limitation_scope_miss'
+                    else:drop_rule='limitation_vocab_miss'
+                else:drop_rule='model_'+status
+            decision.update(retained=retained,drop_rule=drop_rule)
+        decisions.append(decision)
     kept.sort();blocks=[];last_header=None
     for _,text,header in kept:
         if header:
@@ -206,6 +231,16 @@ def apply_attribution(raw,review,evidence,decode):
         else:blocks.append(text)
         last_header=header
     answer='\n\n'.join(blocks)
+    if audit_sink is not None:
+        # Telemetry must not turn a supported answer into an error. Raw model
+        # reasons and passages remain outside this public diagnostic event.
+        fields={'claim_count':len(claims),'retained_claims':len(kept),
+                'has_supported_quotes':bool(quotes),'decisions':[
+                    {key:item[key] for key in ('id','status','retained','drop_rule')} |
+                    {'claim_sha256':hashlib.sha256(by_id[item['id']]['text'].encode('utf-8')).hexdigest()}
+                    for item in decisions]}
+        try:audit_sink(fields)
+        except Exception:pass
     if not quotes:return None
     if any(r['status'] in {'unsupported','rejected_by_deterministic_check','rejected_by_reference_check'} for r in decisions):
         answer+='\n\n部分子项的依据尚未核对完整，以上仅保留本次来源能够支持的内容。'
@@ -214,3 +249,9 @@ def apply_attribution(raw,review,evidence,decode):
     return decoded,{'claim_count':len(claims),'retained_claims':len(kept),**_table_parse_audit(value,claims),
                     'decisions':decisions,'selected_evidence_quotes':quotes,
                     'method':'model_span_selection_then_exact_quote_and_quantity_checks'}
+
+
+def apply_attribution_v2(raw,review,evidence,decode,*,facets,**kwargs):
+    """Opt-in typed recovery; the legacy function above remains unchanged."""
+    from .typed_grounding import apply_review
+    return apply_review(raw,review,evidence,facets,decode,**kwargs)
