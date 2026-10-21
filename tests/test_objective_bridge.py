@@ -5,6 +5,13 @@ from forecast_runtime.objective_bridge import objective_question,requested_windo
 
 NOW=datetime(2026,10,20,21,43,tzinfo=timezone(timedelta(hours=8)))
 
+
+@pytest.fixture(autouse=True)
+def exercise_interpretation_when_enabled(monkeypatch):
+    # These existing cases exercise interpretation validation explicitly.
+    # The production default is now on_request; policy tests live separately.
+    monkeypatch.setenv('MARINE_OBJECTIVE_INTERPRETATION','always')
+
 @pytest.mark.parametrize('q',[
     '生成浙江未来72小时海浪海面风和气压影响报告',
     '绘制浙江明天的客观预报风场图',
@@ -167,6 +174,7 @@ def test_regional_followup_has_three_real_value_time_position_tuples_and_winner(
     assert '| 最低海平面气压 |' not in answer['answer']
     context=answer['answer_meta']['objective_context']
     from forecast_runtime.objective_scope import resolve_scope
+    assert context.pop('objective_scope_resolution')['scope']['id']=='zhejiang'
     assert context=={'dataset_id':'ecmwf_fixture_20261020','start':'2026-10-20T20:00:00+08:00',
                      'end':'2026-10-23T20:00:00+08:00','hours':72,
                      'scope':resolve_scope('浙江'),'bounds':resolve_scope('浙江')['bounds']}

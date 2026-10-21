@@ -7,6 +7,8 @@
   const close=make('button','×');close.setAttribute('aria-label','关闭客观预报面板');close.onclick=()=>window.ObjectivePanel.close();title.append(close);panel.append(title);
   const sourceLabel=make('p','原始预报网格 · 临时解释 · 时间统一为北京时间');panel.append(sourceLabel);
   const availability=make('p');availability.id='objectiveAvailability';panel.append(availability);
+  const scopeNotice=make('p');scopeNotice.id='objectiveScopeNotice';scopeNotice.hidden=true;panel.append(scopeNotice);
+  const groupControls=make('div');groupControls.className='objective-layer-group';groupControls.hidden=true;panel.append(groupControls);
   function choose(label,entries){const wrap=make('label',label),node=make('select');entries.forEach(([value,text])=>{const option=make('option',text);option.value=value;node.append(option);});wrap.append(node);panel.append(wrap);return node;}
   const dataset=choose('预报批次',[]),field=choose('地图要素',[['wave','有效波高 · m'],['wind','10米风 · m/s'],['pressure','海平面气压 · hPa']]);
   const area=choose('统计与显示范围',[['119.5,26.5,123.5,31.5','浙江近海参考统计框'],['115,15,145,36','台风与东海大范围（框选统计）']]);
@@ -34,6 +36,7 @@
   products.onclick=()=>setMode('objective');shortcuts.append(knowledge,similar,products);
   document.querySelector('.chat-panel').prepend(shortcuts);
   let datasets=[],times=[],frame=null,layer=null,sequence=0,reportSequence=0,actionEpoch=0,catalogRequest=null,defaultDatasetId='',suppressOpenLoad=false,coverageSequence=0;
+  let activeGroup=null;
   let scopes=[{id:'zhejiang',label:'浙江近海参考统计框',bounds:[119.5,26.5,123.5,31.5]}];
   const palettes={wave:{min:0,max:8,label:'有效波高 0—8 m'},wind:{min:0,max:40,label:'10米风速 0—40 m/s · 箭头表示风吹向'},pressure:{min:960,max:1040,label:'海平面气压 960—1040 hPa · 白线间隔4 hPa'}};
   const stops=[[35,54,145],[35,149,200],[43,201,171],[246,216,71],[235,92,51],[156,33,64]];
@@ -42,7 +45,7 @@
   const stamp=value=>value?String(value).slice(0,16).replace('T',' '):'未提供';
   const localInput=value=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(value||new Date()).replace(' ','T');
   async function get(path){const r=await fetch(path,{cache:'no-store'}),data=await r.json();if(!r.ok)throw Error(data.error||'查询失败');return data;}
-  function params(){const p=new URLSearchParams({dataset_id:dataset.value,field:field.value,valid_time:times[Number(slider.value)]||'',bounds:area.value,maxsize:'180'});if(field.value==='wind'&&datasets.find(d=>d.dataset_id===dataset.value)?.fields?.wave)p.set('sea_mask','wave_valid');return p;}
+  function params(){const p=new URLSearchParams({dataset_id:dataset.value,field:field.value,valid_time:times[Number(slider.value)]||'',bounds:area.value,maxsize:'180'});if(datasets.find(d=>d.dataset_id===dataset.value)?.fields?.wave)p.set('sea_mask','wave_valid');return p;}
   const currentDataset=()=>datasets.find(d=>d.dataset_id===dataset.value);
   const currentScope=()=>scopes.find(s=>s.bounds.join(',')===area.value);
   function periodParams(){const p=new URLSearchParams({dataset_id:dataset.value,field:field.value,start:start.value+':00+08:00',hours:duration.value||'72',bounds:area.value,maxsize:'180'});if(currentDataset()?.fields?.wave)p.set('sea_mask','wave_valid');return p;}
@@ -87,7 +90,11 @@
   function clearFrame(){
     if(layer){map.removeLayer(layer);layer=null;}map.closePopup();frame=null;image.hidden=true;stats.replaceChildren();legend.style.background='';legendText.textContent='';
   }
-  function cancelAction(clear=true){actionEpoch++;sequence++;show.disabled=false;if(clear)clearFrame();}
+  function invalidateGroup(){
+    if(activeGroup)for(const bar of activeGroup.bars){for(const button of bar.buttons){button.disabled=true;button.setAttribute('aria-pressed','false');}bar.note.textContent='此组图层已被后续操作替换。';}
+    activeGroup=null;groupControls.replaceChildren();groupControls.hidden=true;
+  }
+  function cancelAction(clear=true){actionEpoch++;sequence++;coverageSequence++;show.disabled=false;invalidateGroup();if(clear){scopeNotice.hidden=true;scopeNotice.textContent='';clearFrame();}}
   function contours(ctx,data,project){
     const z=data.values,xs=data.lon,ys=data.lat;
     ctx.strokeStyle='rgba(255,255,255,.78)';ctx.lineWidth=1;ctx.font='11px sans-serif';ctx.fillStyle='#fff';
@@ -158,24 +165,82 @@
       status.textContent=(data.cache_hit?'已复用同批次、同范围和时段的报告':'报告已生成')+' · 图、表、文字均来自所选批次。';
     }catch(e){if(ticket===reportSequence)reportResult.replaceChildren(make('p',e.message));}finally{if(ticket===reportSequence)report.disabled=false;}
   }
+  function validateActionTime(when){
+    const iso=typeof when==='string'&&when.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,6})?)?(Z|[+-](\d{2}):(\d{2}))$/);
+    if(!iso||!Number.isFinite(Date.parse(when)))throw Error('地图动作缺少明确时区的有效时刻。');
+    const [year,month,day,hour,minute,second]=iso.slice(1,7).map(v=>Number(v||0)),date=new Date(Date.UTC(year,month-1,day));
+    if(year<1900||year>2200||month<1||month>12||date.getUTCFullYear()!==year||date.getUTCMonth()!==month-1||date.getUTCDate()!==day||hour>23||minute>59||second>59||Number(iso[8]||0)>14||Number(iso[9]||0)>59||(Number(iso[8]||0)===14&&Number(iso[9]||0)!==0))throw Error('地图动作的日期时刻无效。');
+  }
   function validAction(action){
-    const keys=['type','dataset_id','field','valid_time','start','hours','bounds','title','source_family','available_fields','field_state','state','level'];
+    if(action?.type==='objective_clear'){
+      if(Object.keys(action).some(k=>!['type','reason'].includes(k))||typeof action.reason!=='string'||!action.reason.trim()||action.reason.length>500)throw Error('清图动作的说明无效。');
+      return {...action};
+    }
+    const keys=['type','dataset_id','field','valid_time','start','hours','bounds','title','source_family','available_fields','field_state','state','level','group_id','group_index','group_size','time_role','scope_note','window_start','window_hours'];
     if(!action||typeof action!=='object'||Array.isArray(action)||Object.keys(action).some(k=>!keys.includes(k)))throw Error('地图动作包含不支持的字段。');
     if(!['objective_field','objective_maximum'].includes(action.type)||typeof action.dataset_id!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(action.dataset_id)||!Object.hasOwn(palettes,action.field))throw Error('地图动作的数据集或要素无效。');
     const period=action.type==='objective_maximum',when=period?action.start:action.valid_time;
     if(period&&(!Number.isInteger(action.hours)||action.hours<1||action.hours>168||action.valid_time!==undefined))throw Error('时段最大值地图需要1至168小时，不能带单时刻参数。');
     if(!period&&(action.start!==undefined||action.hours!==undefined))throw Error('单时刻地图不能带时段最大值参数。');
-    const iso=typeof when==='string'&&when.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,6})?)?(Z|[+-](\d{2}):(\d{2}))$/);
-    if(!iso||!Number.isFinite(Date.parse(when)))throw Error('地图动作缺少明确时区的有效时刻。');
-    const [year,month,day,hour,minute,second]=iso.slice(1,7).map(v=>Number(v||0)),date=new Date(Date.UTC(year,month-1,day));
-    if(year<1900||year>2200||month<1||month>12||date.getUTCFullYear()!==year||date.getUTCMonth()!==month-1||date.getUTCDate()!==day||hour>23||minute>59||second>59||Number(iso[8]||0)>14||Number(iso[9]||0)>59||(Number(iso[8]||0)===14&&Number(iso[9]||0)!==0))throw Error('地图动作的日期时刻无效。');
+    validateActionTime(when);
+    const hasWindow=action.window_start!==undefined||action.window_hours!==undefined;
+    if(hasWindow){
+      if(period||action.time_role!=='peak_of_this_field'||!Number.isInteger(action.window_hours)||action.window_hours<1||action.window_hours>168)throw Error('仅峰值快照可以携带1至168小时的原始查询窗口。');
+      validateActionTime(action.window_start);
+      if(Date.parse(when)<Date.parse(action.window_start)||Date.parse(when)>Date.parse(action.window_start)+action.window_hours*3600000)throw Error('峰值时刻不在原始查询窗口内。');
+    }
     if(action.bounds!==undefined){const b=action.bounds;if(!Array.isArray(b)||b.length!==4||!b.every(finite)||b[0]<-180||b[2]>180||b[1]<-90||b[3]>90||b[0]>=b[2]||b[1]>=b[3])throw Error('地图动作的经纬度范围无效。');}
     for(const key of ['title','source_family','field_state','state','level'])if(action[key]!==undefined&&(typeof action[key]!=='string'||action[key].length>160))throw Error('地图动作的说明字段无效。');
+    if(action.scope_note!==undefined&&(typeof action.scope_note!=='string'||action.scope_note.length>500))throw Error('地图动作的范围说明无效。');
     if(action.available_fields!==undefined&&(!Array.isArray(action.available_fields)||action.available_fields.length>3||action.available_fields.some(k=>!Object.hasOwn(palettes,k))))throw Error('地图动作的要素列表无效。');
-    return action;
+    const grouped=['group_id','group_index','group_size','time_role'].some(k=>action[k]!==undefined);
+    if(grouped&&(typeof action.group_id!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(action.group_id)||!Number.isInteger(action.group_size)||action.group_size<1||action.group_size>3||!Number.isInteger(action.group_index)||action.group_index<0||action.group_index>=action.group_size||!['shared','peak_of_this_field'].includes(action.time_role)||(period&&action.time_role!=='shared')))throw Error('地图动作组的编号或时间角色无效。');
+    return {...action,bounds:action.bounds?.slice(),available_fields:action.available_fields?.slice()};
+  }
+  function validActionGroup(raw){
+    if(!Array.isArray(raw)||raw.length<1||raw.length>3)throw Error('地图动作组需要1至3个要素。');
+    const actions=raw.map(validAction),first=actions[0],fields=new Set();
+    if(first.type==='objective_clear')throw Error('清图动作不能作为要素组。');
+    for(let i=0;i<actions.length;i++){
+      const action=actions[i];
+      if(action.type!==first.type||action.dataset_id!==first.dataset_id||JSON.stringify(action.bounds)!==JSON.stringify(first.bounds)||action.source_family!==first.source_family||action.level!==first.level||action.scope_note!==first.scope_note||fields.has(action.field))throw Error('地图动作组的批次、范围、类型或要素不一致。');
+      if(action.group_id!==first.group_id||action.group_size!==actions.length||action.group_index!==i||action.time_role!==first.time_role)throw Error('地图动作组的顺序或时间角色不一致。');
+      if(action.type==='objective_maximum'&&(Date.parse(action.start)!==Date.parse(first.start)||action.hours!==first.hours))throw Error('逐格最大值动作组的统计时段不一致。');
+      if(action.window_start!==first.window_start||action.window_hours!==first.window_hours)throw Error('峰值快照动作组的原始查询窗口不一致。');
+      if(action.time_role==='shared'&&action.type==='objective_field'&&Date.parse(action.valid_time)!==Date.parse(first.valid_time))throw Error('同时刻动作组的有效时刻不一致。');
+      fields.add(action.field);
+    }
+    return actions;
+  }
+  const fieldName=value=>({wave:'海浪',wind:'海面风',pressure:'气压'}[value]||value);
+  function actionDescription(action){
+    if(action.type==='objective_maximum')return '当前：'+fieldName(action.field)+' · 从'+stamp(action.start)+'起'+action.hours+'小时逐格最大值';
+    return '当前：'+fieldName(action.field)+' · '+stamp(action.valid_time)+(action.time_role==='peak_of_this_field'?'（本要素峰值时刻）':'（北京时间）')+(action.window_start?' · 统计窗口：从'+stamp(action.window_start)+'起'+action.window_hours+'小时':'');
+  }
+  function groupBar(group,target){
+    const wrap=make('div');wrap.className='objective-layer-group';wrap.append(make('strong','本回答图层（逐项查看）'));
+    const note=make('p','同一批次与范围；点击要素查看其对应时刻。'),buttons=[];wrap.append(note);
+    const choices=make('div');choices.className='objective-actions';wrap.append(choices);
+    group.actions.forEach((action,index)=>{const button=make('button',action.title||fieldName(action.field));button.type='button';button.setAttribute('aria-pressed','false');button.title=actionDescription(action);button.onclick=()=>selectGroupAction(group,index);choices.append(button);buttons.push(button);});
+    target.append(wrap);group.bars.push({wrap,note,buttons});
+  }
+  async function selectGroupAction(group,index){
+    if(activeGroup!==group||(group.isCurrent&&!group.isCurrent()))return {state:'cancelled'};
+    for(const bar of group.bars){bar.note.textContent=actionDescription(group.actions[index]);bar.buttons.forEach((button,i)=>button.setAttribute('aria-pressed',String(index===i)));}
+    return applyAction(group.actions[index],{group,isCurrent:()=>activeGroup===group&&(!group.isCurrent||group.isCurrent())});
+  }
+  async function applyActionGroup(raw,options={}){
+    const actions=validActionGroup(raw);if(options.isCurrent&&!options.isCurrent())return {state:'cancelled'};
+    cancelAction();const group={actions,bars:[],isCurrent:options.isCurrent};activeGroup=group;
+    groupControls.hidden=false;groupBar(group,groupControls);if(options.target)groupBar(group,options.target);
+    return selectGroupAction(group,0);
   }
   async function applyAction(raw,options={}){
-    const action=validAction(raw),epoch=++actionEpoch,current=()=>epoch===actionEpoch&&(!options.isCurrent||options.isCurrent());
+    const action=validAction(raw);if(options.isCurrent&&!options.isCurrent())return {state:'cancelled'};
+    if(!options.group)invalidateGroup();
+    const epoch=++actionEpoch,current=()=>epoch===actionEpoch&&(!options.isCurrent||options.isCurrent());
+    if(action.type==='objective_clear'){cancelAction();status.textContent=action.reason;return {state:'cleared',message:action.reason};}
+    scopeNotice.textContent=action.scope_note||'';scopeNotice.hidden=!action.scope_note;
     const period=action.type==='objective_maximum';view.value=period?'maximum':'instant';
     sequence++;clearFrame();show.disabled=false;
     if(!current())return {state:'cancelled'};
@@ -187,24 +252,30 @@
       if(!selected){clearFrame();status.textContent='本次回答的数据批次未登记，地图未显示其他批次。';return {state:'no_data',message:status.textContent};}
       syncFields(action.field);
       if(action.bounds){const value=action.bounds.join(',');let option=Array.from(area.children).find(n=>n.value===value);if(!option){option=make('option','本次问题指定范围');option.value=value;area.append(option);}area.value=value;}
+      const when=period?action.start:action.valid_time;
+      start.value=localInput(new Date(action.window_start||when));
+      const reportHours=period?action.hours:action.window_hours;
+      if(reportHours!==undefined){if(!Array.from(duration.children).some(n=>n.value===String(reportHours))){const option=make('option',reportHours+'小时');option.value=String(reportHours);duration.append(option);}duration.value=String(reportHours);}
       const state=action.field_state||action.state;
       if(!Object.hasOwn(selected.fields||{},action.field)||['not_provided','no_data','unavailable','outside_coverage'].includes(state)){
         field.value='';times=[];slider.max='0';slider.value='0';timeLabel.textContent='所问起始时刻：'+stamp(action.start||action.valid_time)+'（北京时间）';clearFrame();
         status.textContent=action.field==='pressure'?'该批次未提供可用气压网格，旧图已清除；没有拼接其他批次。':'本次问题所需的'+({wave:'海浪',wind:'海面风'}[action.field]||'要素')+'网格不可用，旧图已清除。';return {state:'no_data',message:status.textContent};
       }
-      const when=period?action.start:action.valid_time;
       const index=(selected.fields[action.field].valid_times||[]).findIndex(t=>Date.parse(t)===Date.parse(when));
       if(!period&&index<0){times=[];slider.max='0';slider.value='0';clearFrame();timeLabel.textContent='所问时刻：'+stamp(when)+'（北京时间）';status.textContent='该批次没有所问时刻的原生网格，地图未替换为其他时刻。';return {state:'no_data',message:status.textContent};}
-      availableTimes(when);start.value=localInput(new Date(when));if(period){if(!Array.from(duration.children).some(n=>n.value===String(action.hours))){const option=make('option',action.hours+'小时');option.value=String(action.hours);duration.append(option);}duration.value=String(action.hours);}readCoverage();
-      const result=await load({isCurrent:current});if(current()&&result?.state==='ready'&&action.title)status.textContent=action.title+(period?' · 逐格时段最大值，各格点峰值时刻可不同。':' · 图层就绪，点击地图可查询格点。');return result;
+      availableTimes(when);readCoverage();
+      const result=await load({isCurrent:current});if(current()&&result?.state==='ready'){
+        const description=actionDescription(action);timeLabel.textContent=description;legendText.textContent=description+' · '+legendText.textContent;
+        status.textContent=description+(period?' · 各格点峰值时刻可不同。':' · 图层就绪，点击地图可查询格点。')+(action.scope_note?' '+action.scope_note:'');
+      }return result;
     }catch(error){if(current()){clearFrame();status.textContent=error.message;}return {state:current()?'error':'cancelled',message:error.message};}
   }
   const manualLoad=()=>{cancelAction();return load();};
-  dataset.addEventListener('change',()=>{cancelAction();syncFields();availableTimes();readCoverage();return load();});field.addEventListener('change',()=>{cancelAction();availableTimes();return load();});area.addEventListener('change',()=>{readCoverage();return manualLoad();});
+  dataset.addEventListener('change',()=>{cancelAction();syncFields();availableTimes();readCoverage();return load();});field.addEventListener('change',()=>{if(activeGroup){const index=activeGroup.actions.findIndex(a=>a.field===field.value);if(index>=0)return selectGroupAction(activeGroup,index);}cancelAction();availableTimes();return load();});area.addEventListener('change',()=>{readCoverage();return manualLoad();});
   view.addEventListener('change',manualLoad);start.addEventListener('change',()=>{readCoverage();if(view.value==='maximum')return manualLoad();});duration.addEventListener('change',()=>{readCoverage();if(view.value==='maximum')return manualLoad();});
   slider.addEventListener('change',manualLoad);slider.addEventListener('input',()=>{cancelAction();timeLabel.textContent='有效时刻：'+stamp(times[Number(slider.value)])+'（北京时间）';});
   prev.onclick=()=>{slider.value=String(Math.max(0,Number(slider.value)-1));return manualLoad();};next.onclick=()=>{slider.value=String(Math.min(times.length-1,Number(slider.value)+1));return manualLoad();};show.onclick=manualLoad;report.onclick=buildReport;
   ask.onclick=()=>window.MapAssistant.send('从'+start.value.replace('T',' ')+'起，生成'+(currentScope()?.label||'浙江地图选定范围')+'未来'+duration.value+'小时'+Object.keys(currentDataset()?.fields||{}).map(k=>({wave:'海浪',wind:'海面风',pressure:'气压'}[k])).filter(Boolean).join('、')+'影响报告，使用数据集ID '+dataset.value+'，地图范围：'+area.value+'，说明重点海域及变化时段。');
   let clickInstalled=false;
-  window.ObjectivePanel={open:async()=>{panel.hidden=false;if(!clickInstalled){map.on('click',async e=>{if(panel.hidden||!frame||view.value==='maximum')return;const ticket=sequence,p=params();p.set('lon',e.latlng.lng);p.set('lat',e.latlng.lat);try{const data=await get('/api/objective/point?'+p);if(ticket!==sequence||panel.hidden||!frame)return;const content=make('div');content.append(make('strong','客观预报格点'),make('p','北京时间 '+stamp(data.valid_time)),make('p','数值 '+(data.value??'缺测')+' '+(data.unit||'')),make('p','原生网格中心 '+data.grid_lon+'°E，'+data.grid_lat+'°N'));L.popup().setLatLng(e.latlng).setContent(content).openOn(map);}catch(e){if(ticket===sequence&&!panel.hidden)status.textContent=e.message;}});clickInstalled=true;}if(suppressOpenLoad)return;if(!datasets.length)await initialize();else if(frame)renderLayer(frame);else await load();},close:()=>{panel.hidden=true;cancelAction();},load,buildReport,applyAction,cancelAction};
+  window.ObjectivePanel={open:async()=>{panel.hidden=false;if(!clickInstalled){map.on('click',async e=>{if(panel.hidden||!frame||view.value==='maximum')return;const ticket=sequence,p=params();p.set('lon',e.latlng.lng);p.set('lat',e.latlng.lat);try{const data=await get('/api/objective/point?'+p);if(ticket!==sequence||panel.hidden||!frame)return;const content=make('div');content.append(make('strong','客观预报格点'),make('p','北京时间 '+stamp(data.valid_time)),make('p','数值 '+(data.value??'缺测')+' '+(data.unit||'')),make('p','原生网格中心 '+data.grid_lon+'°E，'+data.grid_lat+'°N'));L.popup().setLatLng(e.latlng).setContent(content).openOn(map);}catch(e){if(ticket===sequence&&!panel.hidden)status.textContent=e.message;}});clickInstalled=true;}if(suppressOpenLoad)return;if(!datasets.length)await initialize();else if(frame)renderLayer(frame);else await load();},close:()=>{panel.hidden=true;cancelAction();},load,buildReport,applyAction,applyActionGroup,cancelAction};
 })();

@@ -1,33 +1,35 @@
 # 台风与海洋灾害知识问答系统
 
-当前代码快照：**2026-10-21，客观预报与地点地图版**。保留DeepSeek、CRAG、本地资料/官方网络联合检索、相似台风、地图连续对话；新增或完善L2/L5风浪产品、地点/日期/追问联动、分区过程、72小时逐格最大值图和报告复用。`VERSION.txt`保留原应用版本标识，当前源码以所在提交和`HANDOFF_MANIFEST.json`为准。
+当前代码快照：**2026-10-22，客观预报复审实现版**（`phase1.12.0-objective-review`）。按Claude复审实现地点四态解析、整源静态海点域、多要素地图动作与切换，并增加一次晚期争议复核和按需模型解读。保留DeepSeek、CRAG、本地资料/官方网络联合检索、相似台风、地图连续对话和报告复用。当前源码以所在提交和`HANDOFF_MANIFEST.json`为准。
 
-**给Claude的入口：[当前交接与复审任务](docs/CLAUDE_CURRENT_HANDOFF_20261021.md) · [如何按提问地点绘制二维风浪地图](docs/OBJECTIVE_MAP_RENDERING_GUIDE.md) · [可复制的评审提问](docs/CLAUDE_PROMPT.md)。**
+**给Claude的入口：[本轮实现与验证](docs/OBJECTIVE_REVIEW_IMPLEMENTATION_20261022.md) · [原复审方案](docs/NEXT_PHASE_REVIEW_FOR_CODEX_20261021.md) · [海点与缺测契约](docs/OBJECTIVE_SEA_MASK_CONTRACT_20261022.md) · [可复制的评审提问](docs/CLAUDE_PROMPT.md)。**
+
+按提问地点绘制二维风浪地图的原理和接口见[绘图指南](docs/OBJECTIVE_MAP_RENDERING_GUIDE.md)；该指南按2026-10-21版本编写，新增的地点、掩膜和动作组接口以本轮实现记录为准。[上一轮交接](docs/CLAUDE_CURRENT_HANDOFF_20261021.md)保留作历史背景。
 
 ## 三个功能
 
 | 功能 | 当前行为与边界 |
 |---|---|
-| 灾害/预警知识问答 | 本地资料、官方网页和程序数据联合检索；支持连续追问。子问归属、归纳证明、审查冲突仍有复审任务 |
+| 灾害/预警知识问答 | 本地资料、官方网页和程序数据联合检索；支持连续追问；晚期异议新增一次定向复核，子问归属、首轮归纳证明及旧录制哈希仍有跟踪项 |
 | 相似台风 | 历史路径、机构和相似度查询及地图显示；路径相似不等于灾损相似 |
-| 客观预报产品 | L2/L5风浪获取/保留/复用；按地点和时段计算二维场、原生过程和逐格最大值，在当地地图显示，输出HTML/PNG/CSV/JSON报告 |
+| 客观预报产品 | 按地点和时段从L2/L5计算二维场、原生过程及逐格最大值；未知/越界地点阻断，父级回退明示；恢复海点参与统计，风浪分别切换及使用自身峰值时刻；输出HTML/PNG/CSV/JSON报告 |
 
 地图采用真实NC数值驱动的Canvas图层，不是让模型生成图片。单时刻海面风叠加对应u/v箭头；72小时最大风速各格峰值时间可能不同，不拼接风向。下载PNG是经纬度图，不是带底图的地图截图。
 
 ## 验证状态
 
-- 完整本机应用最近记录：2289项测试、134项子测试通过。
-- 本次公开快照重新运行：2231项通过、58项因私有录制或数据库依赖跳过、134项子测试通过，失败0。
-- 本次Node地图/连接测试3个文件全部通过。
-- 已有8次真实问答（7取得数据、1无覆盖）、8组产品检查及独立NC核验；本次上传没有新付费问答或160题重测。
+- 本轮完整本机应用实际重跑：2447项测试、134项子测试通过，失败0。
+- 本次公开快照独立重跑：2389项通过、58项私有依赖跳过、134项子测试通过，失败0（26.57秒）。
+- 本次Node地图/知识库测试3个文件全部通过。
+- 本轮13条真实本地NC问答、跨出口峰值核对、旧版/新版合成复现对照和浏览器检查已执行。模型调用0次、网络下载0次；未重跑160题，也未重新录制24次基线。
 
-见[验证记录](docs/SNAPSHOT_VALIDATION.md)和[统计摘要](evaluations/objective_map_20261021/summary.json)。HTTP200、full/partial、自评和程序检查分别报告，均不代替专家验收。
+见[验证记录](docs/SNAPSHOT_VALIDATION.md)和[本轮统计摘要](evaluations/objective_review_20261022/summary.json)。[2026-10-21统计](evaluations/objective_map_20261021/summary.json)独立保留。HTTP200、full/partial、自评和程序检查分别报告，均不代替专家验收。
 
 ## 代码入口
 
 | 链路 | 文件 |
 |---|---|
-| 提问地点、日期、图件意图 | `forecast_runtime/objective_bridge.py`、`objective_scope.py`、`marine_kb/objective_context.py` |
+| 提问地点、日期、图件意图 | `forecast_runtime/objective_bridge.py`、`objective_scope.py`、`objective_places.json`、`objective_fields.py`、`marine_kb/objective_context.py` |
 | NC解析、原生网格与二维图 | `forecast_runtime/objective.py`、`objective_time.py`、`objective_process.py` |
 | L2/L5获取和选批次 | `forecast_runtime/objective_sources.py` |
 | 地图/报告API与缓存 | `forecast_runtime/objective_api.py`、`objective_report_api.py`、`objective_report.py` |
@@ -52,7 +54,7 @@ $env:MARINE_WEB_ENABLED = 'false'
 $env:TYPHOON_WEB_SEARCH_ENABLED = 'false'
 $env:TYPHOON_WEB_READ_ENABLED = 'false'
 .\.venv\Scripts\python.exe -m pytest tests -q
-node --test tests/test_objective_panel.cjs tests/test_objective_map_actions.cjs tests/test_knowledge_connection.cjs
+node --test tests/test_objective_panel.cjs tests/test_objective_map_actions.cjs tests/test_knowledge_libraries.cjs
 ```
 
 仓库中的合成NC测试不需要业务数据库或真实模型。私有依赖测试按设计跳过，不启用真实API回退。完整演示需另行恢复授权数据，见[数据资产说明](docs/DATA_ASSETS.md)。
@@ -61,7 +63,9 @@ node --test tests/test_objective_panel.cjs tests/test_objective_map_actions.cjs 
 
 ## 当前复审重点与公开边界
 
-未知地名是否静默退全省/保留旧地点、首帧缺测海点恢复后统计与最大图的一致性、多要素地图交付，属于本轮静态发现的待验证点。不能写成已实测失败，也不能把已有绘图功能说成尚未实现。地点目前是参考框，尚非精细海岸/行政海域多边形。
+本轮重点复查地点四态保护是否存在误默认或误澄清、原生有效性与各图表是否一致、各要素峰值时刻与报告窗口是否隔离，以及晚期争议复核是否真正执行且不改写已核对内容。本轮程序测试不能证明真实模型审查已稳定。地点目前是参考框，尚非精细海岸/行政海域多边形；风浪同屏叠加、双屏和带底图导出仍为扩展。
+
+默认策略为`OBJECTIVE_UNBOXED_POLICY=parent_with_notice`、`OBJECTIVE_SEA_MASK=static_any_valid`、`MARINE_OBJECTIVE_INTERPRETATION=on_request`。普通程序图件和报告不调用模型；明确要求解读时才进入现有模型流程。公开模板保持全部凭据为空、外部调用与自动获取关闭。
 
 L2/L5变量沿用临时解释，未提供气压；MWD、单位、时区及部分业务定义待核定。时间重合不能证明NC来自某个台风，模式风浪不等于正式预警或活动许可。
 

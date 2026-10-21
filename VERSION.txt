@@ -1,6 +1,6 @@
 台风与海洋灾害专业问答 · 首期本地工作台
-Version: phase1.10.0-l2l5-map-dialogue
-Release date: 20261020
+Version: phase1.12.0-objective-review
+Release date: 20261022
 Baseline: 1.4.10 (20260916), preserved in a separate directory
 Platform: Windows native (no Docker)
 API version: 1.5 (map-integrated multi-turn QA, forecast data, explicit assumption-based calculations)
@@ -20,3 +20,5 @@ Validation for this follow-up is recorded separately; the preceding 24-recording
 Objective QA delivery: source-bound analogue ranking cards; official warning concept ownership after joint local/web retrieval; server-owned objective batch/window follow-up slots and protected regional products. Mixed product-plus-unrelated operational follow-ups are explicitly clarified instead of dropping a task.
 
 L2/L5 integration 20261020: dedicated WAV/SSW acquisition every 15 minutes and on-demand; source/level/issue-bound native field plots; QA-to-map actions; exact time/field follow-up slots; 72h wind/wave reports. L5 preferred for full Zhejiang reference-box coverage. Pressure stays unavailable for L2/L5, never borrowed from ECMWF. Provisional wind interpretation is 10m gust; MWD is not rendered.
+
+Objective review 20261022: one versioned four-state scope resolver for routing and follow-ups; visible parent-reference fallback and unknown/out-of-region clearing; source-axis any-valid wave domain with per-frame missingness; v4 report cache; field action groups with per-field peak times and explicit switches. Report interpretation defaults to on_request. Late review disputes receive one bounded, traceable atom recheck. Validation is recorded separately; this is not a new full-160 model evaluation.

@@ -1,30 +1,30 @@
 {
-  "schema_version": 3,
-  "created_at": "2026-10-21T23:36:48.056767+08:00",
-  "snapshot": "20261021-objective-map",
-  "baseline_commit": "333d45dc0a2d69100c97cae8688551fc48590e3c",
+  "schema_version": 4,
+  "created_at": "2026-10-22T00:36:30.559210+08:00",
+  "snapshot": "20261022-objective-review",
+  "baseline_commit": "5d619da54f8fe2b92b96fc3bc9f157ed1a719790",
   "source_version_file": [
     "台风与海洋灾害专业问答 · 首期本地工作台",
-    "Version: phase1.10.0-l2l5-map-dialogue",
-    "Release date: 20261020"
+    "Version: phase1.12.0-objective-review",
+    "Release date: 20261022"
   ],
   "visibility": "PUBLIC",
-  "purpose": "Current source and Claude review of location-aware NC maps",
+  "purpose": "Source-only implementation of Claude objective review P1-P3, T1 and T5",
   "tests": {
-    "source_local_record": {
-      "passed": 2289,
+    "source_local_current": {
+      "passed": 2447,
       "subtests_passed": 134,
       "failed": 0,
-      "seconds": 37.4,
-      "method": "Earlier full local application run; no new full-source run during publication"
+      "seconds": 53.22,
+      "method": "Current complete local application run, separately recorded by implementation task"
     },
     "public_checkout": {
-      "passed": 2231,
+      "passed": 2389,
       "skipped": 58,
       "subtests_passed": 134,
       "failed": 0,
-      "seconds": 33.82,
-      "method": "New pytest run in the source-only checkout; no live model fallback",
+      "seconds": 26.57,
+      "method": "New actual pytest tests -q -ra execution in source-only checkout, no model/network fallback",
       "skip_reasons": {
         "private_recordings_or_cassettes": 54,
         "private_typhoon_databases": 4
@@ -37,15 +37,16 @@
       "names": [
         "test_objective_panel.cjs",
         "test_objective_map_actions.cjs",
-        "test_knowledge_connection.cjs"
-      ]
+        "test_knowledge_libraries.cjs"
+      ],
+      "method": "New actual node --test execution in public checkout"
     }
   },
   "privacy_audit": {
     "known_credential_exact_value_matches": 0,
     "high_confidence_token_matches": 0,
     "forbidden_payloads": 0,
-    "source_byte_comparisons": 481,
+    "source_byte_comparisons": 494,
     "private_team_bundle_read": false,
     "real_credentials_in_public_repo": false,
     "exact_synthetic_negative_test_exceptions": [
@@ -53,34 +54,35 @@
       "tests/test_public_connector_v2.py",
       "tests/test_web_supplement.py"
     ],
-    "limits": "Known current project credential values and high-confidence patterns; exact synthetic test literals excluded. Not exhaustive security certification."
+    "limits": "Known current application .env values and high-confidence patterns; exact synthetic test literals excluded. Not exhaustive security certification."
   },
   "excluded_local_curation": [
     {
       "path": "tools/build_fulltext_partial_manifest_20261021.py",
       "source_sha256": "c1220ad71b523287f7ce5ea4e7b16feb4ab764b4a4d3a1f6d15e8d72d3ac4127",
-      "reason": "contains local source-document curation literals; runtime and related tests do not depend on publishing it"
+      "reason": "Local document-body curation tool; core runtime does not depend on publication"
     },
     {
       "path": "tools/finalize_fulltext_followup_20261021.py",
       "source_sha256": "5c7180eef8d1b59dc7050a1cf7876dff818510594deb882008bcd825e7d8aebd",
-      "reason": "contains local source-document curation literals; runtime and related tests do not depend on publishing it"
+      "reason": "Local document-body curation tool; core runtime does not depend on publication"
     },
     {
       "path": "tools/prepare_reviewed_short_standards_20261021.py",
       "source_sha256": "6175ff71bc0b6c5a1d33d816ec0bdc7a731692e00c1de8eb509c1ad5344f5951",
-      "reason": "contains local source-document curation literals; runtime and related tests do not depend on publishing it"
+      "reason": "Local document-body curation tool; core runtime does not depend on publication"
     }
   ],
   "public_adaptations": {
-    ".env.example": "Public credential-free template with objective worker switches; deployment uses private configuration."
+    ".env.example": "Existing public template, empty credentials and safe worker defaults; three explicit policy settings added",
+    "README.md": "Current public snapshot entrypoint, implementation and validation links; old historical entries retained"
   },
   "files": [
     {
       "path": ".env.example",
-      "size_bytes": 1335,
-      "sha256": "0a64145cbcc90bc78d36d1bfe52ca1bbae991ff23f7801a300f733b21c9f05db",
-      "source_sha256": "7a553f81b5cef2fc092d2cdfcb4754eed52abff10f0f9f4ad9a9822cee6bd826"
+      "size_bytes": 1504,
+      "sha256": "313282241e28aaacd09d20af8a38a5dc0cb864f1e19241f97509eaa5b236763f",
+      "source_sha256": "721db6eb59c20c4f8a9a5f97b8500587ecb6fafd137bec624113c94050b7ad1a"
     },
     {
       "path": ".gitattributes",
@@ -100,14 +102,14 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 5561,
-      "sha256": "9f6bc86931da5d9c8e9a82aa7e8671d2ad11b801fde6d5d3598b7409dcca73a9"
+      "size_bytes": 6720,
+      "sha256": "39fd053c2156e49b7cf9dff098004305d2cd542a4b003dec884e806061a1ea76"
     },
     {
       "path": "VERSION.txt",
-      "size_bytes": 3400,
-      "sha256": "e2e2584cbeb8c7a6545af2dbb849e44ad5e9d6f9d2a5c6082033e8125efe49c6",
-      "source_sha256": "e2e2584cbeb8c7a6545af2dbb849e44ad5e9d6f9d2a5c6082033e8125efe49c6"
+      "size_bytes": 3907,
+      "sha256": "a13ad91ddd3aa2a8c0d580ec56259999fc73b1af98a9a3d33618979d819882b7",
+      "source_sha256": "a13ad91ddd3aa2a8c0d580ec56259999fc73b1af98a9a3d33618979d819882b7"
     },
     {
       "path": "config.py",
@@ -233,8 +235,9 @@
     },
     {
       "path": "docs/CLAUDE_PROMPT.md",
-      "size_bytes": 2232,
-      "sha256": "234e6fe128274ad5342793c187eab6b764cc4594e50e8fc1b49c9c300f120d6f"
+      "size_bytes": 3580,
+      "sha256": "4a3a031a89e0160f2f2c7c132abd6d8353dbb1ce337b25e3f574b5bf6037e1ab",
+      "source_sha256": "4a3a031a89e0160f2f2c7c132abd6d8353dbb1ce337b25e3f574b5bf6037e1ab"
     },
     {
       "path": "docs/CLAUDE_TYPHOON_DELIVERY_REVIEW_20261020.md",
@@ -264,9 +267,28 @@
       "source_sha256": "a3eded690e6df2713dbf27d0c7b8b45ad8cb5c9d7bc624ef68885c3ee6ff758e"
     },
     {
+      "path": "docs/NEXT_PHASE_REVIEW_FOR_CODEX_20261021.md",
+      "size_bytes": 39065,
+      "sha256": "fa8214790bec1b17a0c1a80ef67685c00d8aecd9b17fb9e679eb01d2803b0adb",
+      "source_sha256": "fa8214790bec1b17a0c1a80ef67685c00d8aecd9b17fb9e679eb01d2803b0adb"
+    },
+    {
       "path": "docs/OBJECTIVE_MAP_RENDERING_GUIDE.md",
-      "size_bytes": 30040,
-      "sha256": "a0bb6e390271c5ce399b364f1ffad1a6b704bbcf68a5960984794cd9a8b68a60"
+      "size_bytes": 30652,
+      "sha256": "2fd0824ca6e65d3b0e45c63ae069742194e03fa2a5401886decc6fb28a516f0b",
+      "source_sha256": "2fd0824ca6e65d3b0e45c63ae069742194e03fa2a5401886decc6fb28a516f0b"
+    },
+    {
+      "path": "docs/OBJECTIVE_REVIEW_IMPLEMENTATION_20261022.md",
+      "size_bytes": 7260,
+      "sha256": "c513cd5c2f1e3c512d17f996239755333f9c0d8f65b6fdb94d86be16be3658ed",
+      "source_sha256": "c513cd5c2f1e3c512d17f996239755333f9c0d8f65b6fdb94d86be16be3658ed"
+    },
+    {
+      "path": "docs/OBJECTIVE_SEA_MASK_CONTRACT_20261022.md",
+      "size_bytes": 3568,
+      "sha256": "6f343eb6ddc0bb4bdf6bd26b9f26c36f83a4987a6aa5c0f5e19d6c03ac2212dd",
+      "source_sha256": "6f343eb6ddc0bb4bdf6bd26b9f26c36f83a4987a6aa5c0f5e19d6c03ac2212dd"
     },
     {
       "path": "docs/P0实施与方案核对记录_20261020.md",
@@ -288,8 +310,9 @@
     },
     {
       "path": "docs/SNAPSHOT_VALIDATION.md",
-      "size_bytes": 2260,
-      "sha256": "471890a15ca664c78e52268fa20e259fd7a3a277fea0807b2a888f51671c71ed"
+      "size_bytes": 2123,
+      "sha256": "f69fd089e52092217ebdb6d066f4122c83014f43dbd5c59727677e5b6b660fd8",
+      "source_sha256": "f69fd089e52092217ebdb6d066f4122c83014f43dbd5c59727677e5b6b660fd8"
     },
     {
       "path": "docs/archive/20261019_CLAUDE_PROMPT.md",
@@ -345,6 +368,26 @@
       "path": "docs/archive/20261020_6777f92_SNAPSHOT_VALIDATION.md",
       "size_bytes": 2323,
       "sha256": "0ceecd056869ed13287d1faa86521ebd6b7fa4bb2d57da9ace5e52882a408992"
+    },
+    {
+      "path": "docs/archive/20261021_5d619da_CLAUDE_PROMPT.md",
+      "size_bytes": 2232,
+      "sha256": "234e6fe128274ad5342793c187eab6b764cc4594e50e8fc1b49c9c300f120d6f"
+    },
+    {
+      "path": "docs/archive/20261021_5d619da_HANDOFF_MANIFEST.json",
+      "size_bytes": 146509,
+      "sha256": "7674f262af8b82450b91479f0f0b10968f7a2f584f63180e70824080bb083bfd"
+    },
+    {
+      "path": "docs/archive/20261021_5d619da_README.md",
+      "size_bytes": 5561,
+      "sha256": "9f6bc86931da5d9c8e9a82aa7e8671d2ad11b801fde6d5d3598b7409dcca73a9"
+    },
+    {
+      "path": "docs/archive/20261021_5d619da_SNAPSHOT_VALIDATION.md",
+      "size_bytes": 2260,
+      "sha256": "471890a15ca664c78e52268fa20e259fd7a3a277fea0807b2a888f51671c71ed"
     },
     {
       "path": "docs/local_asset_inventory.json",
@@ -425,6 +468,11 @@
       "path": "evaluations/objective_map_20261021/summary.json",
       "size_bytes": 3702,
       "sha256": "3c9262e9591f7f9bc7e0e84ea6a712ddc186fa5a5947a0e43a52560f7413f003"
+    },
+    {
+      "path": "evaluations/objective_review_20261022/summary.json",
+      "size_bytes": 5296,
+      "sha256": "0abd2943add0ef88e4429cc5c2bc2efee98f16f76abcf5b784e1755f2bacec37"
     },
     {
       "path": "evaluations/p1_p6_followup_20261020/OFFLINE_REPORT.html",
@@ -655,9 +703,9 @@
     },
     {
       "path": "forecast_runtime/objective.py",
-      "size_bytes": 44930,
-      "sha256": "b9f6254ff38b56cfa624adf30d26dc039d63c47a7135c44e3ef3b7b41814baeb",
-      "source_sha256": "b9f6254ff38b56cfa624adf30d26dc039d63c47a7135c44e3ef3b7b41814baeb"
+      "size_bytes": 51397,
+      "sha256": "ba38fb604b6d35ac3d69d7777cc1894d5ed7707248ec229906de7668dbfdfff9",
+      "source_sha256": "ba38fb604b6d35ac3d69d7777cc1894d5ed7707248ec229906de7668dbfdfff9"
     },
     {
       "path": "forecast_runtime/objective_api.py",
@@ -667,9 +715,21 @@
     },
     {
       "path": "forecast_runtime/objective_bridge.py",
-      "size_bytes": 28780,
-      "sha256": "4a06f727443c5e32fc628d34ce9e8445123f6b315447f840279940a382377b58",
-      "source_sha256": "4a06f727443c5e32fc628d34ce9e8445123f6b315447f840279940a382377b58"
+      "size_bytes": 33222,
+      "sha256": "8b3e5d4b1890fa41d8270add72fbee1ee6e90de7ad923bc52eb0179a244a990d",
+      "source_sha256": "8b3e5d4b1890fa41d8270add72fbee1ee6e90de7ad923bc52eb0179a244a990d"
+    },
+    {
+      "path": "forecast_runtime/objective_fields.py",
+      "size_bytes": 991,
+      "sha256": "652203f1293f9d014b661795b9d5fbc2622c0547e13e23697a72218c2185c599",
+      "source_sha256": "652203f1293f9d014b661795b9d5fbc2622c0547e13e23697a72218c2185c599"
+    },
+    {
+      "path": "forecast_runtime/objective_places.json",
+      "size_bytes": 5271,
+      "sha256": "c884b127d816f2109d24307f6fc6c90345985ca62d511993561fa92cc2632fa3",
+      "source_sha256": "c884b127d816f2109d24307f6fc6c90345985ca62d511993561fa92cc2632fa3"
     },
     {
       "path": "forecast_runtime/objective_process.py",
@@ -679,9 +739,9 @@
     },
     {
       "path": "forecast_runtime/objective_report.py",
-      "size_bytes": 54670,
-      "sha256": "ea80aa836fffca90d866c550c1334cbe8d022efbe5088473ec25449d81ade3bc",
-      "source_sha256": "ea80aa836fffca90d866c550c1334cbe8d022efbe5088473ec25449d81ade3bc"
+      "size_bytes": 55590,
+      "sha256": "577b9d69feead7cac4424aca79fb10f58c97c4dd866caef840f6885ff96e2e7f",
+      "source_sha256": "577b9d69feead7cac4424aca79fb10f58c97c4dd866caef840f6885ff96e2e7f"
     },
     {
       "path": "forecast_runtime/objective_report_api.py",
@@ -691,9 +751,9 @@
     },
     {
       "path": "forecast_runtime/objective_scope.py",
-      "size_bytes": 4535,
-      "sha256": "10ed168dbf4e88a3430fbba1ef8738667f2e431fd5dc328c75e7512c414359d9",
-      "source_sha256": "10ed168dbf4e88a3430fbba1ef8738667f2e431fd5dc328c75e7512c414359d9"
+      "size_bytes": 20602,
+      "sha256": "0aa8d8d653ae42c445f6348846572ba6f40116b7d61016360a49d7eb3d2ecd49",
+      "source_sha256": "0aa8d8d653ae42c445f6348846572ba6f40116b7d61016360a49d7eb3d2ecd49"
     },
     {
       "path": "forecast_runtime/objective_sources.py",
@@ -812,8 +872,8 @@
     {
       "path": "frontend/index.html",
       "size_bytes": 113311,
-      "sha256": "79ad329d29e2fbbfacab8ee01dd335dda4b7b703be5e6799d7f2d6c6d58f0c98",
-      "source_sha256": "79ad329d29e2fbbfacab8ee01dd335dda4b7b703be5e6799d7f2d6c6d58f0c98"
+      "sha256": "97f47b394f97c82b89c7e58ec8185843a77ee57918696e4172749055aaad7f98",
+      "source_sha256": "97f47b394f97c82b89c7e58ec8185843a77ee57918696e4172749055aaad7f98"
     },
     {
       "path": "frontend/knowledge.html",
@@ -835,9 +895,9 @@
     },
     {
       "path": "frontend/map_assistant.js",
-      "size_bytes": 11242,
-      "sha256": "63d9f4c9d4cb316083c99ff458ca59e7f9ea7b66a78650611928a7d70a702b37",
-      "source_sha256": "63d9f4c9d4cb316083c99ff458ca59e7f9ea7b66a78650611928a7d70a702b37"
+      "size_bytes": 11696,
+      "sha256": "03d00b68652e677e04f123b27c2904ea88105d3dd16f6007c7a3cda7e53a0c3a",
+      "source_sha256": "03d00b68652e677e04f123b27c2904ea88105d3dd16f6007c7a3cda7e53a0c3a"
     },
     {
       "path": "frontend/month1_acceptance.js",
@@ -847,15 +907,15 @@
     },
     {
       "path": "frontend/objective_panel.css",
-      "size_bytes": 2757,
-      "sha256": "74f8ded32194b4620699095b79da23fb270c4e9299d3fd5e29d9a90dfffb8963",
-      "source_sha256": "74f8ded32194b4620699095b79da23fb270c4e9299d3fd5e29d9a90dfffb8963"
+      "size_bytes": 3448,
+      "sha256": "b388cbe99a36fe913841ca480c4febe3d34be27a9c540597cb27189dcba3fba6",
+      "source_sha256": "b388cbe99a36fe913841ca480c4febe3d34be27a9c540597cb27189dcba3fba6"
     },
     {
       "path": "frontend/objective_panel.js",
-      "size_bytes": 27681,
-      "sha256": "d443616ea5da1c1ff32461b5db607d7521e02286b49f14d0b454f1ef395e1e4c",
-      "source_sha256": "d443616ea5da1c1ff32461b5db607d7521e02286b49f14d0b454f1ef395e1e4c"
+      "size_bytes": 34707,
+      "sha256": "24e64c48d3ccb0c47765b95d7311a16d651379c114e62ac033550ef9efcc3b7b",
+      "source_sha256": "24e64c48d3ccb0c47765b95d7311a16d651379c114e62ac033550ef9efcc3b7b"
     },
     {
       "path": "frontend/vendor/leaflet/LICENSE",
@@ -967,9 +1027,9 @@
     },
     {
       "path": "marine_kb/answer_pipeline.py",
-      "size_bytes": 25407,
-      "sha256": "9e46577c41f767f611ceb1e8f11178879852f4ee69e1a1a1b2d96cbbe4fb169a",
-      "source_sha256": "9e46577c41f767f611ceb1e8f11178879852f4ee69e1a1a1b2d96cbbe4fb169a"
+      "size_bytes": 32685,
+      "sha256": "46f8c95e7721c43c96c0239da4655895b534480cc67e38710e1f5fd556a80d8e",
+      "source_sha256": "46f8c95e7721c43c96c0239da4655895b534480cc67e38710e1f5fd556a80d8e"
     },
     {
       "path": "marine_kb/answer_trace.py",
@@ -997,9 +1057,9 @@
     },
     {
       "path": "marine_kb/chat_api.py",
-      "size_bytes": 14978,
-      "sha256": "cc6c2b4c4b05fd026640a4cd467d93d3d6ca470f92495de2d439770741baa3ce",
-      "source_sha256": "cc6c2b4c4b05fd026640a4cd467d93d3d6ca470f92495de2d439770741baa3ce"
+      "size_bytes": 15317,
+      "sha256": "d81595a0b929c3694c6d391264d0c38b90220558de15541a8d1ce8b0dd51f6a1",
+      "source_sha256": "d81595a0b929c3694c6d391264d0c38b90220558de15541a8d1ce8b0dd51f6a1"
     },
     {
       "path": "marine_kb/citation_repair.py",
@@ -1147,9 +1207,9 @@
     },
     {
       "path": "marine_kb/objective_context.py",
-      "size_bytes": 13758,
-      "sha256": "1659b9502e20f1a7577003ef45f1275415b6b7ef27d9196d9849f1739e54036c",
-      "source_sha256": "1659b9502e20f1a7577003ef45f1275415b6b7ef27d9196d9849f1739e54036c"
+      "size_bytes": 15246,
+      "sha256": "982d6a09b45728735bfff7d6fdb447c4f9eef0d9f3e915724871d181b6dbe5ee",
+      "source_sha256": "982d6a09b45728735bfff7d6fdb447c4f9eef0d9f3e915724871d181b6dbe5ee"
     },
     {
       "path": "marine_kb/parsers.py",
@@ -1189,9 +1249,9 @@
     },
     {
       "path": "marine_kb/qa.py",
-      "size_bytes": 146255,
-      "sha256": "fa79cde8fe8d3dab9353a2c8e69ff13f2d134938f1c829dc4d5dbe085d43e883",
-      "source_sha256": "fa79cde8fe8d3dab9353a2c8e69ff13f2d134938f1c829dc4d5dbe085d43e883"
+      "size_bytes": 146684,
+      "sha256": "6c52c83b3a0c18d44a8945a5adfac605249ef40822ad99a436d8f853165a308a",
+      "source_sha256": "6c52c83b3a0c18d44a8945a5adfac605249ef40822ad99a436d8f853165a308a"
     },
     {
       "path": "marine_kb/qa_observability.py",
@@ -1799,6 +1859,12 @@
       "source_sha256": "369f9c0a38aa3018b25b9940978c9f7effd46431dad1db63ff6759b8c11658af"
     },
     {
+      "path": "tests/test_late_review_recheck.py",
+      "size_bytes": 11475,
+      "sha256": "41c162d215a890599a43eb2a230eddcfc793bc38273a3e63d8013956130fe30b",
+      "source_sha256": "41c162d215a890599a43eb2a230eddcfc793bc38273a3e63d8013956130fe30b"
+    },
+    {
       "path": "tests/test_library_catalog.py",
       "size_bytes": 16462,
       "sha256": "13901ebcb7decbce2bbba7851f653668b581ae755972d34f7ac117ed5bfebb97",
@@ -1884,9 +1950,9 @@
     },
     {
       "path": "tests/test_objective_bridge.py",
-      "size_bytes": 12727,
-      "sha256": "d2e5902120e71bf27eabdf90e6d010e07fdd923197be35248f7988762e55ea2e",
-      "source_sha256": "d2e5902120e71bf27eabdf90e6d010e07fdd923197be35248f7988762e55ea2e"
+      "size_bytes": 13113,
+      "sha256": "31b16836584b37c5fd3a69166e99bb9c75bc2cab5d8202c87ec942ac77124772",
+      "source_sha256": "31b16836584b37c5fd3a69166e99bb9c75bc2cab5d8202c87ec942ac77124772"
     },
     {
       "path": "tests/test_objective_context.py",
@@ -1908,15 +1974,15 @@
     },
     {
       "path": "tests/test_objective_l2_bridge.py",
-      "size_bytes": 13472,
-      "sha256": "29fa7dfae1cae357ae07629327aec2d9e47ed300aece6dd1912ddf2795c6f9ac",
-      "source_sha256": "29fa7dfae1cae357ae07629327aec2d9e47ed300aece6dd1912ddf2795c6f9ac"
+      "size_bytes": 13683,
+      "sha256": "e88ec7cf210c32dc70a7d7080800af39d30944ca2ee4f5aa8c42542570f8b2e7",
+      "source_sha256": "e88ec7cf210c32dc70a7d7080800af39d30944ca2ee4f5aa8c42542570f8b2e7"
     },
     {
       "path": "tests/test_objective_map_actions.cjs",
-      "size_bytes": 9975,
-      "sha256": "d1b30e1c94ad0565bff102385014d11538e51f85310d61ed50ee85e920041276",
-      "source_sha256": "d1b30e1c94ad0565bff102385014d11538e51f85310d61ed50ee85e920041276"
+      "size_bytes": 18934,
+      "sha256": "9fe46ac9a5379b11b1b5497a7b1497388181e6256725dd9123ca894b74a5239c",
+      "source_sha256": "9fe46ac9a5379b11b1b5497a7b1497388181e6256725dd9123ca894b74a5239c"
     },
     {
       "path": "tests/test_objective_panel.cjs",
@@ -1939,14 +2005,20 @@
     {
       "path": "tests/test_objective_report.py",
       "size_bytes": 18514,
-      "sha256": "903442fee8ae7934d91ab7f22f21e179b02e550c29d1fbe7fe42e79375aa1752",
-      "source_sha256": "903442fee8ae7934d91ab7f22f21e179b02e550c29d1fbe7fe42e79375aa1752"
+      "sha256": "29b93e187c9e16f2e267e78191959a7f351934022676023a920f771600938662",
+      "source_sha256": "29b93e187c9e16f2e267e78191959a7f351934022676023a920f771600938662"
     },
     {
       "path": "tests/test_objective_report_products.py",
       "size_bytes": 9842,
       "sha256": "1839b1d21811abeff4680f8499f6722a0ddd48e032e2e037c3131b295c38d53d",
       "source_sha256": "1839b1d21811abeff4680f8499f6722a0ddd48e032e2e037c3131b295c38d53d"
+    },
+    {
+      "path": "tests/test_objective_review_routes_20261022.py",
+      "size_bytes": 9958,
+      "sha256": "7a5baa17533523b0a5a1f113a0a650d32b2c48a34ebccf5b55545839038c9bb4",
+      "source_sha256": "7a5baa17533523b0a5a1f113a0a650d32b2c48a34ebccf5b55545839038c9bb4"
     },
     {
       "path": "tests/test_objective_scope_api.py",
@@ -1961,10 +2033,22 @@
       "source_sha256": "df954e39984e7c54b69f45bba3f394b58026f7e8072ade9a4380280df49c00d2"
     },
     {
+      "path": "tests/test_objective_scope_resolution_v2.py",
+      "size_bytes": 11095,
+      "sha256": "16f5bb5f6e15586f958e37eb9bea154e128f62cec836a3bdf13163b15bec6fb8",
+      "source_sha256": "16f5bb5f6e15586f958e37eb9bea154e128f62cec836a3bdf13163b15bec6fb8"
+    },
+    {
       "path": "tests/test_objective_sources.py",
       "size_bytes": 12851,
       "sha256": "8cd6014cc0b35691faaa9afb3ac0c6ff2bc94d89616cf4c74f64835fd21ad161",
       "source_sha256": "8cd6014cc0b35691faaa9afb3ac0c6ff2bc94d89616cf4c74f64835fd21ad161"
+    },
+    {
+      "path": "tests/test_objective_static_sea_mask.py",
+      "size_bytes": 11594,
+      "sha256": "e9f1e19163b551c565ece6a19f5e165baee539756fb9050374d866d1ca32586d",
+      "source_sha256": "e9f1e19163b551c565ece6a19f5e165baee539756fb9050374d866d1ca32586d"
     },
     {
       "path": "tests/test_official_activity_policy.py",
@@ -2415,6 +2499,12 @@
       "size_bytes": 12407,
       "sha256": "2124508fdfdd1e771d8e770e7659d856d1c330f0b43b6053df012eaa0f257669",
       "source_sha256": "2124508fdfdd1e771d8e770e7659d856d1c330f0b43b6053df012eaa0f257669"
+    },
+    {
+      "path": "tools/build_objective_review_report_20261022.py",
+      "size_bytes": 7832,
+      "sha256": "91c864d46047817ab80d869322a53e6cbffc5d69369615f7435d66345d022024",
+      "source_sha256": "91c864d46047817ab80d869322a53e6cbffc5d69369615f7435d66345d022024"
     },
     {
       "path": "tools/build_p0_baseline_report.py",
@@ -2895,6 +2985,12 @@
       "size_bytes": 7544,
       "sha256": "b5b34a4e14f4a84cc54c1404fa26fbae33dd589148de529c0d2b0c7ae46d8e30",
       "source_sha256": "b5b34a4e14f4a84cc54c1404fa26fbae33dd589148de529c0d2b0c7ae46d8e30"
+    },
+    {
+      "path": "tools/test_objective_review_20261022.py",
+      "size_bytes": 8393,
+      "sha256": "efbb976d44ff7d1dacfae772f88097ca769cdafd87d3a7aecac762310d608740",
+      "source_sha256": "efbb976d44ff7d1dacfae772f88097ca769cdafd87d3a7aecac762310d608740"
     },
     {
       "path": "tools/test_objective_upgrade_products_20261021.py",

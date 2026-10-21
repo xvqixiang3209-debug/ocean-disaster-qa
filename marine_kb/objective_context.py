@@ -25,15 +25,8 @@ def _map_bounds(value):
 
 
 def _explicit_map_fields(question):
-    """The object after a correction wins over the object being corrected."""
-    corrections = list(re.finditer(r'换成|改成|切换到|切换为', question))
-    if corrections:
-        question = question[corrections[-1].end():]
-    fields = []
-    if re.search(r'海浪|波高|浪高|涌浪|浪场', question): fields.append('wave')
-    if re.search(r'风场|风速|海面风|海上风|10米风|(?:换成|改成|看看|看一下)风(?:[，,。？?]|$)', question): fields.append('wind')
-    if '气压' in question: fields.append('pressure')
-    return fields
+    from forecast_runtime.objective_fields import requested_fields
+    return requested_fields(question)
 
 
 def _window(question, context, now):
@@ -76,19 +69,39 @@ def product_context(value):
         return None
     result = {'dataset_id': identifier, 'start': start.isoformat(),
               'end': end.isoformat(), 'hours': int(duration)}
+    pending=value.get('pending_scope') is True
+    if pending:
+        # Keep only time/dataset/field slots while asking for a new location.
+        # A pending context can never carry the old rectangle back into a query.
+        if value.get('scope') is not None or value.get('bounds') is not None:
+            return None
+        result['pending_scope']=True
     if value.get('scope') is not None:
-        from forecast_runtime.objective_scope import resolve_scope
+        from forecast_runtime.objective_scope import validated_scope
         supplied = value['scope']
         if not isinstance(supplied, dict):
             return None
         try:
-            scope = resolve_scope('' if supplied.get('kind') == 'map_bounds' else supplied.get('label', ''),
-                                  bounds=supplied.get('bounds') if supplied.get('kind') == 'map_bounds' else None)
+            scope = validated_scope(supplied, allow_legacy=True)
         except ValueError:
             return None
-        if any(supplied.get(key) != scope[key] for key in ('id', 'bounds', 'kind', 'version')):
+        if scope is None or any(supplied.get(key) != scope[key] for key in ('id', 'bounds', 'kind', 'version')):
             return None
         result.update(scope=scope, bounds=scope['bounds'])
+    if value.get('fields') is not None:
+        fields=value['fields']
+        if (not isinstance(fields,list) or not fields or len(fields)>3 or
+                any(name not in _FIELD_LABELS for name in fields) or len(set(fields))!=len(fields)):
+            return None
+        result['fields']=list(fields)
+    if isinstance(value.get('objective_scope_resolution'),dict) and result.get('scope'):
+        from forecast_runtime.objective_scope import resolve_scope_request
+        supplied=value['objective_scope_resolution']
+        names=supplied.get('requested_places') or []
+        if isinstance(names,list) and all(isinstance(name,str) and len(name)<=40 for name in names):
+            resolution=resolve_scope_request('、'.join(names),bounds=result['scope']['bounds'] if result['scope']['kind']=='map_bounds' else None)
+            if resolution.get('scope') and resolution['scope']['bounds']==result['scope']['bounds']:
+                result['objective_scope_resolution']=resolution
     if value.get('view_kind') == 'field':
         field = value.get('field')
         bounds = _map_bounds(value.get('bounds'))
@@ -96,17 +109,19 @@ def product_context(value):
         except (ValueError, TypeError): return None
         # A map is a single original NC time, not a one-hour aggregation.
         # start/end remain the established conversation window contract.
-        if field not in _FIELD_LABELS or bounds is None or valid_time.tzinfo is None or valid_time != start or duration != 1:
+        if field not in _FIELD_LABELS or bounds is None and not pending or valid_time.tzinfo is None or valid_time != start or duration != 1:
             return None
         if result.get('scope') and bounds != result['scope']['bounds']:
             return None
-        result.update(view_kind='field', field=field, valid_time=valid_time.isoformat(), bounds=bounds)
+        result.update(view_kind='field', field=field, valid_time=valid_time.isoformat())
+        if bounds is not None:result['bounds']=bounds
     elif value.get('view_kind') == 'maximum':
         field = value.get('field')
         bounds = _map_bounds(value.get('bounds'))
-        if field not in _FIELD_LABELS or bounds is None or result.get('scope') and bounds != result['scope']['bounds']:
+        if field not in _FIELD_LABELS or bounds is None and not pending or result.get('scope') and bounds != result['scope']['bounds']:
             return None
-        result.update(view_kind='maximum',field=field,bounds=bounds)
+        result.update(view_kind='maximum',field=field)
+        if bounds is not None:result['bounds']=bounds
     elif value.get('view_kind') not in (None, '', 'report'):
         return None
     return result
@@ -115,7 +130,7 @@ def product_context(value):
 def product_question_plan(question, history=None, *, now=None):
     from forecast_runtime.objective_bridge import objective_question
     from forecast_runtime.storage import local_now
-    from .evidence_applicability import PATHS, leaf_places
+    from forecast_runtime.objective_scope import place_mentions, resolve_scope_request
     from .conversation import followup_question, resolve_turn
     from .facet_contract import build_contract, facet_contract_enabled
     q = str(question or '').strip()
@@ -129,22 +144,28 @@ def product_question_plan(question, history=None, *, now=None):
     field_context = bool(context and context.get('view_kind') == 'field')
     maximum_context = bool(context and context.get('view_kind') == 'maximum')
     report_request = bool(re.search(r'(?:生成|制作|输出|再做|改为|给我).{0,16}(?:报告|专报|简报|分析)|(?:[\d一二两三四五六七]+\s*(?:小时|天)).{0,12}(?:报告|专报|简报)|海况简报|风浪分析', q))
-    reference = followup_question(q) or elliptical or bool(re.search(r'同一批次和时段|同批次|同一时段|同一时刻|改成|换成|更正|最新批次', q)) or bool(field_context and report_request)
+    reference = followup_question(q) or elliptical or bool(re.search(r'同一批次和时段|同批次|同一时段|同一时刻|改成|换成|更正|最新批次|不是.{0,80}是', q)) or bool(field_context and report_request)
     # A different business question is never made a grid product merely by
     # adding a previous product's name. Mixed products are explicitly scoped.
     unrelated = bool(re.search(r'什么是|是什么意思|定义|原理|台风|预警|警报|响应|赶海|游泳|海钓|停航|救助|人口|地形', q))
     has_product = bool(re.search(r'图件|报告|海浪图|风场图|气压图|客观预报',q))
     mixed = bool(context and reference and unrelated and has_product and not re.search(r'什么是|是什么意思|定义|原理',q))
     geo_text = re.sub(r'(?:参考|统计)?分区|参考(?:统计)?框|北部|中部|南部', '', q)
-    explicit_places = leaf_places(geo_text)
-    outside = [name for name in explicit_places if name != '浙江' and '浙江' not in PATHS.get(name,())]
-    foreign = bool(re.search(r'[\u4e00-\u9fff]{1,10}(?:海岸|海峡|海湾|国)|太平洋|大西洋|印度洋|北冰洋',geo_text)) and not any(name in geo_text for name in ('浙江','舟山','宁波','台州','温州','嘉兴'))
-    unsupported = bool(outside or foreign)
+    explicit_places = place_mentions(geo_text)
+    resolution=resolve_scope_request(geo_text,previous=context.get('scope') if context else None)
+    if context and context.get('pending_scope') and not explicit_places and '地图范围' not in q:
+        resolution.update(state='needs_scope',reason='pending_location',scope=None,
+                          notice='请先明确地点或框选地图范围；已保留上一轮的批次、时刻和要素，尚未恢复任何旧地点图层。')
+    unsupported = resolution['state'] in {'needs_scope','out_of_region'}
     inherit = bool(context and reference and not unrelated and not unsupported)
     if unsupported and (objective_question(q) or context and reference):
+        pending_context=({key:value for key,value in context.items() if key not in
+                          {'scope','bounds','objective_scope_resolution'}} if context else None)
+        if pending_context:pending_context['pending_scope']=True
         return {'normalized_question':q, 'normalizer':'objective_scope_boundary', 'retrieval_queries':[],
                 'subquestions':[], 'sid':None, 'context_used':False, 'history_messages_used':0,
-                'clarification':'当前客观报告计算范围是浙江近海参考框；这次所问地区不在该报告范围内，未改用浙江结果代答。请在地图选择大范围图查看，或明确要计算的浙江参考范围。'}
+                'objective_pending_context':pending_context,
+                'objective_scope_resolution':resolution,'clarification':resolution['notice']}
     if mixed:
         return {'normalized_question':q, 'normalizer':'objective_mixed_scope', 'retrieval_queries':[],
                 'subquestions':[], 'sid':None, 'context_used':False, 'history_messages_used':0,
@@ -172,25 +193,27 @@ def product_question_plan(question, history=None, *, now=None):
         # window; it cannot silently keep only the old map's field.
         explicit_snapshot = bool(re.search(r'单时刻|单时次|快照|(?:\d{1,2}[时点]|\d{1,2}:\d{2}).{0,12}(?:图|分布)',q)) and not _maximum_query(q)
         maximum_mode = bool((maximum_context and not report_request and not explicit_snapshot) or _maximum_query(q))
-        field_mode = (field_context and hours == 1 or maximum_context and explicit_snapshot) and not report_request and not maximum_mode and len(explicit_fields) <= 1
+        field_mode = (field_context and hours == 1 or maximum_context and explicit_snapshot) and not report_request and not maximum_mode
         if field_mode:hours=1
         if field_context and report_request and not explicit_duration:
             hours = 72
-        field = (explicit_fields[0] if explicit_fields else None) or context.get('field')
-        from forecast_runtime.objective_scope import resolve_scope
-        named_scope = bool(re.search(r'浙江|舟山|朱家尖|宁波|台州|温州|嘉兴|地图范围', q))
-        scope = resolve_scope(q) if named_scope else context.get('scope')
+        fields = explicit_fields or context.get('fields') or ([context['field']] if context.get('field') else [])
+        field = fields[0] if fields else None
+        named_scope = bool(explicit_places or '地图范围' in q)
+        scope = resolution['scope'] if named_scope else context.get('scope')
         # Historical field contexts only carried a rectangle. Keep that exact
         # rectangle until the user supplies a new named scope or map bounds.
         bounds = scope['bounds'] if scope else context.get('bounds') if field_mode or maximum_mode else None
         map_scope = bool(scope and scope['kind'] == 'map_bounds' or not scope and (field_mode or maximum_mode))
-        place = scope['label'] if scope and scope['kind'] != 'map_bounds' else '浙江'
+        place = ('、'.join(resolution['requested_places']) if named_scope and resolution.get('requested_places') else
+                 '、'.join((context.get('objective_scope_resolution') or {}).get('requested_places') or []) or
+                 scope['label'] if scope and scope['kind'] != 'map_bounds' else '浙江')
         scope_marker = ('地图范围：' + ','.join(format(v, '.12g') for v in bounds) + '，') if map_scope and bounds else ''
         # Chinese explicit clock keeps the legacy date parser's inclusive
         # sampling convention out of this continuous product interval.
         normalized = ((place + '客观预报地图查询，' if field_mode else place + '客观预报，') +
                       ('数据集ID ' + dataset + '，' if dataset else '') +
-                      ('地图要素：' + _FIELD_LABELS[field] + '，' if field_mode or maximum_mode and field else '') +
+                      ('地图要素：' + '、'.join(_FIELD_LABELS[f] for f in fields) + '，' if (field_mode or maximum_mode) and fields else '') +
                       ('最大值模式：逐格最大值图，' if maximum_mode else '') + scope_marker + '从' +
                       start.strftime('%Y年%m月%d日%H时%M分') +
                       f'起未来{hours}小时。本轮问题：' + q)
@@ -199,9 +222,11 @@ def product_question_plan(question, history=None, *, now=None):
     result = {'normalized_question': normalized, 'normalizer': 'objective_input_slots',
               'retrieval_queries': [q], 'subquestions': parts, 'sid': None,
               'context_used': inherit, 'history_messages_used': 1 if inherit else 0}
+    result['objective_scope_resolution']=resolution
     if inherit and field_mode:
         result['objective_view_kind'] = 'field'
         result['objective_field'] = field
+        result['objective_fields'] = fields
         result['objective_bounds'] = bounds
     if facet_contract_enabled():
         facets = build_contract(normalized, parts, state)

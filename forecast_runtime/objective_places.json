@@ -1,0 +1,244 @@
+{
+  "version": "zhejiang_reference_boxes_v2",
+  "places": [
+    {
+      "id": "zhejiang",
+      "names": [
+        "浙江",
+        "浙江省"
+      ],
+      "bounds": [
+        119.5,
+        26.5,
+        123.5,
+        31.5
+      ],
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "jiaxing",
+      "names": [
+        "嘉兴",
+        "嘉兴市"
+      ],
+      "bounds": [
+        120.75,
+        30.25,
+        121.65,
+        30.95
+      ],
+      "parent": "zhejiang",
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "ningbo",
+      "names": [
+        "宁波",
+        "宁波市"
+      ],
+      "bounds": [
+        121.3,
+        28.85,
+        122.6,
+        30.4
+      ],
+      "parent": "zhejiang",
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "zhoushan",
+      "names": [
+        "舟山",
+        "舟山市"
+      ],
+      "bounds": [
+        121.75,
+        29.45,
+        123.15,
+        31.1
+      ],
+      "parent": "zhejiang",
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "taizhou",
+      "names": [
+        "台州",
+        "台州市"
+      ],
+      "bounds": [
+        121.1,
+        28.05,
+        122.55,
+        29.25
+      ],
+      "parent": "zhejiang",
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "wenzhou",
+      "names": [
+        "温州",
+        "温州市"
+      ],
+      "bounds": [
+        120.35,
+        26.9,
+        122.1,
+        28.25
+      ],
+      "parent": "zhejiang",
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "zhujiajian",
+      "names": [
+        "朱家尖",
+        "朱家尖岛"
+      ],
+      "bounds": [
+        122.33,
+        29.82,
+        122.53,
+        30.02
+      ],
+      "parent": "zhoushan",
+      "source": "v1 reference box retained; not an administrative sea boundary"
+    },
+    {
+      "id": "shengsi",
+      "names": [
+        "嵊泗",
+        "嵊泗县",
+        "嵊泗列岛"
+      ],
+      "bounds": null,
+      "parent": "zhoushan",
+      "source": "Existing containment; separate trusted reference box not supplied"
+    },
+    {
+      "id": "putuo",
+      "names": [
+        "普陀",
+        "普陀区"
+      ],
+      "bounds": null,
+      "parent": "zhoushan",
+      "source": "Existing containment; separate trusted reference box not supplied"
+    },
+    {
+      "id": "putuoshan",
+      "names": [
+        "普陀山",
+        "普陀山岛"
+      ],
+      "bounds": null,
+      "parent": "putuo",
+      "source": "Existing containment; separate trusted reference box not supplied"
+    },
+    {
+      "id": "xiangshan",
+      "names": [
+        "象山",
+        "象山县"
+      ],
+      "bounds": null,
+      "parent": "ningbo",
+      "source": "Existing containment; separate trusted reference box not supplied"
+    },
+    {
+      "id": "dongji",
+      "names": [
+        "东极岛",
+        "东极列岛"
+      ],
+      "bounds": null,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "yangshan",
+      "names": [
+        "洋山港",
+        "大小洋山",
+        "小洋山",
+        "大洋山"
+      ],
+      "bounds": null,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "east_china_sea",
+      "names": [
+        "东海"
+      ],
+      "bounds": null,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "hangzhou_bay",
+      "names": [
+        "杭州湾"
+      ],
+      "bounds": null,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "xiangshan_bay",
+      "names": [
+        "象山港"
+      ],
+      "bounds": null,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "xiamen",
+      "names": [
+        "厦门",
+        "厦门市"
+      ],
+      "bounds": null,
+      "outside": true,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "fuzhou",
+      "names": [
+        "福州",
+        "福州市"
+      ],
+      "bounds": null,
+      "outside": true,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "quanzhou",
+      "names": [
+        "泉州",
+        "泉州市"
+      ],
+      "bounds": null,
+      "outside": true,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "shenzhen",
+      "names": [
+        "深圳",
+        "深圳市"
+      ],
+      "bounds": null,
+      "outside": true,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    },
+    {
+      "id": "qingdao",
+      "names": [
+        "青岛",
+        "青岛市"
+      ],
+      "bounds": null,
+      "outside": true,
+      "source": "Recognised request name only; trusted calculation box not supplied"
+    }
+  ]
+}

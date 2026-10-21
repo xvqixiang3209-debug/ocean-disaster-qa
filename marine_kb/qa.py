@@ -1822,6 +1822,10 @@ class MarineQuestionService:
         if plan.get('clarification'):
             return {'answer':plan['clarification'],'rag_sources':[],'web_sources':[],
                     'answer_meta':{'used_mode':'needs_clarification','normalized_question':question,
+                                   **({'map_action':{'type':'objective_clear','reason':plan['clarification'][:500]},
+                                       'objective_scope_resolution':plan.get('objective_scope_resolution'),
+                                       'objective_context':plan.get('objective_pending_context')}
+                                      if plan.get('normalizer')=='objective_scope_boundary' else {}),
                                    'conversation_context_used':False}}
         normalized, normalizer = plan['normalized_question'], plan['normalizer']
         retrieval_queries, parts, sid = plan['retrieval_queries'], plan['subquestions'], plan.get('sid')

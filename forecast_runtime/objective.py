@@ -1,4 +1,11 @@
-"""Local objective-forecast slices: immutable sources, native statistics, no LLM."""
+"""Local objective-forecast slices: immutable sources, native statistics, no LLM.
+
+``wave_valid`` is a static model-sea domain: a cell is sea when the wave
+source has a finite value at *any* source-native timestamp. Each field still
+has independent, time-varying validity. Missing sea samples are counted, while
+cells never valid in the wave source remain transparent and are never zeroes.
+This is a model-grid contract, not a surveyed coastline or a dry/wet model.
+"""
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
@@ -8,7 +15,9 @@ from threading import RLock
 import hashlib
 import json
 import math
+import os
 import re
+import uuid
 
 import h5py
 import numpy as np
@@ -41,6 +50,14 @@ SYNOPTIC_BOUNDS = [115., 15., 145., 36.]
 _PLOT_LOCK = RLock()
 COLOR_LIMITS = {'wave': (0, 8), 'wind': (0, 40), 'pressure': (960, 1040)}
 COLORMAPS = {'wave': 'viridis', 'wind': 'turbo', 'pressure': 'coolwarm'}
+STATIC_SEA_MASK_VERSION = 'static_any_valid_v1'
+STATIC_SEA_MASK_METHOD = 'static_any_valid_wave_native_sample_in_source_axis'
+
+
+def sea_mask_method():
+    """Expose the effective algorithm so rollback cannot reuse new reports."""
+    return ('nearest_wave_native_valid_cell_mask' if os.environ.get('OBJECTIVE_SEA_MASK') == 'first_frame'
+            else STATIC_SEA_MASK_METHOD)
 
 
 @lru_cache(maxsize=3)
@@ -193,6 +210,7 @@ class ObjectiveForecast:
         self.root.mkdir(parents=True, exist_ok=True)
         self.index_path = self.root / 'index.json'
         self.lock = RLock()
+        self._sea_masks = {}
 
     def _index(self):
         if not self.index_path.exists(): return {'datasets': [], 'profile': PROFILE}
@@ -312,21 +330,102 @@ class ObjectiveForecast:
                 'v': arrays[1] if field == 'wind' else None, 'lat': axes_lat, 'lon': axes_lon,
                 'source': source, 'valid_time': valid, 'requested_bounds': [west, south, east, north]}
 
+    def _static_sea_mask(self, dataset):
+        """OR finite waves over the complete immutable source, streaming rows.
+
+        SHA and coordinate hashes identify the cached, canonical north-to-south
+        grid. Only one 256-row frame block is decoded at a time; an interrupted
+        cache write cannot become a valid mask. A cached mask never changes with
+        a user's time window, display resolution, or selected field.
+        """
+        source = self._source(dataset, 'wave')
+        with self.lock, _open(source['path'], source['format']) as nc:
+            lat = np.array(nc[source['latitude_name']][:], dtype=float, copy=True)
+            lon = _longitude(np.array(nc[source['longitude_name']][:], dtype=float, copy=True))
+            yi, xi = np.argsort(-lat), np.argsort(lon)
+            lat, lon = lat[yi], lon[xi]
+            hashes = {name: hashlib.sha256(np.asarray(axis, dtype='<f8').tobytes()).hexdigest()
+                      for name, axis in (('latitude', lat), ('longitude', lon))}
+            identity = {'source_sha256': source['sha256'], 'version': STATIC_SEA_MASK_VERSION,
+                        'axis_sha256': hashes, 'shape': [len(lat), len(lon)]}
+            key = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+            if key in self._sea_masks:
+                return self._sea_masks[key]
+            directory = self.root / 'index' / 'masks'
+            path = directory / (source['sha256'] + '_' + STATIC_SEA_MASK_VERSION + '.npy')
+            metadata_path = path.with_suffix('.json')
+            try:
+                metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
+                mask = np.load(path, allow_pickle=False)
+                if not isinstance(metadata, dict) or metadata.get('identity') != identity or mask.dtype != np.bool_ or list(mask.shape) != identity['shape']:
+                    raise ValueError('static mask cache identity mismatch')
+                if metadata.get('mask_sha256') != hashlib.sha256(mask.tobytes()).hexdigest():
+                    raise ValueError('static mask cache checksum mismatch')
+            except (OSError, ValueError, KeyError, EOFError):
+                variable = nc[source['fields']['wave']['variables'][0]]
+                attrs = _attrs(variable)
+                # Accumulate in source orientation before one canonical reorder.
+                mask = np.zeros((len(lat), len(lon)), dtype=bool)
+                for time_index in range(len(source['valid_times'])):
+                    for y0 in range(0, len(lat), 256):
+                        selection = ((time_index, slice(y0, y0+256), slice(None)) if len(variable.shape) == 3
+                                     else (time_index, 0, slice(y0, y0+256), slice(None)))
+                        raw = np.array(variable[selection], copy=True)
+                        values = raw.astype(float)
+                        missing = ~np.isfinite(values)
+                        for name in ('_FillValue', 'missing_value'):
+                            if name in attrs:
+                                for marker in np.asarray(attrs[name]).reshape(-1):
+                                    missing |= raw == marker
+                        if source.get('source_family') == 'zjocean_l2_l5':
+                            missing |= (values <= -999) | (values >= 9999)
+                        values = values * float(attrs.get('scale_factor', 1)) + float(attrs.get('add_offset', 0))
+                        values *= source['fields']['wave']['scale']
+                        good = ~missing & np.isfinite(values) & (values >= 0)
+                        mask[y0:y0+len(raw)] |= good
+                mask = mask[np.ix_(yi, xi)]
+                directory.mkdir(parents=True, exist_ok=True)
+                temporary = path.with_name(path.name + '.' + uuid.uuid4().hex + '.part')
+                temporary_meta = metadata_path.with_name(metadata_path.name + '.' + uuid.uuid4().hex + '.part')
+                try:
+                    with temporary.open('wb') as stream:
+                        np.save(stream, mask, allow_pickle=False)
+                    metadata = {'identity': identity, 'mask_sha256': hashlib.sha256(mask.tobytes()).hexdigest()}
+                    temporary_meta.write_text(json.dumps(metadata, sort_keys=True), encoding='utf-8')
+                    os.replace(temporary, path)
+                    os.replace(temporary_meta, metadata_path)
+                finally:
+                    temporary.unlink(missing_ok=True)
+                    temporary_meta.unlink(missing_ok=True)
+            result = {'values': mask, 'lat': lat, 'lon': lon, 'source': source,
+                      'axis_sha256': hashes, 'source_sha256': source['sha256']}
+            if len(self._sea_masks) >= 3:
+                self._sea_masks.pop(next(iter(self._sea_masks)))
+            self._sea_masks[key] = result
+            return result
+
     def _mask(self, dataset, native, field, bounds, sea_mask):
         if sea_mask not in {None, '', 'none', 'wave_valid'}: raise ValueError('sea_mask仅支持none或wave_valid')
         if sea_mask != 'wave_valid': return np.ones_like(native['values'], dtype=bool), None
         if 'wave' not in dataset['fields']: raise ValueError('该数据集没有海浪有效海点掩膜')
         source = self._source(dataset, 'wave')
-        # A static model sea mask, not a shoreline survey or an inundation map.
-        margin = [max(-180, bounds[0] - 1), max(-90, bounds[1] - 1), min(180, bounds[2] + 1), min(90, bounds[3] + 1)]
-        wave = self._native(dataset, 'wave', source['valid_times'][0], margin)
+        if sea_mask_method() == 'nearest_wave_native_valid_cell_mask':
+            # Explicit rollback for comparison, never the production default.
+            wave = self._native(dataset, 'wave', source['valid_times'][0], source['coverage'])
+            wave['values'] = np.isfinite(wave['values'])
+        else:
+            wave = self._static_sea_mask(dataset)
         yi = np.abs(wave['lat'][:, None] - native['lat'][None, :]).argmin(axis=0)
         xi = np.abs(wave['lon'][:, None] - native['lon'][None, :]).argmin(axis=0)
-        mask = np.isfinite(wave['values'][np.ix_(yi, xi)])
+        mask = wave['values'][np.ix_(yi, xi)].copy()
         mask &= ((native['lat'][:, None] >= wave['lat'].min()) & (native['lat'][:, None] <= wave['lat'].max())
                  & (native['lon'][None, :] >= wave['lon'].min()) & (native['lon'][None, :] <= wave['lon'].max()))
-        return mask, {'method': 'nearest_wave_native_valid_cell_mask', 'source': _public_source(source),
-                      'valid_time': wave['valid_time'], 'note': 'Model sea-grid mask; not a precise coastline.'}
+        return mask, {'method': sea_mask_method(), 'source': _public_source(source),
+                      'source_sha256': source['sha256'], 'axis_sha256': wave.get('axis_sha256'),
+                      'valid_time': wave.get('valid_time'), 'never_valid_count': int((~mask).sum()),
+                      'note': ('First-frame rollback model sea-grid mask; not a precise coastline.'
+                               if sea_mask_method() == 'nearest_wave_native_valid_cell_mask' else
+                               'Model sea-grid mask over the full source-native time axis; not a precise coastline. Field validity is independent at each timestamp.')}
 
     @staticmethod
     def _stats(native, mask=None):
@@ -334,6 +433,7 @@ class ObjectiveForecast:
         mask = np.ones(values.shape, dtype=bool) if mask is None else mask
         good = np.isfinite(values) & mask
         result = {'native_count': int(values.size), 'sea_count': int(mask.sum()), 'valid_count': int(good.sum()),
+                  'never_valid_count': int((~mask).sum()),
                   'missing_count': int((mask & ~np.isfinite(values)).sum()), 'minimum': None, 'maximum': None, 'mean': None}
         if not good.any(): return result
         def edge(maximum):
@@ -426,10 +526,13 @@ class ObjectiveForecast:
             times = [t for t in source['valid_times'] if first <= _stamp(t) <= last]
             coverage = temporal_coverage(source['valid_times'], first, last)
             specs = threshold_specs(thresholds, field, UNITS[field])
-            series = []; mask = mask_meta = None
+            series = []; mask = mask_meta = valid_counts = None
             for valid in times:
                 native = self._native(dataset, field, valid, bounds)
-                if mask is None: mask, mask_meta = self._mask(dataset, native, field, bounds, sea_mask)
+                if mask is None:
+                    mask, mask_meta = self._mask(dataset, native, field, bounds, sea_mask)
+                    valid_counts = np.zeros(mask.shape, dtype=np.int32)
+                valid_counts += (mask & np.isfinite(native['values'])).astype(np.int32)
                 item = {'time': valid, **self._stats(native, mask)}
                 if specs:
                     item['threshold_samples'] = [threshold_sample(native['values'], mask, spec) for spec in specs]
@@ -444,6 +547,8 @@ class ObjectiveForecast:
                              'maximum': max(maxima, key=lambda r: r['value']) if maxima else None,
                              'native_count': max((s['native_count'] for s in series), default=0),
                              'sea_count': max((s['sea_count'] for s in series), default=0),
+                             'never_valid_count': int((~mask).sum()) if mask is not None else 0,
+                             'intermittent_cell_count': int((mask & (valid_counts < coverage['expected_count'])).sum()) if mask is not None else 0,
                              'valid_count': sum(s['valid_count'] for s in series), 'missing_count': sum(s['missing_count'] for s in series),
                              'sample_count_unit': 'grid_cell_time_samples', 'frame_count': len(series),
                              'coverage_start': source['available_start'], 'coverage_end': source['available_end'],
@@ -451,7 +556,7 @@ class ObjectiveForecast:
                              'series_start': times[0] if times else None, 'series_end': times[-1] if times else None,
                              'requested_start': first.isoformat(), 'requested_end': last.isoformat(), 'partial': partial,
                              'temporal_coverage': coverage, 'process': process,
-                             'data_partial': any(not s['valid_count'] for s in series) or not series,
+                             'data_partial': any(s['missing_count'] > 0 or not s['valid_count'] for s in series) or not series,
                              'sea_mask': mask_meta, 'source_files': [_public_source(source)],
                              'coverage_bounds': source['coverage'], 'requested_bounds': bounds,
                              'spatial_partial': not (source['coverage'][0] <= bounds[0] and source['coverage'][1] <= bounds[1]
@@ -517,17 +622,16 @@ class ObjectiveForecast:
                 counts = np.zeros(native['values'].shape, dtype=np.int32)
                 peak_indices = np.full(native['values'].shape, -1, dtype=np.int32)
                 mask, mask_meta = self._mask(dataset, native, field, bounds, sea_mask)
-            # Wave values already carry their native dynamic validity. A hole in
-            # the first wave frame must not suppress a later valid wave peak.
-            active_mask = np.ones_like(mask) if field == 'wave' and sea_mask == 'wave_valid' else mask
-            good = np.isfinite(native['values']) & active_mask
+            good = np.isfinite(native['values']) & mask
             replace = good & (~np.isfinite(maximum) | (native['values'] > maximum))
             peak_indices[replace] = i
             counts += good.astype(np.int32)
             np.fmax(maximum, np.where(good, native['values'], np.nan), out=maximum)
-        display_mask = counts > 0 if field == 'wave' and sea_mask == 'wave_valid' else mask
+        display_mask = mask & (counts > 0)
         aggregate = {**native, 'values': maximum, 'valid_time': None}
-        stats = self._stats(aggregate, display_mask)
+        # The domain remains static even when a sea cell has no finite samples
+        # in the requested window. Its displayed maximum is still transparent.
+        stats = self._stats(aggregate, mask)
         for name in ('minimum', 'maximum'):
             edge = stats[name]
             if edge:
@@ -536,7 +640,7 @@ class ObjectiveForecast:
                 edge['time'] = times[int(peak_indices[y, x])]
         ys = np.unique(np.linspace(0, len(native['lat'])-1, min(maxsize, len(native['lat']))).astype(int))
         xs = np.unique(np.linspace(0, len(native['lon'])-1, min(maxsize, len(native['lon']))).astype(int))
-        selected = maximum[np.ix_(ys, xs)]
+        selected = np.where(display_mask, maximum, np.nan)[np.ix_(ys, xs)]
         result_values = [[round(float(v), 6) if np.isfinite(v) else None for v in row] for row in selected]
         lat, lon = native['lat'][ys], native['lon'][xs]
         expected_count = coverage['expected_count']
@@ -549,12 +653,11 @@ class ObjectiveForecast:
                     valid_sample_ratios=[[round(int(v)/expected_count, 6) if expected_count else None for v in row] for row in selected_counts],
                     valid_sample_count_unit='finite source-native timestamps per displayed grid cell',
                     valid_sample_ratio_denominator='expected native timestamps in requested window; missing values and missing timestamps both reduce the ratio',
-                    maximum_sample_count=int(counts.max()), minimum_sample_count=int(counts[display_mask].min()) if display_mask.any() else 0,
+                    maximum_sample_count=int(counts.max()), minimum_sample_count=int(counts[mask].min()) if mask.any() else 0,
+                    never_valid_count=int((~mask).sum()),
+                    intermittent_cell_count=int((mask & (counts < expected_count)).sum()),
                     sea_mask=mask_meta, stats_resolution='native_grid_before_display_sampling',
                     summary_note='Each cell is its maximum over available native times, which may differ between cells. This is not a snapshot at one shared peak time.')
-        if field == 'wave' and sea_mask == 'wave_valid':
-            base['sea_mask'] = {'method': 'any_valid_wave_native_sample_in_requested_window', 'source': _public_source(source),
-                                'note': 'Native wave-valid cells over this period; not a precise coastline.'}
         return base
 
     def image_temporal_maximum_png(self, dataset_id=None, field='wave', start=None, hours=72, bounds=None, maxsize=600, sea_mask='wave_valid'):

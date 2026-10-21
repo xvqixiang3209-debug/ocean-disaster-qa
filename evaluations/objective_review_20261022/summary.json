@@ -1,0 +1,197 @@
+{
+  "snapshot": "20261022-objective-review",
+  "created_at": "2026-10-22T00:36:29.988165+08:00",
+  "baseline_commit": "5d619da54f8fe2b92b96fc3bc9f157ed1a719790",
+  "tests": {
+    "source_local_current": {
+      "passed": 2447,
+      "subtests_passed": 134,
+      "failed": 0,
+      "seconds": 53.22,
+      "method": "Current complete local application run, separately recorded by implementation task"
+    },
+    "public_checkout": {
+      "passed": 2389,
+      "skipped": 58,
+      "subtests_passed": 134,
+      "failed": 0,
+      "seconds": 26.57,
+      "method": "New actual pytest tests -q -ra execution in source-only checkout, no model/network fallback",
+      "skip_reasons": {
+        "private_recordings_or_cassettes": 54,
+        "private_typhoon_databases": 4
+      }
+    },
+    "node_current": {
+      "test_files": 3,
+      "passed": 3,
+      "failed": 0,
+      "names": [
+        "test_objective_panel.cjs",
+        "test_objective_map_actions.cjs",
+        "test_knowledge_libraries.cjs"
+      ],
+      "method": "New actual node --test execution in public checkout"
+    }
+  },
+  "local_real_nc_questions": {
+    "question_count": 13,
+    "checks_passed": 13,
+    "model_calls": 0,
+    "network_downloads": 0,
+    "network_search_calls": 0,
+    "synthetic_data": false,
+    "state_counts": {
+      "ready": 8,
+      "out_of_region": 1,
+      "partial": 2,
+      "no_data": 1,
+      "needs_scope": 1
+    },
+    "cases": [
+      {
+        "id": "01_parent_shengsi",
+        "tool_state": "ready",
+        "scope_id": "zhoushan",
+        "map_fields": [
+          "wave"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "02_follow_putuo",
+        "tool_state": "ready",
+        "scope_id": "zhoushan",
+        "map_fields": [
+          "wave"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "03_xiamen",
+        "tool_state": "out_of_region",
+        "scope_id": null,
+        "map_fields": [],
+        "checks": "pass"
+      },
+      {
+        "id": "04_zhujiajian_wind_wave",
+        "tool_state": "ready",
+        "scope_id": "zhujiajian",
+        "map_fields": [
+          "wave",
+          "wind"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "05_follow_both",
+        "tool_state": "ready",
+        "scope_id": "zhujiajian",
+        "map_fields": [
+          "wave",
+          "wind"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "06_ningbo_report",
+        "tool_state": "partial",
+        "scope_id": "ningbo",
+        "map_fields": [
+          "wave",
+          "wind"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "07_follow_wind_maximum",
+        "tool_state": "ready",
+        "scope_id": "ningbo",
+        "map_fields": [
+          "wind"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "08_explicit_bounds",
+        "tool_state": "ready",
+        "scope_id": "map_bounds",
+        "map_fields": [
+          "wave"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "09_default_notice",
+        "tool_state": "ready",
+        "scope_id": "zhejiang",
+        "map_fields": [
+          "wave"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "10_uncovered",
+        "tool_state": "no_data",
+        "scope_id": "zhujiajian",
+        "map_fields": [
+          "wave",
+          "wind"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "11_change_from_zhujiajian",
+        "tool_state": "ready",
+        "scope_id": "zhoushan",
+        "map_fields": [
+          "wave",
+          "wind"
+        ],
+        "checks": "pass"
+      },
+      {
+        "id": "12_unknown_island",
+        "tool_state": "needs_scope",
+        "scope_id": null,
+        "map_fields": [],
+        "checks": "pass"
+      },
+      {
+        "id": "13_report_cache_reuse",
+        "tool_state": "partial",
+        "scope_id": "ningbo",
+        "map_fields": [
+          "wave",
+          "wind"
+        ],
+        "checks": "pass"
+      }
+    ],
+    "raw_answers_published": false,
+    "source_values_published": false,
+    "source_nc_published": false,
+    "note": "Uses latest locally registered eligible NC; does not claim a fresh website download; partial/no_data are separated from failed program assertions."
+  },
+  "additional_current_verification": {
+    "old_new_synthetic_comparison": true,
+    "actual_h5py_scipy_no_stub": true,
+    "real_nc_cross_outlet_peak_and_time_check": true,
+    "browser_checked": [
+      "wave/wind answer selectors",
+      "independent field peak times preserve report window",
+      "parent scope notice",
+      "out-of-region clears prior layer"
+    ],
+    "expert_acceptance": false
+  },
+  "new_model_calls_for_publication": 0,
+  "new_network_downloads_for_publication": 0,
+  "new_160_question_run": false,
+  "new_24_recording_run": false,
+  "t1_late_review_validation": "mock positive/negative regressions only; no new real-model judgement recording",
+  "raw_requests_responses_published": false,
+  "private_configuration_published": false,
+  "historical_labels_are_not_correctness_rates": true
+}

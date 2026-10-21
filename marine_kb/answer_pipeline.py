@@ -4,6 +4,7 @@ No raw recorded v1 response is treated as a response to a new v2 prompt.
 The legacy pipeline remains available for a controlled rollout.
 """
 import copy
+import hashlib
 import json
 import re
 
@@ -84,15 +85,106 @@ def enforce_relations(result, facets, evidence):
     return result
 
 
-def withhold_disputed_atoms(result, issues):
+def _dispute_proof(atom, evidence):
+    """The conflict identity includes the actual cited passage, not its label."""
+    sources={int(e.get('citation') or i+1):e for i,e in enumerate(evidence or [])}
+    refs=[]
+    for ref in atom.get('evidence_quotes') or []:
+        citation,pid=ref.get('citation'),ref.get('passage_id')
+        source=sources.get(citation,{})
+        passage=next((p for p in source.get('passages',[]) if p.get('id',p.get('passage_id'))==pid),None)
+        if type(citation) is not int or type(pid) is not int or not passage:
+            raise ValueError('disputed_atom_original_passage_unavailable')
+        quote=ref.get('quote') or passage.get('text','')
+        if not quote or quote not in passage.get('text',''):
+            raise ValueError('disputed_atom_original_quote_unavailable')
+        refs.append((citation,pid,hashlib.sha256(passage['text'].encode()).hexdigest(),
+                     hashlib.sha256(quote.encode()).hexdigest()))
+    if not refs:raise ValueError('disputed_atom_original_refs_unavailable')
+    identity={'text_sha256':hashlib.sha256(str(atom.get('text','')).encode()).hexdigest(),
+              'facet_ids':sorted(atom.get('facet_ids') or []),'passages':sorted(set(refs)),
+              'proof_type':atom.get('type')}
+    if atom.get('type')=='synthesis':
+        identity['premises']=atom.get('premises') or []
+        identity['inference']=atom.get('inference') or {}
+    return hashlib.sha256(json.dumps(identity,sort_keys=True,separators=(',',':')).encode()).hexdigest(),identity
+
+
+def _same_recheck_proof(atom,row):
+    """A second judge can confirm the original proposition, never replace it."""
+    kind=atom.get('type')
+    expected='synthesis' if kind=='synthesis' else 'supported'
+    if (row.get('text')!=atom.get('text') or row.get('status')!=expected or
+            row.get('type')!=kind or set(row.get('facet_ids') or [])!=set(atom.get('facet_ids') or [])):
+        return False
+    if kind=='synthesis':
+        return (row.get('premises')==atom.get('premises') and row.get('inference')==atom.get('inference'))
+    selected={(r['citation'],r['passage_id']):r['quote'] for r in atom.get('evidence_quotes') or []}
+    refs=row.get('refs')
+    if not isinstance(refs,list) or len(refs)!=len(selected):return False
+    seen=set()
+    for ref in refs:
+        if not isinstance(ref,dict):return False
+        key=(ref.get('citation'),ref.get('passage_id'))
+        if key not in selected or key in seen or ref.get('quote',selected[key])!=selected[key]:return False
+        seen.add(key)
+    return seen==set(selected)
+
+
+def _recheck_disputed_atom(atom, reasons, accepted, evidence, facets, caller, budget, cache):
+    record={'aid':atom['aid'],'attempted':False,'completed':False,'confirmed_support':False}
+    try:
+        key,identity=_dispute_proof(atom,evidence)
+        record.update(conflict_key=key,**identity)
+        if key in cache:
+            return {**copy.deepcopy(cache[key]),'aid':atom['aid'],'cache_hit':True}
+        if caller is None or budget is None:
+            record['state']='not_requested'
+        elif not bool(budget.take('judge_recheck') if hasattr(budget,'take') else budget('judge_recheck')):
+            record['state']='budget_exhausted'
+        else:
+            from .typed_grounding import review_atoms
+            refs={(r['citation'],r['passage_id']) for r in atom.get('evidence_quotes') or []}
+            selected=[]
+            for i,source in enumerate(evidence or []):
+                citation=int(source.get('citation') or i+1)
+                passages=[p for p in source.get('passages',[]) if (citation,p.get('id',p.get('passage_id'))) in refs]
+                if passages:selected.append({**{k:v for k,v in source.items() if k not in {'text','passages'}},'passages':copy.deepcopy(passages)})
+            premises=[copy.deepcopy(a) for a in accepted if a.get('aid') in (atom.get('premises') or [])]
+            check={'facet_contract':copy.deepcopy(facets or []),'atoms':[copy.deepcopy(atom)],
+                   'evidence':selected,'verified_premises':premises,
+                   'draft_sha256':hashlib.sha256(str(atom.get('text','')).encode()).hexdigest(),
+                   'recheck_atom_ids':[atom['aid']],'coverage_review_disagreement':copy.deepcopy(reasons),
+                   'recheck_instruction':'只复核这一个已通过原子，结合覆盖审查异议和所列原始引用段。保留aid、text、facet_ids、refs及已有premises/inference；不能改写、换引用、补事实。仅原证明再次完整支持时返回原类型和支持判定，否则返回unsupported。verified_premises只读，不对其重新生成裁决。'}
+            evidence_view('judge_recheck',selected)
+            record['attempted']=True
+            with model_stage('judge_recheck'):
+                value=review_atoms(check,caller)
+            row=value['atoms'][0]
+            record.update(completed=True,second_status=row.get('status'),
+                          second_reason=str(row.get('reason') or '')[:600])
+            record['confirmed_support']=_same_recheck_proof(atom,row)
+            record['state']='supported_again' if record['confirmed_support'] else 'disagreed'
+    except Exception as exc:
+        record.update(state='error',error=str(exc)[:120] if isinstance(exc,ValueError) else type(exc).__name__)
+        observe_failure('judge_recheck',exc,aid=atom.get('aid'))
+    if record.get('conflict_key'):cache[record['conflict_key']]=copy.deepcopy(record)
+    event('late_review_atom_recheck',**record,review_issues=copy.deepcopy(reasons))
+    return record
+
+
+def withhold_disputed_atoms(result, issues, *, recheck=None, evidence=None, facets=None, budget=None):
     """A late critic cannot rewrite facts or silently publish a disputed claim.
 
     Only an exact overlapping atom is withheld, together with syntheses that
     depend on it. Unrelated siblings and original wording remain untouched.
-    This is an unresolved disagreement, never a new unsupported model verdict.
+    A single targeted second check can confirm an unchanged, already validated
+    proof. Budget denial, failures and disagreement remain explicitly unresolved.
     """
     compact=lambda text:re.sub(r'\s+|[*#]', '', str(text)).strip('。；;')
     rejected=set();matches=[];ambiguous=[]
+    previous=list(result.get('disputed_atom_rechecks') or [])
+    cache={r['conflict_key']:r for r in previous if r.get('conflict_key')}
     for issue in issues or []:
         if issue.get('kind') not in {'unsupported_claim','contradiction'}:continue
         span=compact(issue.get('text',''))
@@ -119,17 +211,32 @@ def withhold_disputed_atoms(result, issues):
                               'reason':'review_span_not_unique'});continue
         for atom in candidates:
             rejected.add(atom['aid']);matches.append({'aid':atom['aid'],'issue':dict(issue)})
+    by_aid={a['aid']:a for a in result.get('accepted_atoms',[])}
+    rechecks=[]
+    for aid in sorted(rejected):
+        reasons=[m['issue'] for m in matches if m['aid']==aid]
+        record=_recheck_disputed_atom(by_aid[aid],reasons,result.get('accepted_atoms',[]),
+                                     evidence,facets,recheck,budget,cache)
+        rechecks.append(record)
+        if record['confirmed_support']:rejected.remove(aid)
     while True:
         more={a['aid'] for a in result.get('accepted_atoms',[])
               if rejected & set(a.get('premises') or [])}
         if more <= rejected:break
         rejected |= more
+    unresolved=[];resolved=[]
+    for issue in issues or []:
+        if issue.get('kind') not in {'unsupported_claim','contradiction'}:continue
+        linked=[m['aid'] for m in matches if m['issue']==issue]
+        (resolved if linked and not any(aid in rejected for aid in linked) else unresolved).append(dict(issue))
     accepted=[a for a in result.get('accepted_atoms',[]) if a['aid'] not in rejected]
     return {**result,'accepted_atoms':accepted,
             'disputed_atom_withholding':{'matches':matches,'ambiguous':ambiguous,'withheld_atom_ids':sorted(rejected),
-                                        'scope':'exact conflicting spans; not an expert adjudication'},
+                                        'rechecks':rechecks,'resolved_issues':resolved,'unresolved_issues':unresolved,
+                                        'scope':'one targeted confirmation of the unchanged proof; unresolved disagreements withheld'},
+            'disputed_atom_rechecks':list(cache.values()),
             'decisions':list(result.get('decisions') or [])+[
-                {'aid':aid,'retained':False,'drop_rule':'final_review_disputed_pending_recheck'} for aid in sorted(rejected)]}
+                {'aid':aid,'retained':False,'drop_rule':'final_review_disputed_unresolved'} for aid in sorted(rejected)]}
 
 
 def ground(qa,model,raw,evidence,facets):
@@ -204,6 +311,13 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
     payload={**payload,'subquestions':facets,'facet_contract':facets,
              'typed_delivery_instruction':'逐个子问交付所需内容，允许依据多个有据前提作明确标注的比较归纳。文件身份与正文条款分开引用；元数据passage_id=0只支持身份。保留条件、否定、主语和适用对象。'}
     audit={'version':2,'facet_contract':facets,'scope_review':None,'scope_gate':None}
+    def permits(stage):
+        budget=current_budget()
+        return budget is not None and budget.remaining()>0 and budget.calls < budget.max_calls
+
+    def disputed_recheck(check):
+        from .typed_grounding import PROMPT
+        return qa._call_model(model,PROMPT,json.dumps(check,ensure_ascii=False))
     from .protected_tool_delivery import verified_tool_atoms,merge_tool_atoms,resolve_tool_gaps
     tool_atoms,evidence,tool_audit=verified_tool_atoms(meta,evidence,facets)
     audit['protected_tool_delivery']=tool_audit
@@ -214,7 +328,8 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
         raw,review,gate=review_scope(qa,model,raw,evidence,facets,question)
         audit.update(scope_review=review,scope_gate=gate)
         grounded=ground(qa,model,raw,evidence,facets)
-        grounded=withhold_disputed_atoms(grounded,review.get('issues') or [])
+        grounded=withhold_disputed_atoms(grounded,review.get('issues') or [],
+            recheck=disputed_recheck,evidence=evidence,facets=facets,budget=permits)
         audit['initial_disputed_atom_withholding']=grounded.get('disputed_atom_withholding')
         if grounded.get('disputed_atom_withholding',{}).get('withheld_atom_ids'):
             from .facet_delivery import publishable
@@ -238,10 +353,6 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
                                'phase2':audit,'generation_used':False}}
 
     grounded=merge_tool_atoms(grounded,tool_atoms,facets)
-
-    def permits(stage):
-        budget=current_budget()
-        return budget is not None and budget.remaining()>0 and budget.calls < budget.max_calls
 
     local_scope = []
 
@@ -331,7 +442,8 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
                     _,merged_review,merged_gate=review_scope(qa,model,merged,evidence,facets,question)
             audit.update(merged_scope_review=merged_review,merged_scope_gate=merged_gate)
             all_issues.extend(merged_review.get('issues') or [])
-            grounded=withhold_disputed_atoms(grounded,merged_review.get('issues') or [])
+            grounded=withhold_disputed_atoms(grounded,merged_review.get('issues') or [],
+                recheck=disputed_recheck,evidence=evidence,facets=facets,budget=permits)
             if merged_gate:
                 scope_missing=merged_gate['kept']
         atom_scope=gate_atoms(grounded['accepted_atoms'],facets,all_issues)
@@ -382,11 +494,13 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
         complete=False;answer+='\n\n'+boundary_reason
     final_review=audit.get('merged_scope_review') or {}
     latest_review=final_review or (audit.get('scope_review') or {})
-    unresolved=[i for i in latest_review.get('issues',[]) if i.get('kind') in {'unsupported_claim','contradiction'}]
+    withholding=grounded.get('disputed_atom_withholding') or audit.get('initial_disputed_atom_withholding') or {}
+    unresolved=withholding.get('unresolved_issues')
+    if unresolved is None:
+        unresolved=[i for i in latest_review.get('issues',[]) if i.get('kind') in {'unsupported_claim','contradiction'}]
     review_unavailable=bool(local_scope and getattr(qa,'coverage_review_enabled',False) and final_review.get('verdict')=='unavailable')
     if unresolved or review_unavailable:
         complete=False
-        withholding=grounded.get('disputed_atom_withholding') or audit.get('initial_disputed_atom_withholding') or {}
         note=(('部分内容的复核意见不一致，已暂缓发布争议内容并保留其他已核对信息。'
                if withholding.get('withheld_atom_ids') else
                '部分内容的复核意见不一致，争议范围尚待核对，当前回答不作为完整结论。') if unresolved
@@ -396,7 +510,7 @@ def organized_v2(qa,question,model,hits,sources,evidence,payload,meta,boundary_r
                     render_mode='grounded' if complete else 'with_gaps')
     audit.update({k:grounded.get(k) for k in ('method','delivery','decisions','publishable',
         'render_mode','draft_sha256','recovery_trace','frozen_atom_sha256','relation_review','judge_consistency',
-        'disputed_atom_withholding')})
+        'disputed_atom_withholding','disputed_atom_rechecks')})
     audit.update(business_validation_error=business_error,unresolved_final_review=unresolved)
     status=grounded['answerability']
     citations=_refs(answer)

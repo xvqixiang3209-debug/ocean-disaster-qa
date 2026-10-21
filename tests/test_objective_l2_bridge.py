@@ -188,7 +188,9 @@ def test_real_frame_stats_source_and_map_action_survive_answer_delivery(runtime)
 def test_field_answer_returns_server_owned_context_for_next_map_question(runtime):
     result = answer_objective(runtime, '显示2026年10月21日08时浙江近海海浪分布图', qa(), {}, False)
     context = result['answer_meta']['objective_context']
-    assert context == {'dataset_id': L5, 'start': VALID,
+    assert context['fields']==['wave']
+    assert context['objective_scope_resolution']['scope']['id']=='zhejiang'
+    assert {k:v for k,v in context.items() if k not in {'fields','objective_scope_resolution'}} == {'dataset_id': L5, 'start': VALID,
                        'end': (FIRST+timedelta(hours=1)).isoformat(), 'hours': 1,
                        'view_kind': 'field', 'field': 'wave', 'valid_time': VALID,
                        'bounds': ZHEJIANG_SCOPE['bounds'], 'scope': ZHEJIANG_SCOPE}
@@ -236,7 +238,7 @@ def test_unknown_explicit_dataset_does_not_fall_back_to_ecmwf(runtime):
     assert result['answer_meta']['business_state'] == 'no_data'
     assert not runtime.objective.calls
     assert not runtime.objective_sources.ensure_calls
-    assert result['answer_meta']['map_action'] is None
+    assert result['answer_meta']['map_action']['type']=='objective_clear'
 
 
 def test_report_map_action_uses_actual_peak_time_instead_of_report_start(runtime):

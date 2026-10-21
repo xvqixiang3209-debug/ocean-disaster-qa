@@ -38,7 +38,7 @@ FIELDS = {
 FILES = frozenset({'report.json', 'report.html', 'series.csv',
                    'wave_peak.png', 'wind_peak.png', 'pressure_peak.png',
                    'wave_maximum.png', 'wind_maximum.png'})
-REPORT_ALGORITHM_VERSION = 'objective-report-scope-process-cache-v3'
+REPORT_ALGORITHM_VERSION = 'objective-report-scope-process-cache-v4'
 INTERPRETATION_VERSION = 'source-profile-explicit-temporary-v1'
 _REPORT_LOCKS = {}
 _REPORT_LOCKS_GUARD = threading.Lock()
@@ -173,6 +173,7 @@ def _field(value, catalogue_field):
     value = value if isinstance(value, dict) else {}
     allowed = ('state', 'unit', 'series', 'maximum', 'minimum', 'native_count',
                'sea_count', 'valid_count', 'missing_count', 'sample_count',
+               'never_valid_count', 'intermittent_cell_count', 'data_partial',
                'sample_count_unit', 'frame_count', 'coverage_start', 'coverage_end',
                'available_start', 'available_end', 'series_start', 'series_end',
                'requested_start', 'requested_end', 'partial', 'profile',
@@ -368,6 +369,7 @@ class ObjectiveReport:
         # The key uses the registered immutable file identity, selected field
         # definitions and interpretation profile. Questions never enter shared
         # product HTML, so another user's wording cannot leak through reuse.
+        from .objective import sea_mask_method
         identity = {'algorithm': REPORT_ALGORITHM_VERSION, 'interpretation': INTERPRETATION_VERSION,
                     'dataset_id': selected_id, 'batch': dataset.get('batch'),
                     'sources': _source_files(dataset.get('source_files') or dataset.get('sources')),
@@ -375,7 +377,7 @@ class ObjectiveReport:
                     'profile': _safe(dataset.get('profile') or {}), 'source_family': dataset.get('source_family'),
                     'level': dataset.get('level'), 'scope': selected_scope, 'start': begin.isoformat(),
                     'hours': hours, 'requested_fields': sorted(requested), 'thresholds': _safe(thresholds or {}),
-                    'mask': 'wave_valid', 'issued_as_of_creation': dataset_batch <= created}
+                    'mask': sea_mask_method(), 'issued_as_of_creation': dataset_batch <= created}
         cache_key = hashlib.sha256(json.dumps(identity, ensure_ascii=False, sort_keys=True,
                                               separators=(',', ':'), allow_nan=False).encode('utf8')).hexdigest()
         report_id = cache_key[:32]
@@ -467,9 +469,12 @@ class ObjectiveReport:
             zones.append({'id': region['id'], 'name': region['name'], 'bounds': list(region['bounds']),
                           'fields': normalize_fields(section)})
         fields = normalize_fields(stats)
+        mask_note = ('当前显式启用首帧海点域回退，用于算法对照，不是默认静态海点算法。'
+                     if os.environ.get('OBJECTIVE_SEA_MASK') == 'first_frame' else
+                     '海陆掩膜采用同批次波浪源完整原生时间轴上至少一次有效的海点，并映射到其他要素原生网格；各时次和要素分别判断是否有值，从未有效点透明，海点缺测不按0补齐；它不是精细岸线或淹没模型。')
         limitations = [
             f'统计范围为{selected_scope["label"]}参考经纬度框，不代表法定或行政海域边界。',
-            '海陆掩膜采用同批次波浪产品有效海点，并映射到本数据集其他要素原生网格；它不是精细岸线或淹没模型。',
+            mask_note,
             '已提供要素的极值均在海上原生网格统计，不以显示下采样或P95代替极值。',
             '分要素保留原生时间步长，不把不同起报批次或文件外时段补成实况；折线连接仅用于查看，不修改原始值。',
             '各分区独立统计，公共边界格点可能重复计入，不将分区格点数相加作为全区面积。',
@@ -498,7 +503,8 @@ class ObjectiveReport:
             if value.get('spatial_partial'):
                 gaps.append(f'{info[key]["label"]}：源网格未完整覆盖请求统计框，仅统计覆盖范围{value.get("coverage_bounds") or "见源文件"}与请求框的交集。')
             if isinstance(value.get('missing_count'), (int, float)) and value['missing_count'] > 0:
-                gaps.append(f'{info[key]["label"]}：有{value["missing_count"]}个海上格点-时间样本缺测，未按0补齐。')
+                gaps.append(f'{info[key]["label"]}：有{value["missing_count"]}个海上格点-时次样本缺测'
+                            f'（含时有时无的格点{value.get("intermittent_cell_count", "未统计")}个），未按0补齐。')
             coverage = value.get('temporal_coverage') or {}
             if coverage.get('complete') is False:
                 missing = coverage.get('missing_times') or []
@@ -719,6 +725,9 @@ class ObjectiveReport:
             if value.get('series'):
                 lines.append(f'{info["label"]}所选窗口原生样本时段：{value.get("series_start") or "未取得"} 至 {value.get("series_end") or "未取得"}；'
                              f'海上格点数：{value.get("sea_count", "未取得")}；有效格点-时间样本数：{value.get("valid_count", "未取得")}；缺测样本数：{value.get("missing_count", "未取得")}。')
+                if 'never_valid_count' in value:
+                    lines.append(f'{info["label"]}波浪源全时间轴从未有效的网格数：{value["never_valid_count"]}；'
+                                 f'窗口内有效样本不完整的海点数：{value.get("intermittent_cell_count", "未统计")}。')
             else:
                 lines.append(f'{info["label"]}：所选窗口无可用原生时次，未将源文件其他日期的覆盖当作本窗口样本。')
             if value.get('available_start') or value.get('available_end'):

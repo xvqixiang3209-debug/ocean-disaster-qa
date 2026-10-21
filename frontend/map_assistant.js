@@ -118,6 +118,8 @@
     try {
       const data=await client.ask(question);
       if (current!==revision) return;
+      // A new answer retires previous answer-layer controls, including non-map answers.
+      window.ObjectivePanel?.cancelAction?.(Boolean(data.map_action||(Array.isArray(data.map_actions)&&data.map_actions.length)));
       bubble.replaceChildren();
       appendAssistantAnswer(bubble,data.answer || '本次没有取得可用回答。');
       if(Array.isArray(data.objective_artifacts)&&data.objective_artifacts.length){
@@ -136,11 +138,13 @@
       });
       bubble.appendChild(copy);
       // Map delivery is independent of answer delivery: a failed layer must not erase a complete answer.
-      const mapAction=data.map_action||(Array.isArray(data.map_actions)?data.map_actions[0]:null);
-      if(mapAction){
+      const mapActions=Array.isArray(data.map_actions)&&data.map_actions.length?data.map_actions:null;
+      const mapAction=data.map_action;
+      if(mapActions||mapAction){
         try{
-          if(!window.ObjectivePanel?.applyAction)throw Error('地图图层模块尚未加载，请刷新页面。');
-          const mapped=await window.ObjectivePanel.applyAction(mapAction,{isCurrent:()=>current===revision});
+          if(!window.ObjectivePanel?.applyAction||(mapActions&&!window.ObjectivePanel?.applyActionGroup))throw Error('地图图层模块尚未加载，请刷新页面。');
+          const options={isCurrent:()=>current===revision,target:bubble};
+          const mapped=mapActions?await window.ObjectivePanel.applyActionGroup(mapActions,options):await window.ObjectivePanel.applyAction(mapAction,options);
           if(current!==revision)return;
           if(mapped&&['error','no_data'].includes(mapped.state))bubble.appendChild(make('p','地图说明：'+(mapped.message||'本次图层没有可用数据，回答仍已保留。'),'conversation-note'));
         }catch(error){

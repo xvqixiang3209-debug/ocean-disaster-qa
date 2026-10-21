@@ -1,6 +1,8 @@
 """Connect objective field products to the existing, server-owned QA session."""
 from datetime import timedelta
 import hashlib
+import json
+import os
 import re
 
 
@@ -32,12 +34,8 @@ def _artifact_text(artifacts, *, markdown=False):
 
 
 def _requested_fields(question):
-    q=str(question or '').split('本轮问题：')[-1]
-    fields=[]
-    if re.search(r'海浪|波高|浪高|涌浪|风浪|浪.{0,3}(?:最高|最大|更高|更大)',q):fields.append('wave')
-    if re.search(r'风速|风场|海面风|海上风|10米风|风浪|换成风|改成风',q):fields.append('wind')
-    if re.search(r'气压',q):fields.append('pressure')
-    return fields or ['wave','wind','pressure']
+    from .objective_fields import requested_fields
+    return requested_fields(question) or ['wave','wind','pressure']
 
 
 def _maximum_query(question):
@@ -48,13 +46,17 @@ def _field_query(question):
     if _maximum_query(question):return False
     raw=question.split('本轮问题：')[-1]
     if re.search(r'报告|专报|简报|分析|逐格|全过程|过程统计|分区|北部|中部|南部|未来\s*[\d一二两三四五六七八九十]+\s*(?:小时|天)',raw):return False
+    from .objective_fields import requested_fields
     return bool(re.search(r'地图查询|二维|分布|绘制|显示|风场|(?:浪|风|气压).{0,4}图',question) or
-                re.search(r'\d{1,2}(?:[时点]|:\d{2})',raw) and re.search(r'波高|浪高|海浪|海面风|风速|气压',raw))
+                re.search(r'\d{1,2}(?:[时点]|:\d{2})',raw) and requested_fields(raw))
 
 
 def _fields(question, dataset=None):
-    marker=re.search(r'地图要素：(海浪|海面风|气压)',question)
-    if marker:return [{'海浪':'wave','海面风':'wind','气压':'pressure'}[marker[1]]]
+    marker=re.search(r'地图要素：([^，。；\n]+)',question)
+    if marker:
+        from .objective_fields import requested_fields
+        marked=requested_fields(marker[1])
+        if marked:return marked
     fields=_requested_fields(question)
     if fields==['wave','wind','pressure'] and not re.search(r'气压',question):
         return list((dataset or {}).get('available_fields') or (dataset or {}).get('fields') or ['wave','wind'])
@@ -78,6 +80,36 @@ def _maximum_action(dataset,field,start,hours,bounds,state='ready'):
     return action
 
 
+def _map_actions(dataset,fields,*,mode,bounds,valid=None,start=None,hours=None,
+                 peaks=None,states=None,scope_note=''):
+    """Each peak action owns its field's time, never the first field's time."""
+    identity=[dataset['dataset_id'],fields,mode,list(bounds),valid,
+              start.isoformat() if start else None,hours,peaks or {},states or {}]
+    group='oa_'+hashlib.sha256(json.dumps(identity,sort_keys=True).encode()).hexdigest()[:12]
+    actions=[]
+    for index,name in enumerate(fields):
+        state=(states or {}).get(name,'ready')
+        if mode=='maximum':
+            action=_maximum_action(dataset,name,start,hours,bounds,state)
+        else:
+            action=_map_action(dataset,name,(peaks or {}).get(name) or valid,bounds,state)
+        action.update(group_id=group,group_index=index,group_size=len(fields),
+                      time_role='peak_of_this_field' if mode=='peak' else 'shared')
+        if mode=='peak':
+            action.update(window_start=start.isoformat(),window_hours=hours)
+        if scope_note:action['scope_note']=scope_note[:500]
+        actions.append(action)
+    return actions
+
+
+def _group_text(actions):
+    if len(actions)<2:return ''
+    from .objective_fields import LABELS
+    names='、'.join(LABELS[a['field']] for a in actions)
+    timing='报告图各取本要素的峰值时刻' if actions[0].get('time_role')=='peak_of_this_field' else '各图使用同一查询时刻或时段'
+    return f'本回答包含{names}；地图先显示{LABELS[actions[0]["field"]]}，可在本回答图层切换中查看其他要素。范围、批次相同，{timing}。'
+
+
 def _field_product(engine,dataset,question,start,now,bounds,scope=None):
     fields=_fields(question,dataset)
     explicit=bool(re.search(r'地图查询|20\d{2}[-年/]\d|\d{1,2}月\d{1,2}日|今天|今日|明天|明日|后天|\d{1,2}[时点]|\d{1,2}:\d{2}',question))
@@ -88,7 +120,7 @@ def _field_product(engine,dataset,question,start,now,bounds,scope=None):
     frames=[]
     for name in fields:
         try:frame=engine.frame(dataset_id=dataset['dataset_id'],field=name,valid_time=valid,bounds=bounds,maxsize=80,
-                              sea_mask='wave_valid' if name=='wind' and 'wave' in dataset['fields'] else None)
+                              sea_mask='wave_valid' if 'wave' in dataset['fields'] else None)
         except ValueError:
             frame={'state':'no_data','field':name,'code':'native_time_or_bounds_unavailable','stats':{},'valid_time':valid}
         frames.append(frame)
@@ -115,15 +147,18 @@ def _field_product(engine,dataset,question,start,now,bounds,scope=None):
     sources=[s for f in frames for s in f.get('source_files',[])]
     evidence='\n\n'.join(lines)+'\n\n'+'\n'.join('来源文件：'+s['filename']+'；SHA256：'+s['sha256'] for s in sources)
     ready=not spatial_partial and all(f.get('state')=='ready' for f in frames)
-    first=frames[0];field=fields[0]
-    field_state='not_provided' if field not in dataset['fields'] else 'partial' if spatial_partial and first.get('state')=='ready' else first.get('state','no_data')
+    field=fields[0]
+    states={f['field']:('not_provided' if f['field'] not in dataset['fields'] else
+                       'partial' if spatial_partial and f.get('state')=='ready' else f.get('state','no_data')) for f in frames}
+    actions=_map_actions(dataset,fields,mode='field',valid=valid,bounds=bounds,states=states)
+    if _group_text(actions):lines.append(_group_text(actions))
     return {'kind':'objective_field','state':'ready' if ready else 'partial' if any(f.get('state')=='ready' for f in frames) else 'no_data',
             'dataset_id':dataset['dataset_id'],'source_family':dataset.get('source_family'),'level':dataset.get('level'),
             'start':valid,'end':(stamp(valid)+timedelta(hours=1)).isoformat(),'hours':1,'valid_time':valid,
-            'view_kind':'field','field':field,'bounds':list(bounds),'scope':scope,'as_of':now.isoformat(),'batch':dataset['batch'],
+            'view_kind':'field','field':field,'requested_fields':fields,'bounds':list(bounds),'scope':scope,'as_of':now.isoformat(),'batch':dataset['batch'],
             'available_fields':list(dataset['fields']),'spatial_partial':spatial_partial,'frames':[{k:v for k,v in f.items() if k not in {'values','u','v','lat','lon'}} for f in frames],
             'summary':'\n\n'.join(lines),'evidence':evidence,'artifacts':[],
-            'map_action':_map_action(dataset,field,valid,bounds,field_state)}
+            'map_action':actions[0],'map_actions':actions}
 
 
 def _region_delivery(result,question):
@@ -165,7 +200,10 @@ def _region_delivery(result,question):
 def _objective_context(result):
     from marine_kb.objective_context import product_context
     if result.get('state') not in {'ready','partial'} and result.get('view_kind')!='field':return None
-    return product_context({key:result.get(key) for key in ('dataset_id','start','end','hours','view_kind','field','valid_time','bounds','scope') if result.get(key) is not None})
+    value={key:result.get(key) for key in ('dataset_id','start','end','hours','view_kind','field','valid_time','bounds','scope') if result.get(key) is not None}
+    if result.get('requested_fields'):value['fields']=result['requested_fields']
+    if result.get('objective_scope_resolution'):value['objective_scope_resolution']=result['objective_scope_resolution']
+    return product_context(value)
 
 
 def _language_problem(organized,artifacts):
@@ -188,7 +226,8 @@ def _language_problem(organized,artifacts):
 
 def objective_question(question):
     q=str(question or '')
-    fields=bool(re.search(r'海浪|波高|浪高|海面风|海上风|风速|风场|气压|风浪|海况',q))
+    from .objective_fields import requested_fields
+    fields=bool(requested_fields(q) or '海况' in q)
     product=bool(re.search(r'报告|专报|简报|分析|图件|分布图|二维|逐格|过程统计',q))
     dated=bool(re.search(r'今天|今日|明天|明日|后天|未来|今后|接下来|随后|20\d{2}[-年/]\d|\d{1,2}月\d{1,2}日|\d{1,2}[时点]',q))
     explicit=bool(re.search(r'客观预报|ECMWF|L[25].{0,10}(?:风|浪|图)|二维.{0,8}(?:风|浪|气压)|(?:风场|海面风|海上风|风速|海浪|波高|浪高|气压|风浪).{0,4}(?:图|产品|分布)|影响(?:研判)?(?:报告|专报)',q,re.I))
@@ -199,7 +238,8 @@ def objective_question(question):
     # product_question_plan rather than silently answering only the NC half.
     if re.search(r'什么是|是什么意思|定义|原理|区别|怎么计算|如何计算|如何制作',q) and not re.search(r'(?:并|另外|同时|再).{0,12}(?:生成|绘制|给我).{0,18}(?:报告|图|简报)',q):return False
     if re.search(r'赶海|游泳|海钓|岸钓|船钓|停航|预警|警报|应急响应',q) and not product:return False
-    return bool(explicit and re.search(r'浙江|舟山|朱家尖|宁波|台州|温州|嘉兴|近海|海域|地图范围|客观预报|ECMWF|二维',q,re.I))
+    from .objective_scope import place_mentions
+    return bool(explicit and (fields or place_mentions(q) or re.search(r'近海|海域|地图范围|客观预报|ECMWF|二维',q,re.I)))
 
 
 def _time_text(question):
@@ -267,7 +307,25 @@ def _thresholds(question):
     return result or None
 
 
+def _scope_result(result,resolution):
+    """Use the same resolution for answer, evidence, context and every action."""
+    result['objective_scope_resolution']=resolution
+    note=resolution.get('notice') or ''
+    if note:
+        for key in ('summary','evidence'):
+            if result.get(key) and not result[key].startswith(note):result[key]=note+'\n\n'+result[key]
+        for action in result.get('map_actions') or ([result['map_action']] if result.get('map_action') else []):
+            if action.get('type')!='objective_clear':action['scope_note']=note[:500]
+    return result
+
+
 def query_objective(runtime,question):
+    from .objective_scope import resolve_scope_request
+    resolution=resolve_scope_request(question)
+    if resolution['state'] in {'needs_scope','out_of_region'}:
+        note=resolution['notice']
+        return {'kind':'objective_scope','state':resolution['state'],'summary':note,'artifacts':[],
+                'objective_scope_resolution':resolution,'map_action':{'type':'objective_clear','reason':note[:500]}}
     engine=getattr(runtime,'objective',None)
     reports=getattr(runtime,'objective_reports',None)
     if engine is None or reports is None:
@@ -280,8 +338,9 @@ def query_objective(runtime,question):
     sources=getattr(runtime,'objective_sources',None)
     acquisition=None
     is_field=_field_query(question)
-    from .objective_scope import resolve_scope
-    scope=resolve_scope(question)
+    scope=resolution['scope']
+    if resolution.get('notice') and resolution['notice'] not in scope['limitations']:
+        scope['limitations'].append(resolution['notice'])
     bounds=scope['bounds']
     datasets=engine.catalogue().get('datasets',[]) if hasattr(engine,'catalogue') else []
     dataset=next((d for d in datasets if d['dataset_id']==identifier),None) if identifier else None
@@ -291,12 +350,12 @@ def query_objective(runtime,question):
         level_match=re.search(r'\bL([25])\b',question,re.I)
         dataset=sources.select(start,start+timedelta(hours=0 if is_field else hours),fields=_fields(question),bounds=bounds,
             as_of=now,level='L'+level_match[1] if level_match else None,latest=bool(re.search('最新批次',question)))
-        if not dataset:return {'kind':'objective_report','state':'no_data','summary':f'尚未取得符合{scope["label"]}、查询日期、批次和产品的L2/L5风浪数据；未借用ECMWF或未来起报批次。','artifacts':[],'data_acquisition':acquisition,'scope':scope,'bounds':bounds,'start':start.isoformat(),'end':(start+timedelta(hours=hours)).isoformat()}
+        if not dataset:return _scope_result({'kind':'objective_report','state':'no_data','summary':f'尚未取得符合{scope["label"]}、查询日期、批次和产品的L2/L5风浪数据；未借用ECMWF或未来起报批次。','artifacts':[],'data_acquisition':acquisition,'scope':scope,'bounds':bounds,'start':start.isoformat(),'end':(start+timedelta(hours=hours)).isoformat(),'map_action':{'type':'objective_clear','reason':'所选地点、日期和批次没有可用数据，已清除上一幅图。'}},resolution)
         identifier=dataset['dataset_id']
     if is_field and dataset:
         result=_field_product(engine,dataset,question,start,now,bounds,scope)
         result['data_acquisition']=acquisition
-        return result
+        return _scope_result(result,resolution)
     package=reports.report(question=question,start=start.isoformat(),dataset_id=identifier,hours=hours,
                            requested_fields=_fields(question,dataset),bounds=bounds,scope=scope,thresholds=_thresholds(question))
     result=dict(package.get('objective_result') or {})
@@ -310,18 +369,25 @@ def query_objective(runtime,question):
     result['requested_question']=question
     result['data_acquisition']=acquisition
     if dataset:
-        field=_fields(question,dataset)[0]
-        peak=(result.get('fields',{}).get(field) or {}).get('minimum' if field=='pressure' else 'maximum') or {}
-        valid=peak.get('time') or peak.get('valid_time')
-        if not valid:
-            valid=next((t for f in dataset['fields'].values() for t in f['valid_times'] if t>=start.isoformat()),start.isoformat())
-        field_state='not_provided' if field not in dataset['fields'] else 'ready' if peak else 'no_data'
+        fields=_fields(question,dataset)
+        states={};peaks={}
+        for field in fields:
+            peak=(result.get('fields',{}).get(field) or {}).get('minimum' if field=='pressure' else 'maximum') or {}
+            peaks[field]=peak.get('time') or peak.get('valid_time')
+            states[field]='not_provided' if field not in dataset['fields'] else 'ready' if peaks[field] else 'no_data'
+        result['requested_fields']=fields
+        fallback=start.isoformat() # Only used by unavailable actions, which clear the map.
         if _maximum_query(question):
-            result.update(view_kind='maximum',field=field)
-            result['map_action']=_maximum_action(dataset,field,start,hours,bounds,field_state)
+            result.update(view_kind='maximum',field=fields[0])
+            actions=_map_actions(dataset,fields,mode='maximum',start=start,hours=hours,bounds=bounds,states=states)
         else:
-            result['map_action']=_map_action(dataset,field,valid,bounds,field_state)
-    return result
+            actions=_map_actions(dataset,fields,mode='peak',valid=fallback,start=start,hours=hours,bounds=bounds,peaks=peaks,states=states)
+        result.update(map_actions=actions,map_action=actions[0])
+        group_text=_group_text(actions)
+        if group_text:
+            result['summary']+='\n\n'+group_text
+            if result.get('evidence'):result['evidence']+='\n\n'+group_text
+    return _scope_result(result,resolution)
 
 
 def answer_objective(runtime,question,qa,meta,allow_web):
@@ -332,7 +398,9 @@ def answer_objective(runtime,question,qa,meta,allow_web):
     query=question if canonical else original if objective_question(original) else question
     try:result=query_objective(runtime,query)
     except (ValueError,KeyError,OSError) as exc:
-        result={'kind':'objective_report','state':'no_data','summary':str(exc)[:300],'artifacts':[]}
+        note=str(exc)[:300]
+        result={'kind':'objective_report','state':'no_data','summary':note,'artifacts':[],
+                'map_action':{'type':'objective_clear','reason':note}}
     body=result.get('evidence') or result.get('summary') or '本次未取得客观预报数据。'
     artifacts=_artifacts(result)
     artifact_evidence=_artifact_text(artifacts)
@@ -350,6 +418,8 @@ def answer_objective(runtime,question,qa,meta,allow_web):
              'objective_artifacts':artifacts,'objective_dataset_id':result.get('dataset_id'),
              'objective_report_id':result.get('report_id'),'tool_data_view':True,
              'map_action':result.get('map_action'),
+             'map_actions':result.get('map_actions') or [],
+             'objective_scope_resolution':result.get('objective_scope_resolution'),
              'objective_context':_objective_context(result),'as_of':result.get('as_of') or meta.get('as_of'),
              'answerability':'full' if result['state']=='ready' else 'partial',
              'business_instruction':('资料1是本次NC原生网格的程序计算和产品。数值图表已由程序展示，'
@@ -368,11 +438,17 @@ def answer_objective(runtime,question,qa,meta,allow_web):
     sources=qa._public_sources(question,[hit])
     response={'answer':program_answer,'rag_sources':sources,'web_sources':[],
               'answer_meta':{**current,'used_mode':'business_data','generation_used':False}}
-    if qa.external_enabled and qa.model_caller and result['state'] in {'ready','partial'} and result.get('kind')!='objective_field':
+    policy=os.environ.get('MARINE_OBJECTIVE_INTERPRETATION','on_request').strip().lower()
+    if policy not in {'off','on_request','always'}:policy='on_request'
+    requested_interpretation=bool(re.search(r'解读|解释.{0,12}(?:结果|报告|影响|变化)|研判|分析原因',original))
+    response['answer_meta'].update(objective_interpretation_policy=policy,
+                                   objective_language_state='not_requested' if policy=='on_request' else 'disabled_by_policy' if policy=='off' else 'not_applicable')
+    if (policy=='always' or policy=='on_request' and requested_interpretation) and qa.external_enabled and qa.model_caller and result['state'] in {'ready','partial'} and result.get('kind')!='objective_field':
         # Data and download tasks are already served by the program above.
         # One bounded interpretation facet avoids relabelling each numerical
         # product as a definition or requesting a download procedure again.
-        fields='、'.join({'wave':'有效波高','wind':'10米风速','pressure':'海平面气压'}[name] for name in _requested_fields(original))
+        fields='、'.join({'wave':'有效波高','wind':'10米风速','pressure':'海平面气压'}[name] for name in
+                        (result.get('requested_fields') or _requested_fields(original)))
         interpretation=f'依据本次客观预报程序结果，解释{fields}在参考统计框和所选时段内的变化、对照及适用限制。'
         language_meta=dict(current)
         for key in ('facets','facet_contract','crag_evidence_plan','evidence_coverage','web_query_subquestions'):

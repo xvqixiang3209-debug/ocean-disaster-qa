@@ -198,7 +198,7 @@ def test_missing_sea_samples_not_treated_as_zero_or_complete(tmp_path):
             return result
     _, output = build(tmp_path, MissingEngine())
     assert output['state'] == 'partial'
-    assert '5个海上格点-时间样本缺测' in output['summary']
+    assert '5个海上格点-时次样本缺测' in output['summary']
     assert output['objective_result']['fields']['wind']['maximum']['value'] == 33.75
 
 
@@ -348,7 +348,7 @@ def test_l2_l5_missing_wind_samples_still_block_complete_delivery(tmp_path):
             return result
     _, output = build(tmp_path, MissingWindEngine(), requested_fields=['wave', 'wind'])
     assert output['state'] == 'partial'
-    assert '6个海上格点-时间样本缺测' in output['summary']
+    assert '6个海上格点-时次样本缺测' in output['summary']
 
 
 @pytest.mark.parametrize('fields', [[], 'wave', ['temperature'], [None], [{}]])
