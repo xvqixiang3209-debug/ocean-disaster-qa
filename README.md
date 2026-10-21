@@ -1,37 +1,44 @@
 # 台风与海洋灾害知识问答系统
 
-当前版本：`phase1.8.5-typhoon-time-delivery`（2026-10-20）。在Claude P0–P6实现上继续修复今日/历史时间路由、活动台风数量和中心动态字段交付，以及不同业务类型的缺项模板。保留DeepSeek、CRAG、本地资料、官方联网检索和地图连续问答。
+当前代码快照：**2026-10-21，客观预报与地点地图版**。保留DeepSeek、CRAG、本地资料/官方网络联合检索、相似台风、地图连续对话；新增或完善L2/L5风浪产品、地点/日期/追问联动、分区过程、72小时逐格最大值图和报告复用。`VERSION.txt`保留原应用版本标识，当前源码以所在提交和`HANDOFF_MANIFEST.json`为准。
 
-**Claude先读[本轮专项复审](docs/CLAUDE_TYPHOON_DELIVERY_REVIEW_20261020.md)，可复制[评审提问](docs/CLAUDE_PROMPT.md)。** 原P0–P6方案和上一轮未解决项保留于 [NEXT_PHASE_PLAN_FOR_CODEX.md](docs/NEXT_PHASE_PLAN_FOR_CODEX.md) 和 [CLAUDE_FOLLOWUP_20261020.md](docs/CLAUDE_FOLLOWUP_20261020.md)。
+**给Claude的入口：[当前交接与复审任务](docs/CLAUDE_CURRENT_HANDOFF_20261021.md) · [如何按提问地点绘制二维风浪地图](docs/OBJECTIVE_MAP_RENDERING_GUIDE.md) · [可复制的评审提问](docs/CLAUDE_PROMPT.md)。**
+
+## 三个功能
+
+| 功能 | 当前行为与边界 |
+|---|---|
+| 灾害/预警知识问答 | 本地资料、官方网页和程序数据联合检索；支持连续追问。子问归属、归纳证明、审查冲突仍有复审任务 |
+| 相似台风 | 历史路径、机构和相似度查询及地图显示；路径相似不等于灾损相似 |
+| 客观预报产品 | L2/L5风浪获取/保留/复用；按地点和时段计算二维场、原生过程和逐格最大值，在当地地图显示，输出HTML/PNG/CSV/JSON报告 |
+
+地图采用真实NC数值驱动的Canvas图层，不是让模型生成图片。单时刻海面风叠加对应u/v箭头；72小时最大风速各格峰值时间可能不同，不拼接风向。下载PNG是经纬度图，不是带底图的地图截图。
 
 ## 验证状态
 
-- 本机1694项测试、102项子测试通过；公开快照1642项通过、52项依赖私有录制的测试跳过、102项子测试通过。
-- 本轮9次真实问答，内部共57次模型调用。最后3题执行期间源码稳定：今日full、历史partial、多子问full；字段值与工具结果一致。
-- 历史partial保留旧记录及具体数值，只缺截止时点前进一步更新，未用今日数据回填。
-- 最后增加的展示去重补丁用实际录制做离线展示阶段回归，没有重新收费生成答案；原始回答与离线展示结果分别保存。
-- 没有本轮160题、24题或专家验收结果；程序full不能等同于单位已核定、事实全部正确或公众活动许可。
+- 完整本机应用最近记录：2289项测试、134项子测试通过。
+- 本次公开快照重新运行：2231项通过、58项因私有录制或数据库依赖跳过、134项子测试通过，失败0。
+- 本次Node地图/连接测试3个文件全部通过。
+- 已有8次真实问答（7取得数据、1无覆盖）、8组产品检查及独立NC核验；本次上传没有新付费问答或160题重测。
 
-详见[验证记录](docs/SNAPSHOT_VALIDATION.md)、[公开实测说明](evaluations/typhoon_time_delivery_20261020/README.md)、[完整实际回答与离线展示对照](evaluations/typhoon_time_delivery_20261020/REPORT.md)。旧24次和160题文件均保留原日期，不代表当前代码输出。
+见[验证记录](docs/SNAPSHOT_VALIDATION.md)和[统计摘要](evaluations/objective_map_20261021/summary.json)。HTTP200、full/partial、自评和程序检查分别报告，均不代替专家验收。
 
 ## 代码入口
 
-| 环节 | 文件 |
+| 链路 | 文件 |
 |---|---|
-| HTTP 和连续追问 | `server.py`、`marine_kb/chat_api.py`、`marine_kb/conversation.py` |
-| 本地与官方网页检索 | `marine_kb/crag.py`、`marine_kb/retrieval.py`、`marine_kb/web_supplement.py` |
-| 统一子问和文档证据 | `marine_kb/facet_contract.py`、`marine_kb/evidence_units.py` |
-| 问答调度与局部恢复 | `marine_kb/answer_pipeline.py`、`marine_kb/recovery.py` |
-| 事实、归纳与交付校验 | `marine_kb/typed_grounding.py`、`marine_kb/facet_delivery.py`、`marine_kb/relation_guard.py` |
-| 缺项范围与生命周期 | `marine_kb/scope_gate.py` |
-| 私有录制与严格回放 | `marine_kb/replay.py`、`tools/replay/README.md` |
-| 预报与地形人口计算 | `forecast_runtime/`、`spatial_runtime/` |
-| 地图统一对话前端 | `frontend/index.html`、`frontend/map_assistant.js` |
-| 160 题需求台账 | `data/requirements/catalog.json` |
+| 提问地点、日期、图件意图 | `forecast_runtime/objective_bridge.py`、`objective_scope.py`、`marine_kb/objective_context.py` |
+| NC解析、原生网格与二维图 | `forecast_runtime/objective.py`、`objective_time.py`、`objective_process.py` |
+| L2/L5获取和选批次 | `forecast_runtime/objective_sources.py` |
+| 地图/报告API与缓存 | `forecast_runtime/objective_api.py`、`objective_report_api.py`、`objective_report.py` |
+| 地图动作与Canvas叠加 | `frontend/map_assistant.js`、`objective_panel.js`、`index.html` |
+| 检索、子问、恢复和事实校验 | `marine_kb/crag.py`、`facet_contract.py`、`answer_pipeline.py`、`typed_grounding.py`、`facet_delivery.py` |
+| 历史相似台风 | `typhoon/`、`forecast_runtime/analogue.py` |
+| 原Claude方案与历史复审 | `docs/NEXT_PHASE_PLAN_FOR_CODEX.md`、`CLAUDE_FOLLOWUP_20261020.md`、`CLAUDE_TYPHOON_DELIVERY_REVIEW_20261020.md` |
 
-## 离线测试
+## 离线开发测试
 
-使用 Python 3.11 或更高版本，在仓库根目录执行：
+当前验证环境为Python3.13.9 x64。Windows示例：
 
 ```powershell
 python -m venv .venv
@@ -39,25 +46,25 @@ python -m venv .venv
 $env:PYTHONIOENCODING = 'utf-8'
 $env:MARINE_FORECAST_WORKER = 'false'
 $env:MARINE_WARNING_WORKER = 'false'
+$env:MARINE_OBJECTIVE_AUTO_SYNC = 'false'
 $env:MARINE_EXTERNAL_MODEL_ENABLED = 'false'
 $env:MARINE_WEB_ENABLED = 'false'
 $env:TYPHOON_WEB_SEARCH_ENABLED = 'false'
 $env:TYPHOON_WEB_READ_ENABLED = 'false'
 .\.venv\Scripts\python.exe -m pytest tests -q
+node --test tests/test_objective_panel.cjs tests/test_objective_map_actions.cjs tests/test_knowledge_connection.cjs
 ```
 
-这些测试使用临时数据和模拟依赖。完整业务演示还需单独恢复数据库与业务文件，见 [数据资产说明](docs/DATA_ASSETS.md)。私有录制不包含在公开仓库，相关测试按设计跳过，不提供真实 API 回退。可独立运行 `tests/test_followup_pipeline_contracts.py`、`tests/test_followup_recovery_delivery.py`、`tests/test_scope_lifecycle_followup.py` 验证本轮通用机制。
+仓库中的合成NC测试不需要业务数据库或真实模型。私有依赖测试按设计跳过，不启用真实API回退。完整演示需另行恢复授权数据，见[数据资产说明](docs/DATA_ASSETS.md)。
 
-浏览空库界面时，保持以上外部调用开关关闭，设置 `APP_HOST=127.0.0.1`、`APP_PORT=8772`，再运行 `.\.venv\Scripts\python.exe .\production_server.py`。完整本地安装还提供 `start_p1_p6_followup.ps1`，沿用父目录 `.venv` 的既有目录结构。
+本机空库预览保持外部调用和worker关闭，设置`APP_HOST=127.0.0.1`、`APP_PORT=8767`，再运行`production_server.py`。拥有授权NC后可运行`python tools/import_objective_nc.py <自己的NC目录>`；地图API及动态catalog示例见[绘图指南](docs/OBJECTIVE_MAP_RENDERING_GUIDE.md)。
 
-## 仍待解决
+## 当前复审重点与公开边界
 
-父级对象继承造成的多子问归属过宽、跨类型工具字段交付如何扩展、受限归纳如何在首次生成时稳定提供证明、不同阶段模型审查的分歧如何裁决、通用完整交付如何超越关键词规则，仍需继续评审和新的真实模型验证。旧记录中 22 个归纳未提供证明、1 个审查记录因片段边界变化不能复用、17 次正文哈希未匹配均如实保留。
+未知地名是否静默退全省/保留旧地点、首帧缺测海点恢复后统计与最大图的一致性、多要素地图交付，属于本轮静态发现的待验证点。不能写成已实测失败，也不能把已有绘图功能说成尚未实现。地点目前是参考框，尚非精细海岸/行政海域多边形。
 
-SWL、MWD、L2/L5 等业务定义仍待数据方回复；时间重合不能证明 NC 由某个台风造成。地形和人口筛查不等于精细淹没或人员转移计算。
+L2/L5变量沿用临时解释，未提供气压；MWD、单位、时区及部分业务定义待核定。时间重合不能证明NC来自某个台风，模式风浪不等于正式预警或活动许可。
 
-## 公开范围
+公开仓库只含代码、测试、需求台账、最小可公开配置和统计；不含真实.env、密钥、业务DB/NC/栅格、原始模型请求响应或私有cassette。已配置密钥的完整内部交接包单独保存在本地，不上传本仓库。三个含大量来源正文的本地校录工具不公开，核心运行代码不依赖发布它们。文件清单和排除记录见`HANDOFF_MANIFEST.json`。既有第三方许可保留，本次没有新增项目开源许可证。
 
-本仓库现为公开仓库，包含源代码、测试、少量公开来源 fixture、需求台账和脱敏诊断。真实 `.env`、密钥、会话凭据、业务数据库、NC、栅格、原始模型请求响应及私有 cassette 不上传。文件清单见 `HANDOFF_MANIFEST.json`。没有为项目新增开源许可证，第三方许可保留。
-
-10 月 19 日交接与验证说明保留在 `docs/archive/`，原历史资料以其文件日期判断；旧数字和旧行号不代表本轮代码。
+旧160题、24次、12题、时间交付等记录按原日期保留于`evaluations/`及`docs/archive/`，不代表本次代码的全量业务验收。

@@ -457,6 +457,7 @@ def _safe_metadata(item: dict) -> dict:
     allowed = allowed + ('trial', 'assumption_id', 'evidence_scope', 'policy_basis', 'applicability','primary_scope',
                          'derived_from_citation','calculation')
     allowed=allowed+('read_from_cache','official_warning_records','official_typhoon_records','historical_statistics_records','crag_channel','crag_passage_ids','crag_facets')
+    allowed=allowed+('analogue_program_result','program_result_sha256')
     return {key: item.get("metadata", {}).get(key) for key in allowed if key in item.get("metadata", {})}
 
 
@@ -468,7 +469,7 @@ def _quality_warning(item: dict) -> str:
             or metadata.get("tables_require_review")
             or metadata.get("embedded_media_count", 0)
             or metadata.get("embedded_image_count", 0)
-            or metadata.get("conversion")
+            or metadata.get("conversion") and not metadata.get('conversion_verified')
             or item.get("quality_status") == "partial"):
         return "部分页面/图表或格式转换结果未核验，非全文结论。"
     return ""
@@ -881,11 +882,16 @@ class MarineQuestionService:
                     if not (source.get('metadata') or {}).get('external_allowed'):
                         allowed = False
                     continue
+                if sid.startswith('warning-concept:'):
+                    from .warning_knowledge import source_allowed
+                    if not source_allowed(source):
+                        allowed = False
+                    continue
                 if sid == 'system:runtime' and source.get('metadata',{}).get('source_type') == 'system_runtime':
                     continue
                 if sid and not sid.startswith('legacy:'):
                     current = self.store.get_source(sid) if hasattr(self.store, 'get_source') else None
-                    if (not current or current.get('status') in {'rejected','pending_review','blocked'}
+                    if (not current or current.get('status') in {'rejected','pending_review','blocked','archived'}
                             or (current.get('metadata') or {}).get('external_permission_override') is False):
                         allowed = False
                 if sid.startswith('legacy:') and self.legacy_rag is None:
@@ -896,6 +902,16 @@ class MarineQuestionService:
 
     def prepare_question(self, question, model_name=None, history=None, selected_context=None, sid=None):
         question = ' '.join(str(question or '').strip().split())[:2000]
+        from .warning_knowledge import matches as warning_concept_question
+        if warning_concept_question(question):
+            return {'normalized_question':question,'normalizer':'official_concept_slots',
+                    'retrieval_queries':[question],'subquestions':[question],'sid':None,
+                    'context_used':False,'history_messages_used':0}
+        from .objective_context import product_question_plan
+        if getattr(getattr(self, 'forecast_data', None), 'objective', None) is not None:
+            product_plan = product_question_plan(question, history)
+            if product_plan is not None:
+                return product_plan
         from .facet_contract import build_contract, facet_contract_enabled
         typed_contract = facet_contract_enabled()
         turn_state = previous_state = None
@@ -1676,8 +1692,8 @@ class MarineQuestionService:
 
     def _collect_local_hits(self, question, normalized, retrieval_queries, parts, meta, dynamic, sid):
         from .query_intents import focused_queries,child_queries
-        retrieval_queries=list(dict.fromkeys(list(retrieval_queries)+focused_queries(normalized)+
-            child_queries(normalized,parts)))[:8]
+        retrieval_queries=list(dict.fromkeys(child_queries(normalized,parts)+
+            list(retrieval_queries)+focused_queries(normalized)))[:8]
         try:
             hits = search(self.store, normalized, limit=12, sid=sid)
             if any(hit.get("semantic_score") is not None for hit in hits):
@@ -1746,6 +1762,12 @@ class MarineQuestionService:
                 or meta.get('used_mode') in {'no_question','needs_clarification'}
                 or meta.get('route') == 'model_unavailable'
                 or meta.get('official_warning_records')
+                or meta.get('numeric_archive_verified')
+                # A verified NC tool can deliver valid values while its
+                # spatial coverage or one requested field remains partial.
+                # Preserve both values and precise gaps; generic guidance
+                # must not replace this source-bound program delivery.
+                or meta.get('objective_delivery_verified') and meta.get('business_evidence_id') and meta.get('tool_data_view')
                 or meta.get('computed_table_fallback') and bool(result.get('rag_sources') or result.get('web_sources'))
                 or meta.get('system_runtime_evidence') and meta.get('used_mode') == 'llm'
                 or meta.get('used_mode')=='llm' and meta.get('answerability')=='partial'
@@ -1782,9 +1804,18 @@ class MarineQuestionService:
         question = " ".join(str(question or "").strip().split())[:2000]
         if not question:
             return {"answer": "请输入需要查询的海洋灾害问题。", "rag_sources": [], "web_sources": [], "answer_meta": {"used_mode": "no_question"}}
+        from .numeric_access import matches as numeric_archive_question, answer as answer_numeric_archive
+        if numeric_archive_question(question):
+            return answer_numeric_archive(self.store, question)
         # Production corpus consent is for the configured DeepSeek service;
         # a request cannot redirect those documents to another provider.
         model = self.model_name if self.require_model_answer else model_name or self.model_name
+        from .warning_knowledge import matches as warning_concept_question, answer as answer_warning_concept
+        if warning_concept_question(question):
+            return answer_warning_concept(question, qa=self, model=model, allow_web=allow_web,
+                meta={'normalized_question':question,'current_turn_question':question,
+                      'normalizer':'official_concept_slots','as_of':datetime.now().astimezone().isoformat(timespec='seconds'),
+                      'conversation_context_used':False,'history_messages_used':0})
         _, original_dynamic = current_context(question)
         plan = question_plan or self.prepare_question(question, model_name=model, history=history,
                                                      selected_context=selected_context, sid=sid)

@@ -5,7 +5,7 @@ import unicodedata
 from urllib.parse import urlsplit
 
 from .answer_design import is_policy_lookup, response_parts
-from .retrieval import STORM_ALIASES, lexical_terms, source_text, evidence_focus
+from .retrieval import STORM_ALIASES, lexical_terms, source_text, evidence_focus, _named_clause_focus
 from .evidence_applicability import facet_support
 
 
@@ -44,7 +44,9 @@ def _score(question, hit):
     overlap = sum(word in body for word in words)
     title_overlap = sum(word in title for word in words)
     topics = _targets(question)
-    matched = [topic for topic in topics if topic in body or any(alias in body for alias in ALIASES.get(topic, ()))]
+    matched = [topic for topic in topics if topic in body or
+               hit.get('named_document_match') and topic in title or
+               any(alias in body for alias in ALIASES.get(topic, ()))]
     primary=any(row['url']==hit.get('url') for row in primary_routes(question))
     if not body or (topics and not matched and not primary) or (not topics and not overlap and not primary):
         return None
@@ -74,6 +76,7 @@ def _score(question, hit):
     if hit.get('metadata', {}).get('parent_url'):
         score += .4  # Operative text ahead of a short publication notice.
     score += 2 if applicability.get('use') == 'direct' else -1 if applicability.get('use') == 'reference' else 0
+    score += _named_clause_focus(question, hit)['score']
     requested_storms=[(chinese,english) for chinese,english in STORM_ALIASES.items()
                       if chinese in question or english in question.lower()]
     # Separate event reports contribute separate sides of a comparison. A
@@ -121,6 +124,11 @@ def select_evidence(question, hits, parts=None, limit=4):
         covered = set()
         for facet_index, target in enumerate(targets):
             facet_score = _score(target, hit)
+            clause = _named_clause_focus(target, hit)
+            if clause['duration_requested'] and not clause['duration_supported']:
+                # A named act's title/date cannot cover all its deadline
+                # siblings. Each needs a body predicate and an actual duration.
+                continue
             if target in TOPICS and re.search(r'定义|概念|区别|什么是|是什么',question):
                 # Incidental mention in a storm bulletin cannot consume a
                 # concept's coverage slot ahead of its actual definition page.

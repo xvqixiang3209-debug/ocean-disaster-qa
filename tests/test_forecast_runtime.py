@@ -196,6 +196,24 @@ class ForecastTests(unittest.TestCase):
             self.assertFalse(self.r.matches(question))
         self.assertTrue(self.r.matches('舟山未来72小时浪高多少？'))
 
+    def test_normative_forecast_quantities_do_not_query_actual_grids(self):
+        for question in [
+            '按GB/T19721.5-2022，常规海温预报每日最低发布频次和时效分别是多少？',
+            '按GB/T19721.6-2023，应急海流预报每日最低频次是多少？',
+            '按GB/T19721.6-2023表A.1，西西北和北西北的角度范围是多少？',
+            '按GB/T19721.2-2017，近岸海域海浪红色警报的波高条件是什么？',
+            '按照海温预报规范，定点数值采用平均值还是瞬时值？',
+        ]:
+            self.assertFalse(self.r.matches(question), question)
+
+    def test_reference_to_standard_does_not_hide_actual_forecast_sibling(self):
+        for question in [
+            '按GB/T19721.2-2017解释有效波高，再查询舟山今天浪高多少？',
+            '按GB/T19721.5-2022说明时效，并查询2026年10月18日朱家尖海温多少？',
+            '依据海浪预报标准，提取NC网格东经122度北纬30度的波高。',
+        ]:
+            self.assertTrue(self.r.matches(question), question)
+
     def test_other_business_domains_cannot_be_replaced_with_forecast_numbers(self):
         for question in ['哪些岸段会淹没，开始进水潮位多少？','50年一遇潮位多少？','预报误差有多大？','台风强度等级有哪些？','台风中心过境时风小了，可以出去看看吗？','我市哪些岸段是高风险区？']:
             self.assertFalse(self.r.matches(question),question)

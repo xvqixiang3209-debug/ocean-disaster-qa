@@ -74,8 +74,15 @@ def warning_question(question):
     if not re.search(r'预警|警报|海浪消息|海啸消息|海啸信息', question): return False
     method=bool(re.search(r'官方渠道|查询渠道|(?:怎样|如何|怎么)查询|(?:代替|替代).{0,20}(?:预警|警报)|哪里.{0,6}(?:查|收到|接收)|在哪.{0,6}(?:查|收到|接收)|从哪.{0,6}查|渠道有哪些|怎么写|如何写|模板|必填数据|产品格式',question))
     release=bool(re.search(r'已经发布|已发布|实际发布|发布记录|公告清单|发布了(?:哪些|什么)|(?:截至|当前|现在|今天|20\d{2}年).{0,80}(?:有哪些|哪些).{0,12}(?:预警|警报)',question))
+    provision = bool(re.search(r'(?:GB|HY|DB\d+)\s*[/∕_ -]?\s*T?\s*\d+(?:\.\d+)?\s*[-—－]\s*\d{4}|'
+                              r'标准|规范|条款|警报时效|预警时效|发布频率|更新频率', question, re.I))
+    if provision and not release:
+        # A standard's edition year and a clause's “是否/多少小时” do not
+        # request alerts actually issued on that date. Keep it in document RAG.
+        return False
     if method and not release:return False
-    if re.search(r'假设|假如|情景|若发布|如果发布|应急响应|命中率|漏报率|空报率|TS评分|提前量|技术进展', question): return False
+    if re.search(r'假设|假如|情景|若发布|如果发布|命中率|漏报率|空报率|TS评分|提前量|技术进展', question): return False
+    if '应急响应' in question and not release: return False
     if re.search(r'发布条件|发布标准|分级标准|阈值|含义|是什么意思|怎么划分|如何划分|多久更新|解除条件|如何解除|解除需要', question):
         # A definition sibling must not suppress an explicit release query.
         # Pure criteria/meaning questions still stay in the document route.

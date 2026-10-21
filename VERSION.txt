@@ -1,9 +1,10 @@
 台风与海洋灾害专业问答 · 首期本地工作台
-Version: phase1.8.5-typhoon-time-delivery
+Version: phase1.10.0-l2l5-map-dialogue
 Release date: 20261020
 Baseline: 1.4.10 (20260916), preserved in a separate directory
 Platform: Windows native (no Docker)
 API version: 1.5 (map-integrated multi-turn QA, forecast data, explicit assumption-based calculations)
+Objective products 20261020: ECMWF CDF/HDF5 sources; bounded 2D wave/wind/pressure slices; native sea-grid statistics; map overlays and dated 72-hour Zhejiang reference reports with PNG/CSV/JSON/HTML artifacts. Source definitions follow a centralized provisional profile. Observed and agency-specific typhoon tracks are selected explicitly; unsupported surge severity proxies are removed.
 QA pipeline: always-on local and official web retrieval, per-facet CRAG evaluation and bounded corrective retrieval, protected numerical tools, original-passage citation and quantity checks
 Activity pipeline: scoped official policy catalog, per-activity source/date/site validation, current matched bathing observation evaluation, latest effective notice precedence; no arbitrary default wind/wave/current limits or fixed tidal access windows
 Zhejiang scope: registered coastal reference points and seven named bathing monitors; broad or ambiguous places require clarification, not an invented point
@@ -12,6 +13,10 @@ Spatial pipeline: 24 ASTER GDEM tiles, source-grid 2020 population subset, point
 QA maintenance 20261018: valid-time interval and as-of isolation, domain routing, map analogue bridge, typed calculation delivery, explicit subquestion coverage and quantity-unit/passage checks.
 
 QA maintenance 20261020: full facet registry with target-only recovery; object-aware delivery floors; exact short navigation references; canonical health-source identity; quoted-clause preservation; constrained synthesis proof schema; post-rewrite scope lifecycle and review disagreement handling.
-Validation status: deterministic offline regressions on the prior 24 recordings; no new paid model answers in this maintenance run. This is not business acceptance or a new full-160 evaluation.
+Historical validation: the P1-P6 maintenance used the prior 24 recordings. The objective-products release has a separate real-NC and four-transaction acceptance report under exports; neither is a new full-160 or expert evaluation.
 QA maintenance 20261020 (typhoon delivery): frozen per-request clock; current/historical/future observation routing; complete-list versus selected-storm count; typed count/identity/position/intensity/motion data; exact-source protected tool handoff; field-level missing values and quantity-specific delivery contracts.
 Validation for this follow-up is recorded separately; the preceding 24-recording validation remains historical, not a new result for this version.
+
+Objective QA delivery: source-bound analogue ranking cards; official warning concept ownership after joint local/web retrieval; server-owned objective batch/window follow-up slots and protected regional products. Mixed product-plus-unrelated operational follow-ups are explicitly clarified instead of dropping a task.
+
+L2/L5 integration 20261020: dedicated WAV/SSW acquisition every 15 minutes and on-demand; source/level/issue-bound native field plots; QA-to-map actions; exact time/field follow-up slots; 72h wind/wave reports. L5 preferred for full Zhejiang reference-box coverage. Pressure stays unavailable for L2/L5, never borrowed from ECMWF. Provisional wind interpretation is 10m gust; MWD is not rendered.

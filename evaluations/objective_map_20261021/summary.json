@@ -1,0 +1,114 @@
+{
+  "snapshot": "20261021-objective-map",
+  "created_at": "2026-10-21T23:14:21.963926+08:00",
+  "tests": {
+    "source_local_record": {
+      "passed": 2289,
+      "subtests_passed": 134,
+      "failed": 0,
+      "seconds": 37.4,
+      "method": "Earlier full local application run; no new full-source run during publication"
+    },
+    "public_checkout": {
+      "passed": 2231,
+      "skipped": 58,
+      "subtests_passed": 134,
+      "failed": 0,
+      "seconds": 33.82,
+      "method": "New pytest run in the source-only checkout; no live model fallback",
+      "skip_reasons": {
+        "private_recordings_or_cassettes": 54,
+        "private_typhoon_databases": 4
+      }
+    },
+    "node_current": {
+      "test_files": 3,
+      "passed": 3,
+      "failed": 0,
+      "names": [
+        "test_objective_panel.cjs",
+        "test_objective_map_actions.cjs",
+        "test_knowledge_connection.cjs"
+      ]
+    }
+  },
+  "existing_live_evidence": {
+    "qa_transactions": 8,
+    "ready": 7,
+    "no_data": 1,
+    "response_checks_passed": 48,
+    "report_qa_transactions": 6,
+    "model_calls_observed": 48,
+    "presentation": "business_data",
+    "real_product_api_checks": 8,
+    "independent_nc_grid_shape": [
+      4,
+      4
+    ],
+    "independent_nc_native_times": 73,
+    "forecast_values_published": false,
+    "expert_acceptance": false,
+    "new_160_question_run": false
+  },
+  "new_model_calls_for_publication": 0,
+  "raw_requests_responses_published": false,
+  "cases": [
+    {
+      "id": "ZJ_NATURAL",
+      "question": "给我一份浙江未来三天风浪分析",
+      "tool_state": "ready",
+      "scope": "浙江",
+      "checked_behavior": "未来三天解析72小时"
+    },
+    {
+      "id": "ZS_THRESHOLD",
+      "question": "从2026年10月21日20时起，给我舟山未来72小时风浪影响报告，说明浪高超过2米的时段。",
+      "tool_state": "ready",
+      "scope": "舟山",
+      "checked_behavior": "严格大于阈值，原生过程统计"
+    },
+    {
+      "id": "ZJJ_MAX",
+      "question": "从2026年10月21日20时起，给我朱家尖未来72小时风浪简报，并生成海浪逐格最大值图。",
+      "tool_state": "ready",
+      "scope": "朱家尖",
+      "checked_behavior": "objective_maximum海浪"
+    },
+    {
+      "id": "ZJJ_MAX_WIND",
+      "question": "同一时段换成海面风逐格最大值图",
+      "tool_state": "ready",
+      "scope": "继承朱家尖",
+      "checked_behavior": "继承数据集/时段，切换wind"
+    },
+    {
+      "id": "ZJJ_SNAPSHOT",
+      "question": "改成2026年10月22日08时海浪图",
+      "tool_state": "ready",
+      "scope": "继承朱家尖",
+      "checked_behavior": "切回objective_field单时刻"
+    },
+    {
+      "id": "ZJJ_TOMORROW",
+      "question": "从明天08时起，生成朱家尖未来24小时海况简报。",
+      "tool_state": "ready",
+      "scope": "朱家尖",
+      "checked_behavior": "次日08时24小时窗口"
+    },
+    {
+      "id": "ZS_HISTORY",
+      "question": "从2026年10月20日08时起，生成舟山未来72小时风浪影响报告。",
+      "tool_state": "ready",
+      "scope": "舟山",
+      "checked_behavior": "选择当时已起报的历史批次"
+    },
+    {
+      "id": "ZJ_NO_COVERAGE",
+      "question": "从2026年11月5日08时起，生成浙江未来72小时风浪报告。不得使用其他日期数据代替。",
+      "tool_state": "no_data",
+      "scope": "浙江",
+      "checked_behavior": "不套用其他日期的数值或图件"
+    }
+  ],
+  "historical_labels_are_not_correctness_rates": true
+}

@@ -49,6 +49,63 @@ _JURISDICTION = re.compile(
     r'开放|停运|停航|复航|回港|名单|准入|法定|强制')
 _LIVE = re.compile(r'当前|现在|今天|今日|明天|实时|截至|截止|20\d{2}[-年/]\d{1,2}[-月/]\d{1,2}')
 _COUNT = re.compile(r'几个|几条|几艘|几家|几处|几座|几人|多少(?:个|条|艘|家|处|座|人|台风|预警|记录|船舶|渔船|航次)|数量|总数|人数')
+_DOCUMENT_CONTEXT = re.compile(
+    r'标准|规范|办法|条例|预案|条款|'
+    r'(?<![A-Za-z])(?:GB|HY|DB|SL|JT|QX)(?:\s*/\s*T)?\s*\d{3,6}(?:\.\d+)*\s*[-—]\s*\d{4}', re.I)
+
+
+def normative_delivery_shape(text, parent_text=''):
+    """Recognize requested provisions, rather than operational measurements.
+
+    A document reference may live in a parent question while its children ask
+    about frequency, horizon, units or a table. It does not exempt a sibling
+    asking for an actual dated/local forecast from the complete numeric tuple.
+    Returned kinds are contract metadata, never evidence for an answer.
+    """
+    if not _DOCUMENT_CONTEXT.search(text + ' ' + parent_text):
+        return {}
+    # A specific product's horizon/frequency is operational metadata. Likewise
+    # a bare document citation cannot turn today's local measurement into a
+    # normative threshold. Calendar dates attached to editions are harmless.
+    product_instance = re.search(r'(?:本次|这次|该批|这批|这一批|今日发布|今天发布|当天发布|已发布).{0,12}(?:预报|产品|警报)|最新.{0,6}(?:预报|产品)', text)
+    actual_value = re.search(r'今天|今日|明天|当前|现在|实时|截至|截止|本次|这次|20\d{2}[-年/]\d{1,2}[-月/]\d{1,2}|\d{1,2}月\d{1,2}日', text)
+    provision_terms = re.search(r'频次|频率|每日.{0,12}(?:几次|多少次|次数)|每天.{0,12}(?:几次|多少次|次数)|'
+                               r'时效|时限|期限|单位|时制|定义|含义|表示|指的是|采用|取值|'
+                               r'阈值|警报.{0,12}条件|警戒.{0,12}(?:条件|标准)|表\s*[A-Z]?\.?\d|'
+                               r'中心角|角度范围', text, re.I)
+    if product_instance or (actual_value and not provision_terms):
+        return {}
+    # Asking which representation a value uses is a definition, not asking
+    # for that value at a place/time. These are affirmative factual answers;
+    # they need not use the discourse markers required for a comparison essay.
+    if re.search(r'(?:平均值|瞬时值|最大值|最小值|流去|流来).{0,16}还是|还是.{0,12}(?:平均值|瞬时值|流去|流来)|'
+                 r'(?:单位|时制|方向).{0,12}(?:是什么|什么|怎样表示|如何表示|采用)|'
+                 r'(?:采用|使用|用).{0,12}(?:什么|哪些)(?:单位|时制)', text):
+        return {'kind': 'explanation', 'quantity_type': 'normative_definition',
+                'required_outputs': ['answer', 'support']}
+    frequency = re.search(r'频次|频率|(?:每日|每天|一日|一天).{0,18}(?:几次|多少次|次数|发布.{0,5}次)', text)
+    duration = re.search(r'时效|(?:时限|期限).{0,10}(?:多少|多久|多长)|多久|几年|几个月|几天|几小时|多少(?:个)?(?:工作日|天|小时|年|月)', text)
+    angle = re.search(r'中心角|角度(?:范围|区间|是多少)|(?:表\s*[A-Z]?\.?\d).{0,24}(?:角度|方位)|区间开闭端点', text, re.I)
+    threshold = re.search(r'阈值|(?:波高|潮位|风速|冰厚|范围).{0,12}(?:警报|警戒).{0,12}(?:条件|标准)|'
+                          r'(?:警报|警戒).{0,12}(?:波高|潮位|风速|冰厚|范围).{0,8}(?:条件|标准)|'
+                          r'(?:红色|橙色|黄色|蓝色).{0,12}警报.{0,15}条件', text)
+    # A combined frequency/horizon facet must retain both facts. Let the
+    # planner split them, or preserve the complete numeric provision floor.
+    if frequency and duration:
+        return {'kind': 'numeric_value', 'quantity_type': 'normative_quantity',
+                'required_outputs': ['frequency', 'duration', 'provenance']}
+    elif frequency:
+        quantity_type = 'normative_frequency'
+    elif duration:
+        quantity_type = 'normative_duration'
+    elif angle:
+        quantity_type = 'normative_angle'
+    elif threshold:
+        quantity_type = 'normative_quantity'
+    else:
+        return {}
+    return {'kind': 'numeric_value', 'quantity_type': quantity_type,
+            'required_outputs': ['value', 'unit', 'provenance']}
 
 
 def _requested_time_fields(text):
@@ -143,6 +200,10 @@ def infer_kind(text, suggested=None):
         return 'distinction'
     if re.search(r'依据什么|依据是(?:什么|哪些)|依据哪些|按什么(?:文件|规定)|依据文件|政策依据|依据.*办理|以何为据|现行.{0,25}(?:标准|规范).{0,8}哪些', text):
         return 'basis_document'
+    if re.search(r'全称|原文出处|规定的出处|适用(?:内容|范围)|(?:文档|文件|标准).{0,8}(?:版本|名称|编号|出处|来源)|请.{0,4}(?:给出|提供|注明)出处', text):
+        # “该标准的版本/范围是什么” asks for identity or scope. A grounded
+        # date/range must not fail because it lacks a concept's “是指”.
+        return 'explanation'
     if re.search(r'(?:会不会|能不能).{0,6}(?:传染|传播|得病)|是否.{0,6}(?:说明|意味着)|风险关系|是否必然|会传什么病|会得', text):
         return 'risk_relation'
     if re.search(r'哪里.{0,5}查|在哪.{0,6}查|在哪里.{0,8}(?:收到|获得|获取)|渠道|查询入口|查询.{0,10}方式|如何查询|怎么查询|怎样查询|如何获取|怎么收到预警', text):
@@ -227,6 +288,12 @@ def _parts(question, supplied):
     return [{'question': part} for part in (parts or [question])]
 
 
+def _scope_places(text):
+    # A formatting instruction is not a town name. Generic named-entity
+    # extraction may mistake the verb 留 for a geographical suffix.
+    return [place for place in leaf_places(text) if place not in {'请保留', '保留'}]
+
+
 def build_contract(question, planner_parts=None, history_state=None):
     """Build JSON-friendly records; callers preserve these through every stage.
 
@@ -235,7 +302,7 @@ def build_contract(question, planner_parts=None, history_state=None):
     ``history_state`` only carries already resolved entities, not old answers.
     """
     state = history_state.as_dict() if hasattr(history_state, 'as_dict') else history_state or {}
-    parent_places = leaf_places(question) or list(state.get('places') or [])
+    parent_places = _scope_places(question) or list(state.get('places') or [])
     parent_objects = object_names(question) or list(state.get('objects') or [])
     parent_time = state.get('time')
     if _LIVE.search(question) or re.search(r'\d{1,2}月\d{1,2}日|昨天|后天', question):
@@ -253,7 +320,7 @@ def build_contract(question, planner_parts=None, history_state=None):
                 identity += 1
         used_ids.add(identity)
         kind = infer_kind(text, part.get('kind'))
-        child_places = leaf_places(text) or parent_places
+        child_places = _scope_places(text) or parent_places
         role = _local_place_role(text, kind, child_places)
         explicit_time = bool(_LIVE.search(text) or re.search(r'\d{1,2}月\d{1,2}日|昨天|后天', text))
         time_scope = parent_time
@@ -265,6 +332,15 @@ def build_contract(question, planner_parts=None, history_state=None):
         elif shape.get('domain') in {'typhoon_dynamics', 'record_metadata'} and shape.get('quantity_type') in {'dynamic', 'metadata'}:
             kind = 'status_at_time'
         outputs = shape.pop('required_outputs', None)
+        provision = normative_delivery_shape(text, question)
+        if provision:
+            kind = provision.pop('kind')
+            outputs = provision.pop('required_outputs')
+            shape = provision
+            # The location is context for a national standard, not a missing
+            # local forecast/site. Do not inherit a sibling's operational time.
+            role = 'context' if child_places else 'none'
+            time_scope = None
         if shape.get('quantity_type') == 'count' and outputs is None and kind == 'numeric_value':
             outputs = ['count', 'statistical_scope', 'as_of', 'provenance']
         if shape.get('domain') == 'typhoon_dynamics':
@@ -272,10 +348,13 @@ def build_contract(question, planner_parts=None, history_state=None):
         key_material = {'text': re.sub(r'[\s？?。；;，,]', '', text), 'kind': kind,
                         'objects': object_names(text) or parent_objects, 'places': child_places}
         key = hashlib.sha1(json.dumps(key_material, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
+        gaps = allowed_gaps(kind, role, text)
+        if provision:
+            gaps = [gap for gap in gaps if gap not in {'business_data_missing', 'calculation_input_missing'}]
         rows.append({'id': identity, 'fid': f'f{identity}', 'key': key, 'question': text, 'text': text,
                      'kind': kind, 'objects': key_material['objects'], 'places': list(child_places),
                      'place_role': role, 'time': time_scope, 'required_outputs': outputs or list(_OUTPUTS[kind]),
-                     'allowed_gaps': allowed_gaps(kind, role, text), 'parent': part.get('parent'), **shape})
+                     'allowed_gaps': gaps, 'parent': part.get('parent'), **shape})
     return rows
 
 

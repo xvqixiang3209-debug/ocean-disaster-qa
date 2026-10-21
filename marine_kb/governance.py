@@ -43,6 +43,9 @@ def reference_scope_allowed(question, item, *, allow_versioned_explanation=False
     code = re.sub(r'[\s/+_—–－-]', '', identity).lower()
     if code and code in compact:
         return True
-    title = str(item.get('title') or item.get('filename') or '').removesuffix('.pdf').removesuffix('.docx')
+    title = re.sub(r'\.(?:pdf|docx?|wps|txt|md)$', '', str(item.get('title') or item.get('filename') or ''), flags=re.I)
     title = re.sub(r'^\d+', '', title)
+    books = re.findall(r'《([^》]{4,100})》', question)
+    if books and any(book in title for book in books) and re.search(r'这份|该文件|所提供|文件中|原文|历史|当时|\d{4}年.*(?:版|公布|发布|修订|修正)', question):
+        return True
     return bool(len(title) >= 6 and title in question and re.search(r'这份|该文件|所提供|文件中|原文|历史|当时|\d{4}年', question))

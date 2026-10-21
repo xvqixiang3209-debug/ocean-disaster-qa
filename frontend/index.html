@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>海洋灾害知识问答</title>
     <link rel="stylesheet" href="/forecast_panel.css?v=phase1.4.0" />
+    <link rel="stylesheet" href="/objective_panel.css?v=phase1.11.0" />
     <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
     <script src="/vendor/leaflet/leaflet.js"></script>
     <style>
@@ -196,8 +197,7 @@
         <h1>海洋灾害知识问答</h1>
         <div class="spacer"></div>
         <button class="btn-kb" id="forecastToggle">潮汐与预报</button>
-        <a class="btn-kb" href="/knowledge.html" target="_blank" rel="noopener" style="text-decoration:none;white-space:nowrap" title="资料审核、异步导入与专业RAG问答">专业知识工作台</a>
-        <button class="btn-kb" onclick="openKnowledgeManager()" title="旧版台风专用库；新资料请使用专业知识工作台">原台风知识库</button>
+        <a class="btn-kb" href="/knowledge.html" target="_blank" rel="noopener" style="text-decoration:none;white-space:nowrap" title="统一管理专业资料与历史台风资料，查看来源、导入任务和审核状态">知识库管理</a>
         <div class="model-select" hidden>
             <label>模型：</label>
             <select id="modelSelect">
@@ -216,6 +216,7 @@
                 <div class="map-mode-toggle">
                     <button id="btnMap" onclick="setMode('map')">海区地图</button>
                     <button id="btnEvolution" onclick="setMode('evolution')">大浪区演变</button>
+                    <button id="btnObjective" onclick="setMode('objective')">风浪气压与报告</button>
                     <button id="btnTyphoon" class="active" onclick="setMode('typhoon'); document.getElementById('chatInput').focus()">海洋灾害知识问答</button>
                 </div>
 
@@ -241,14 +242,21 @@
 
                 <div class="typhoon-controls" id="typhoonControls">
                     <h3>台风路径与历史案例</h3>
+                    <div class="objective-typhoon-selectors">
+                        <label>活动台风<select id="activeTyphoonSelect"><option value="">点击“查看实时台风”读取</option></select></label>
+                        <label>比较路径<select id="typhoonTrackKind"><option value="observed">已发生路径</option><option value="forecast">指定机构预报路径</option></select></label>
+                        <label>预报机构<select id="typhoonAgency"><option value="">预报路径需选择机构</option></select></label>
+                    </div>
                     <div class="hint">所有问题都在右侧提问和继续追问。需要查看台风路径或比较历史案例时，可使用下方工具。</div>
-                    <textarea id="typhoonJson" placeholder='{"name":"当前台风","source":"CMA","forecast_track":[{"time":"...","lat":...,"lon":...,"wind_kt":...,"pressure_hpa":...}, ...]}'></textarea>
-                    <input type="file" id="typhoonFile" accept=".json,application/json" onchange="loadTyphoonFile(event)">
                     <div class="action-row">
                         <button id="liveTyphoonBtn" onclick="loadLiveTyphoon()">查看实时台风</button>
-                        <button id="typhoonMatchBtn" onclick="runTyphoonMatch()">检索10个相似台风</button>
-                        <button class="secondary" onclick="matchConfiguredTyphoon()">实时台风历史类比</button>
+                        <button id="typhoonMatchBtn" onclick="matchConfiguredTyphoon()">检索10个相似台风</button>
                     </div>
+                    <details><summary>自定义JSON路径（可选）</summary>
+                        <textarea id="typhoonJson" placeholder='{"name":"当前台风","source":"CMA","forecast_track":[{"time":"...","lat":...,"lon":...,"wind_kt":...,"pressure_hpa":...}, ...]}'></textarea>
+                        <input type="file" id="typhoonFile" accept=".json,application/json" onchange="loadTyphoonFile(event)">
+                        <button class="secondary" onclick="runTyphoonMatch()">按上方JSON路径检索</button>
+                    </details>
                     <div class="typhoon-status" id="typhoonStatus">正在检查知识库……</div>
                     <div id="typhoonResults"></div>
                 </div>
@@ -343,7 +351,7 @@
     </div>
 
 <script src="/assistant_client.js?v=phase1.4.0"></script>
-<script src="/map_assistant.js?v=phase1.4.0"></script>
+<script src="/map_assistant.js?v=phase1.10.0"></script>
 <script>
 const API_BASE = '';
 const MB_BYTES = 1024 * 1024;
@@ -560,13 +568,15 @@ function changeDate(delta) {
 
 function setMode(mode) {
     currentMode = mode;
+    document.getElementById('btnObjective').classList.toggle('active',mode==='objective');
+    if(window.ObjectivePanel){if(mode==='objective')window.ObjectivePanel.open().catch(e=>setMapNotice(e.message));else window.ObjectivePanel.close();}
     document.getElementById('btnMap').classList.toggle('active', mode === 'map');
     document.getElementById('btnEvolution').classList.toggle('active', mode === 'evolution');
     document.getElementById('btnTyphoon').classList.toggle('active', mode === 'typhoon');
     document.getElementById('evolutionControls').style.display = mode === 'evolution' ? 'block' : 'none';
     document.getElementById('legend').style.display = mode === 'map' ? 'block' : 'none';
     document.getElementById('typhoonControls').style.display = mode === 'typhoon' ? 'block' : 'none';
-    document.querySelector('.map-date-nav').style.display = mode === 'typhoon' ? 'none' : 'flex';
+    document.querySelector('.map-date-nav').style.display = ['typhoon','objective'].includes(mode) ? 'none' : 'flex';
     if (mode === 'evolution') loadEvolutionData();
     else { stopPlay(); if (bigWaveLayer) { map.removeLayer(bigWaveLayer); bigWaveLayer = null; } }
     if (mode !== 'typhoon' && typhoonLayer) { map.removeLayer(typhoonLayer); typhoonLayer = null; }
@@ -622,13 +632,15 @@ async function runTyphoonMatch() {
 }
 
 async function matchConfiguredTyphoon() {
-    await requestTyphoonMatch({ top_k: 10 });
+    try{const controls=window.currentTyphoonSelection?window.currentTyphoonSelection():{};
+        await requestTyphoonMatch({ ...controls, top_k: 10 });
+    }catch(error){document.getElementById('typhoonStatus').textContent=error.message;}
 }
 
 async function requestTyphoonMatch(payload) {
     const button = document.getElementById('typhoonMatchBtn');
     button.disabled = true;
-    document.getElementById('typhoonStatus').textContent = '正在对全部浙江候选计算路径相似度和风暴潮关联影响……';
+    document.getElementById('typhoonStatus').textContent = '正在计算历史路径相似度，并读取已有历史观测与报告……';
     document.getElementById('typhoonResults').innerHTML = '';
     try {
         const requestPayload = { ...payload, top_k: 10, compact: true };
@@ -656,7 +668,7 @@ function renderTyphoonMatch(data) {
             相似度 ${item.similarity_score.toFixed(2)} · ${escapeHtml(item.category)}<br>
             最大风速 ${formatWind(item.max_wind)} · 最低气压 ${formatMetric(item.min_pressure, 'hPa')}<br>
             路径DTW ${formatMetric(item.track_dtw_km, 'km')} · ${escapeHtml(formatZhejiangRelation(item))}<br>
-            风暴潮 ${escapeHtml(item.storm_surge?.severity || '待判断')} · ${item.storm_surge?.is_estimate ? '代理估算' : '关联记录'}
+            ${item.storm_surge?.is_estimate === false && item.storm_surge?.severity ? '风暴潮 ' + escapeHtml(item.storm_surge.severity) + ' · 关联记录' : '风暴潮等级待核对'}
             <div class="select-row"><input type="radio" name="selectedTyphoon" tabindex="-1"> 选择该台风并查看详情</div>
         </div>`).join('');
     updateTyphoonMatchStatus();
@@ -1361,9 +1373,7 @@ function clearChat() {
 }
 
 function openKnowledgeManager() {
-    document.getElementById('knowledgeModal').classList.add('open');
-    updatePdfSplitStrategyHelp();
-    loadKnowledgeManager();
+    window.location.assign('/knowledge.html?library=legacy');
 }
 
 function closeKnowledgeManager() {
@@ -1866,5 +1876,6 @@ async function deleteKnowledge(documentId) {
 </script>
 
 <script src="/forecast_panel.js?v=phase1.4.0"></script>
+<script src="/objective_panel.js?v=phase1.11.0"></script>
 </body>
 </html>

@@ -16,6 +16,8 @@ const server = http.createServer(async(req,res) => {
   const url = new URL(req.url,'http://localhost');
   if (url.pathname === '/knowledge.html') {res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(html);return;}
   if (url.pathname === '/month1_acceptance.js') {res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});res.end(fs.readFileSync(path.join(appRoot,'frontend','month1_acceptance.js'),'utf8'));return;}
+  if (url.pathname === '/knowledge_libraries.js') {res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8'});res.end(fs.readFileSync(path.join(appRoot,'frontend','knowledge_libraries.js'),'utf8'));return;}
+  if (url.pathname === '/api/knowledge/libraries') return json(res,{libraries:[{id:'marine',record_count:1,chunk_count:2,available:true},{id:'legacy',record_count:0,chunk_count:0,available:true,read_only:true,originals_available:false}],query_mode:'joint_local_retrieval',count_note:'来源记录跨库未去重，不是独立有效文档数。'});
   if (url.pathname === '/api/knowledge/month1-acceptance') return json(res,{items:[],summary:{case_count:20,passed_count:0,reviewed_count:0,sample_confirmed_count:0}});
   if (url.pathname === '/api/knowledge/status') return json(res,{csrf_token:readOnly?'':token,source_count:1,chunk_count:2,status_counts:{indexed:1,approved:0,pending_review:0},category_counts:{'历史报告':1},models:['test-model'],external_model:{state:'disabled',enabled:false,configured:false,tested:false,note:'合成测试中关闭'}});
   if (url.pathname === '/api/forecast-products' && req.method === 'GET') return json(res,{items:[product],total:1,page:1,page_size:30,live_source:false,availability:'local_archive_only'});

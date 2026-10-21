@@ -25,8 +25,8 @@ def validate_analysis_result(result: dict) -> ValidationResult:
     analogues = result.get("analogues")
     if not isinstance(current, dict):
         errors.append("缺少 current 台风结果")
-    if not isinstance(analogues, list) or len(analogues) < 2:
-        errors.append("历史相似案例不足两个")
+    if not isinstance(analogues, list) or not analogues:
+        errors.append("历史相似案例列表为空")
         analogues = []
 
     expected_ranks = list(range(1, len(analogues) + 1))

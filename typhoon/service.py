@@ -217,7 +217,8 @@ def _score_candidate(current: dict, candidate: dict, current_track: list[dict], 
 def _analogue_analysis(analogue: dict) -> str:
     differences = analogue.get("differences") or {}
     surge = analogue.get("storm_surge") or {}
-    surge_kind = "历史实测关联" if not surge.get("is_estimate") else "代理估算"
+    surge_kind = ("缺少关联实测" if surge.get("origin")=="missing_observation" else
+                  "历史实测关联" if not surge.get("is_estimate") else "缺少可核对实测")
     report = analogue.get("historical_report") or {}
     report_text = _historical_report_text(report)
     return (
@@ -325,10 +326,8 @@ class TyphoonAnalogueService:
         self.report_repository = report_repository or TyphoonReportRepository()
 
     def find_similar(self, payload: dict, top_k: int = 10) -> dict:
-        if top_k < 2:
-            top_k = 2
-        if top_k > 10:
-            top_k = 10
+        if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 10:
+            raise ValueError('top_k 必须是1至10之间的整数')
         current = normalize_current_typhoon(payload)
         current_summary = _current_summary(current)
         path_only = SIMILARITY_WEIGHTS["intensity"] == 0 and SIMILARITY_WEIGHTS["track"] > 0
@@ -338,8 +337,8 @@ class TyphoonAnalogueService:
             require_complete_intensity=True,
             require_named=True,
         )
-        if len(candidates) < 2:
-            raise RuntimeError("知识库中影响浙江且强度数据有效的历史台风不足两个")
+        if not candidates:
+            raise RuntimeError("知识库中没有可参与匹配的有效历史台风")
 
         pool, stage, thresholds = _matching_pool(current_summary, candidates)
         if not path_only:
@@ -353,8 +352,8 @@ class TyphoonAnalogueService:
         ]
         scored.sort(key=lambda candidate: (candidate["total_distance"], -candidate.get("season", 0)))
         analogues = scored[:top_k]
-        if len(analogues) < 2:
-            raise RuntimeError("有效历史路径不足两个，无法完成类比")
+        if not analogues:
+            raise RuntimeError("没有有效历史路径，无法完成类比")
         for rank, analogue in enumerate(analogues, start=1):
             analogue["rank"] = rank
             historical_report = self.report_repository.lookup(analogue)
@@ -372,6 +371,14 @@ class TyphoonAnalogueService:
             analogue["analysis"] = _analogue_analysis(analogue)
 
         current_result = {**current_summary, "track": current["track"]}
+        supplied=payload.get('current_typhoon',payload)
+        context=supplied.get('track_context') if isinstance(supplied,dict) else None
+        if isinstance(context,dict):
+            current_result['track_context']={key:context[key] for key in
+                ('track_kind','agency','issued_at','track_start','track_end','observed_point_count','forecast_point_count') if key in context}
+        if isinstance(supplied,dict) and isinstance(supplied.get('data_status'),dict):
+            current_result['data_status']={key:supplied['data_status'][key] for key in
+                ('retrieved_at','cache_stale','historical_snapshot','provisional_units','timezone_assumed','wind_input_assumed') if key in supplied['data_status']}
         current_result["storm_surge"] = self.storm_surge_repository.assess(
             current_summary,
             current["track"],
@@ -395,6 +402,7 @@ class TyphoonAnalogueService:
                 "track_components": TRACK_COMPONENT_WEIGHTS,
                 "candidate_count": len(candidates),
                 "scored_candidate_count": len(scored),
+                "input_track": current_result.get('track_context') or {'track_kind':'supplied_path','agency':current.get('source')},
                 "note": "纯路径模式：具备正式名称、最大风速和最低气压的浙江影响候选参与路径评分；强度仅用于文本解释，不参与排名。",
             },
             "knowledge_base": self.knowledge_base.status(),
@@ -423,6 +431,13 @@ def format_analogue_report(result: dict) -> str:
         "",
         f"{analogue_count}个历史相似案例逐条解析：",
     ]
+    context=current.get('track_context') or {}
+    if context:
+        kind=context.get('track_kind')
+        source=('已发生路径' if kind=='observed' else str(context.get('agency') or '指定')+'机构预报路径（含当前记录锚点）' if kind=='forecast' else '外部提供路径')
+        lines[4:4]=['本次输入：'+source+'；起报或最新记录时刻：'+str(context.get('issued_at') or '未提供')+'。','']
+    if (current.get('data_status') or {}).get('provisional_units'):
+        lines.extend(['','接口风速单位沿用当前m/s解释转换为匹配器输入，尚待业务方核定；路径排名不使用强度权重。'])
     for analogue in analogues:
         lines.extend([
             f"{analogue['rank']}. {analogue['season']}年{analogue['name']}："
@@ -430,23 +445,14 @@ def format_analogue_report(result: dict) -> str:
             "",
         ])
 
-    historical_levels = [
-        item.get("storm_surge", {}).get("severity")
-        for item in analogues
-        if item.get("storm_surge", {}).get("severity")
-    ]
-    if "严重" in historical_levels:
-        conclusion = f"{analogue_count}个相似历史案例中存在风暴潮影响较严重的情况，浙江沿岸低洼区、港湾和河口需重点关注。"
-    elif historical_levels and all(level == "轻微" for level in historical_levels):
-        conclusion = f"{analogue_count}个相似历史案例的风暴潮影响整体偏轻，但仍需结合天文潮位和最新增水预报动态修正。"
-    else:
-        conclusion = f"{analogue_count}个相似历史案例的风暴潮影响总体属于一般量级，局地风险仍取决于登陆位置、风向和天文潮位。"
+    measured=sum(1 for item in analogues if not item.get('storm_surge',{}).get('is_estimate')
+                 and item.get('storm_surge',{}).get('record_count',0)>0)
+    conclusion=(f"{analogue_count}个相似案例中，{measured}个有关联实测或报告记录，{analogue_count-measured}个缺少可核对的风暴潮记录。"
+                "以上交付路径相似结果及已有历史事实；本次浙江影响另由指定批次的客观风浪、潮位预报分析，不从路径排名推定灾害轻重。")
     lines.extend([
         f"结论：{conclusion}",
         "",
-        "说明：风暴潮等级优先采用关联验潮站、最大增水或警报记录；没有实测记录时，"
-        "系统仅依据台风强度、距浙江距离和登陆接近度作低至中置信度的粗略判断。"
-        "该“严重/一般/轻微”是历史类比辅助分级，不等同于官方蓝、黄、橙、红风暴潮警报。",
+        "说明：历史增水、潮位和灾损保留对应站点、事件与来源；没有关联记录时保留缺项，不按零处理，也不以中心强度和距离估计风暴潮等级。",
         "本简报仅用于研究和辅助分析，不替代自然资源、气象及应急部门发布的预报预警和防灾指令。",
     ])
     return "\n".join(lines).strip()

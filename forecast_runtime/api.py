@@ -102,8 +102,21 @@ def install(app):
     from pathlib import Path
     from .service import ForecastRuntime
     runtime=ForecastRuntime(Path(app.root_path)/'data'/'forecast_runtime',coastal_acquisition=True)
+    from .objective import ObjectiveForecast
+    from .objective_report import ObjectiveReport
+    from .objective_api import create_blueprint as objective_blueprint
+    from .objective_report_api import create_blueprint as report_blueprint
+    runtime.objective=ObjectiveForecast(runtime.store.root/'objective')
+    runtime.objective_reports=ObjectiveReport(runtime.objective,runtime.store.root/'objective'/'reports')
+    from .objective_sources import ObjectiveSources
+    import os
+    runtime.objective_sources=ObjectiveSources(runtime)
+    runtime.objective_sources.register_local()
+    app.register_blueprint(objective_blueprint(runtime.objective,runtime.objective_sources))
+    app.register_blueprint(report_blueprint(runtime.objective_reports))
     app.register_blueprint(create_blueprint(runtime))
     from .spatial_api import create_blueprint as spatial_blueprint
     app.register_blueprint(spatial_blueprint(runtime))
     app.extensions['forecast_runtime']=runtime
+    if os.getenv('MARINE_OBJECTIVE_AUTO_SYNC','false').lower()=='true':runtime.objective_sources.start()
     return runtime

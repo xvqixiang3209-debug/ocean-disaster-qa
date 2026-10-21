@@ -229,10 +229,16 @@ def validate_markdown_tables(answer,evidence):
 
 def declared_column_unit(label):
     """Read a literal column unit, excluding a mean period such as ``2 min``."""
-    label=unicodedata.normalize('NFKC',re.sub(r'\[资料\d+\]','',label)).strip()
+    label=unicodedata.normalize('NFKC',re.sub(r'\[资料\d+\]','',label)).replace('**','').strip()
     if label in UNITS:return label
     unit_pattern='|'.join(re.escape(u) for u in sorted(UNITS,key=len,reverse=True))
     found=re.findall(r'(?:\(|[,，;；])\s*('+unit_pattern+r')(?=\s*[),，;；])',label)
+    # Standards also declare dimensional columns as 角度/° or 风速/(m/s).
+    # Require the complete, known unit at the end of this column label. An
+    # internal slash in a physical unit must never become another delimiter
+    # (e.g. treating the /s in an unlabelled m/s as a seconds column).
+    slash=re.search(r'(?<![A-Za-z])[/／]\s*(?:\(\s*)?('+unit_pattern+r')\s*\)?\s*$',label)
+    if slash:found.append(slash[1])
     return found[0] if len(set(found))==1 else None
 
 
@@ -248,6 +254,8 @@ def _cell_relation(cell,unit):
         cell=re.sub(re.escape(unit)+r'(?=及以上$|以上$|及以下$|以下$)','',cell)
     cell=cell.replace('不小于','≥').replace('不少于','≥').replace('不大于','≤').replace('不超过','≤')
     cell=cell.replace('大于','>').replace('小于','<').replace('>=','≥').replace('<=','≤')
+    match=re.fullmatch(r'([\[(])('+_CELL_NUMBER+r')[,，]('+_CELL_NUMBER+r')([\])])',cell)
+    if match:return ('range',Decimal(match[2]),match[1]=='[',Decimal(match[3]),match[4]==']')
     suffix=re.fullmatch('('+_CELL_NUMBER+r')(?:及以上|以上|及以下|以下)',cell)
     if suffix:cell=('≥' if cell.endswith('以上') else '≤')+suffix[1]
     cell=re.sub(r'级$','',cell) if unit=='级' else cell

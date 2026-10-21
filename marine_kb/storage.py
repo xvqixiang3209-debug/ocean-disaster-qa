@@ -14,6 +14,8 @@ import re
 import sqlite3
 import uuid
 
+from .review_groups import classify_review_group, group_summary, review_group_id, review_progress, validate_review_group
+
 
 def now():
     return datetime.now(timezone.utc).isoformat()
@@ -90,6 +92,7 @@ class KnowledgeStore:
     def connect(self):
         db = sqlite3.connect(self.database, timeout=60)
         db.row_factory = sqlite3.Row
+        db.create_function('review_group_id', 2, review_group_id, deterministic=True)
         db.execute("PRAGMA foreign_keys=ON")
         db.execute("PRAGMA busy_timeout=60000")
         try:
@@ -109,6 +112,8 @@ class KnowledgeStore:
         # Disk locations are only used server-side, not exposed to browsers/LLM.
         item.pop("raw_path", None)
         item["title"] = item["filename"]
+        item['review_group'] = classify_review_group(item['status'], item['metadata'], source_id=item['source_id'])
+        item['review_progress'] = review_progress(item['status'], item['metadata'], source_id=item['source_id'])
         return item
 
     def get_source(self, source_id):
@@ -163,7 +168,8 @@ class KnowledgeStore:
             db.execute("UPDATE sources SET status=?,quality_status=?,metadata=?,warnings=?,updated_at=?,chunk_count=? WHERE source_id=?", (
                 status, quality_status, dump(metadata), dump(warnings), now(), len(chunks), source_id))
 
-    def list_sources(self, *, q="", status="", category="", page=1, limit=40):
+    def list_sources(self, *, q="", status="", category="", page=1, limit=40, review_group=""):
+        review_group = validate_review_group(review_group)
         filters, params = [], []
         if q:
             filters.append("(filename LIKE ? ESCAPE '\\' OR relative_path LIKE ? ESCAPE '\\')")
@@ -173,6 +179,9 @@ class KnowledgeStore:
             if value:
                 filters.append(f"{field}=?")
                 params.append(value)
+        if review_group:
+            filters.append('review_group_id(status,metadata)=?')
+            params.append(review_group)
         where = " WHERE " + " AND ".join(filters) if filters else ""
         page = max(1, int(page)); limit = min(100, max(1, int(limit)))
         with self.connect() as db:
@@ -248,6 +257,57 @@ class KnowledgeStore:
                 result.append(item)
         return result
 
+    def named_document_candidates(self, query, limit=80, sid=None, include_pending=False):
+        """Search inside documents explicitly named by the user first.
+
+        A generic BM25 top-80 can be crowded by annual reports sharing an
+        edition year. This adds candidates; the ordinary approval, version,
+        relevance and external-permission gates still run afterwards.
+        """
+        import unicodedata
+        from .document_identity import notice_codes
+        text = unicodedata.normalize('NFKC', str(query))
+        names = [x for x in re.findall(r'《([^》]{4,100})》', text)[:3]]
+        codes = re.findall(r'(?:GB|HY|DB\d+)\s*[/∕_ -]?\s*T?\s*(\d+(?:\.\d+)?)\s*[-—－]\s*(\d{4})', text, re.I)[:3]
+        notices = notice_codes(text)[:3]
+        clauses, parameters = [], []
+        for name in names:
+            clauses.append('instr(s.filename,?)>0'); parameters.append(name)
+        for number, year in codes:
+            clauses.append('(instr(s.filename,?)>0 AND instr(s.filename,?)>0)'); parameters.extend((number, year))
+        for issuer, year, issue in notices:
+            # Normalize punctuation and spacing after this bounded SQL scan;
+            # a different year or issue number is never the named document.
+            clauses.append('instr(s.filename,?)>0'); parameters.append(issuer)
+        if not clauses:
+            return []
+        states = "('approved','indexed','pending_review')" if include_pending else "('approved','indexed')"
+        sid_filter = " AND EXISTS(SELECT 1 FROM links l WHERE l.chunk_id=c.chunk_id AND l.sid=? AND l.review_status IN ('auto_accepted','approved'))" if sid else ''
+        params = list(parameters) + ([sid] if sid else [])
+        with self.connect() as db:
+            rows = db.execute(f'''SELECT c.*,s.filename,s.category,s.status,s.metadata AS source_metadata
+                FROM chunks c JOIN sources s USING(source_id)
+                WHERE ({' OR '.join(clauses)}) AND s.status IN {states}{sid_filter}
+                ORDER BY c.chunk_id LIMIT 3000''', params).fetchall()
+            words = set(tokens(text))
+            results = []
+            for raw in rows:
+                item = dict(raw)
+                filename = unicodedata.normalize('NFKC', item['filename'])
+                ordinary_match = (any(name in filename for name in names) or
+                                  any(number in filename and year in filename for number, year in codes))
+                if notices and not ordinary_match and not set(notices) & set(notice_codes(filename)):
+                    continue
+                item['metadata'] = {**json.loads(item.pop('source_metadata')), **json.loads(item['metadata'])}
+                item['title'] = item['filename']
+                item['sids'] = [r[0] for r in db.execute("SELECT sid FROM links WHERE chunk_id=? AND review_status IN ('auto_accepted','approved')", (item['chunk_id'],))]
+                item['url'] = '/knowledge.html?source=' + item['source_id']
+                item['named_document_match'] = True
+                item['score'] = len(words & set(tokens(item['text'])))
+                results.append(item)
+        results.sort(key=lambda x: (-x['score'], x['chunk_id']))
+        return results[:min(200, max(1, int(limit)))]
+
     def review_link(self, chunk_id, sid, status, note):
         if status not in {'approved','rejected','needs_review'} or len(note.strip()) < 4:
             raise ValueError('关联审核需有效状态及至少4字依据')
@@ -294,6 +354,9 @@ class KnowledgeStore:
                       "pending_link_count": db.execute("SELECT count(*) FROM links WHERE review_status='needs_review'").fetchone()[0],
                       "retrieval": "Chinese bigram FTS5/BM25 + query expansion + local reranking",
                       "realtime_connected": False, "training_performed": False}
+            result['review_groups'] = group_summary(dict(db.execute(
+                "SELECT review_group_id(status,metadata),count(*) FROM sources WHERE status='pending_review' "
+                "GROUP BY review_group_id(status,metadata)").fetchall()))
             result['official_origin_confirmed_count'] = db.execute('SELECT count(*) FROM sources s JOIN source_origin_confirmations p ON s.source_id=p.source_id AND s.sha256=p.sha256').fetchone()[0]
             reviews = [json.loads(row[0]) for row in db.execute("SELECT metadata FROM sources WHERE status='approved'")]
             result['technical_reviewed_count'] = sum(meta.get('review_method') == 'official_batch_technical' for meta in reviews)

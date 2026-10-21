@@ -31,7 +31,7 @@ from .rag import (
 )
 
 
-CONTROL_FIELDS = {"top_k", "report_mode", "model", "request_id", "compact"}
+CONTROL_FIELDS = {"top_k", "report_mode", "model", "request_id", "compact", "storm_id", "agency", "track_kind"}
 
 
 def create_typhoon_blueprint(components: TyphoonComponents) -> Blueprint:
@@ -60,8 +60,12 @@ def create_typhoon_blueprint(components: TyphoonComponents) -> Blueprint:
     @blueprint.get("/current")
     def current():
         try:
-            return jsonify(components.current_provider.get_current_typhoon())
-        except (FileNotFoundError, TyphoonInputError, json.JSONDecodeError) as exc:
+            selection={key:request.args[key] for key in ('storm_id','agency','track_kind') if request.args.get(key)}
+            return jsonify(components.current_provider.get_current_typhoon(**selection))
+        except TyphoonInputError as exc:
+            code=getattr(exc,'code','INVALID_CURRENT_TYPHOON')
+            return jsonify(error=str(exc),code=code,choices=getattr(exc,'choices',[])), (409 if code.endswith('_REQUIRED') else 400)
+        except (FileNotFoundError, json.JSONDecodeError) as exc:
             return jsonify({"error": str(exc), "code": "CURRENT_TYPHOON_NOT_READY"}), 404
 
     @blueprint.post("/similar")
@@ -76,7 +80,8 @@ def create_typhoon_blueprint(components: TyphoonComponents) -> Blueprint:
             except (TypeError, ValueError) as exc:
                 raise TyphoonInputError("top_k 必须是整数") from exc
             if not body or set(body.keys()) <= CONTROL_FIELDS:
-                payload = components.current_provider.get_current_typhoon()
+                selection={key:body[key] for key in ('storm_id','agency','track_kind') if body.get(key)}
+                payload = components.current_provider.get_current_typhoon(**selection)
             else:
                 payload = body
             result = components.application.analyze(
@@ -91,7 +96,8 @@ def create_typhoon_blueprint(components: TyphoonComponents) -> Blueprint:
         except FileNotFoundError as exc:
             return jsonify({"error": str(exc), "code": "DATA_NOT_READY"}), 503
         except TyphoonInputError as exc:
-            return jsonify({"error": str(exc), "code": "INVALID_CURRENT_TYPHOON"}), 400
+            code=getattr(exc,'code','INVALID_CURRENT_TYPHOON')
+            return jsonify(error=str(exc),code=code,choices=getattr(exc,'choices',[])),(409 if code.endswith('_REQUIRED') else 400)
         except RepositoryConfigurationError as exc:
             return jsonify({"error": str(exc), "code": "DATA_NOT_READY"}), 503
         except FactValidationError as exc:

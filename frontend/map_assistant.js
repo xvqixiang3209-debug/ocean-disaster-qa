@@ -120,6 +120,10 @@
       if (current!==revision) return;
       bubble.replaceChildren();
       appendAssistantAnswer(bubble,data.answer || '本次没有取得可用回答。');
+      if(Array.isArray(data.objective_artifacts)&&data.objective_artifacts.length){
+        const links=make('div',undefined,'objective-artifacts');
+        data.objective_artifacts.forEach(artifact=>{if(!/^\/api\/objective\/reports\/[a-f0-9]+\/[A-Za-z0-9_.-]+$/.test(artifact.url||''))return;const link=make('a',({'report.html':'查看完整报告','report.json':'数据JSON','series.csv':'时序CSV'}[artifact.filename]||artifact.filename));link.href=artifact.url;link.target='_blank';link.rel='noopener noreferrer';links.append(link);});bubble.append(links);
+      }
       if(data.data_url && /^\/api\/forecast\/evidence\/[a-f0-9]{24}$/.test(data.data_url)) {
         const link=make('a','查看本次数据与来源');link.href=data.data_url;link.target='_blank';link.rel='noopener noreferrer';link.className='map-answer-copy';bubble.appendChild(link);
       }
@@ -131,6 +135,19 @@
         catch (_) {copy.textContent='请选中回答文字复制';}
       });
       bubble.appendChild(copy);
+      // Map delivery is independent of answer delivery: a failed layer must not erase a complete answer.
+      const mapAction=data.map_action||(Array.isArray(data.map_actions)?data.map_actions[0]:null);
+      if(mapAction){
+        try{
+          if(!window.ObjectivePanel?.applyAction)throw Error('地图图层模块尚未加载，请刷新页面。');
+          const mapped=await window.ObjectivePanel.applyAction(mapAction,{isCurrent:()=>current===revision});
+          if(current!==revision)return;
+          if(mapped&&['error','no_data'].includes(mapped.state))bubble.appendChild(make('p','地图说明：'+(mapped.message||'本次图层没有可用数据，回答仍已保留。'),'conversation-note'));
+        }catch(error){
+          if(current!==revision)return;
+          bubble.appendChild(make('p','地图暂未显示：'+error.message+' 回答内容已保留。','conversation-note'));
+        }
+      }
       $('conversationStatus').textContent='可继续追问本次回答，例如“第二点具体怎么做？”';
     } catch (error) {
       if (current!==revision) return;
@@ -146,6 +163,7 @@
   }
   function reset(clear=false, selection={}) {
     revision++;client.reset(selection);setBusy(false);
+    if(window.ObjectivePanel?.cancelAction)window.ObjectivePanel.cancelAction();
     document.querySelectorAll('.map-answer-pending').forEach(node => {node.textContent='此次查询已取消。';});
     if (clear) {
       $('chatMessages').replaceChildren();

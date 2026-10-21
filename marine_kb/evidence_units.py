@@ -137,9 +137,23 @@ def build_doc_card(hit):
         if value: derivation.setdefault(name, 'meta')
     if not effective_from and hit.get('effective_from'):
         effective_from = hit['effective_from']; derivation['effective_from'] = 'meta'
+    if not effective_from and metadata.get('effective_date'):
+        try:
+            effective_from = datetime.fromisoformat(str(metadata['effective_date'])).date().isoformat()
+            derivation['effective_from'] = 'reviewed_metadata:effective_date'
+        except (ValueError, TypeError):
+            pass
     assessment = metadata.get('applicability') or {}
     temporal = assessment.get('temporal') or 'version_unverified'
     if metadata.get('effectiveness') == 'current_verified': temporal = 'current_verified'
+    if temporal == 'version_unverified' and metadata.get('edition_current_verified') is True and metadata.get('edition_verification_url'):
+        try:
+            checked = datetime.fromisoformat(str(metadata.get('edition_checked_at', ''))).date()
+            if 0 <= (datetime.now(timezone.utc).date() - checked).days <= 30:
+                temporal = 'current_verified'
+                derivation['version_status'] = 'official_registry:' + str(metadata['edition_verification_url']) + '; checked=' + checked.isoformat()
+        except (ValueError, TypeError):
+            pass
     jurisdiction = hit.get('jurisdiction') or metadata.get('jurisdiction')
     if jurisdiction:
         derivation['jurisdiction'] = 'meta'

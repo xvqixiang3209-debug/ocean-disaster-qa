@@ -1,5 +1,6 @@
 """P0 QA integration uses only fixed invented evidence and mocked responses."""
 from copy import deepcopy
+from datetime import datetime, timedelta
 import json
 import socket
 from unittest.mock import patch
@@ -18,6 +19,26 @@ QUESTION = "台风来临前要怎么做？"
 ANSWER = "台风来临前，组织渔船回港避风。[资料1]"
 META = {"as_of": "2026-10-20", "normalized_question": QUESTION,
         "subquestions": [{"id": "q1", "question": QUESTION}]}
+
+
+@pytest.fixture(autouse=True)
+def fixed_qa_clock(monkeypatch):
+    """Record and replay the same question time, not whichever wall-clock second.
+
+    The full HTTP route puts ``qa.datetime.now()`` into the generation payload's
+    ``date``. Without this clock dependency fixture a record/replay pair crossing
+    a second correctly fails strict request hashing, making this test flaky.
+    Cassette hashing, request ordering and full-consumption checks stay enabled.
+    """
+    class FixedDateTime(datetime):
+        current = datetime.fromisoformat("2026-10-20T12:00:00+08:00")
+
+        @classmethod
+        def now(cls, tz=None):
+            return cls.current if tz is None else cls.current.astimezone(tz)
+
+    monkeypatch.setattr("marine_kb.qa.datetime", FixedDateTime)
+    return FixedDateTime
 
 
 def hit():
@@ -112,13 +133,40 @@ def test_http_mock_replay_trace_includes_planner_and_generation(tmp_path, monkey
         with ModelCassette(path) as journal:
             client, headers = client_for(qa(ReplayCaller(journal)))
             after = client.post("/api/assistant/ask", json={"question": QUESTION}, headers=headers)
-        assert after.status_code == 200, after.json
+            assert after.status_code == 200, after.json
     assert before.json["answer"].encode() == after.json["answer"].encode()
     stages = [row["stage"] for row in after.json["trace"]["model_calls"]]
     assert "normalize" in stages and "generate" in stages
     assert all(row["prompt_tokens"] == 29 for row in after.json["trace"]["model_calls"])
     assert all(row["completion_tokens"] == 13 for row in after.json["trace"]["model_calls"])
     assert len(live.options) == len(stages)
+    before_calls = before.json["trace"]["model_calls"]
+    after_calls = after.json["trace"]["model_calls"]
+    assert [(row["stage"], row["prompt_sha256"], row["response_sha256"]) for row in before_calls] == [
+        (row["stage"], row["prompt_sha256"], row["response_sha256"]) for row in after_calls]
+
+
+def test_http_replay_rejects_changed_query_clock(tmp_path, monkeypatch, fixed_qa_clock):
+    """One changed second reproduces the failure and must still be rejected."""
+    monkeypatch.setenv("MARINE_TRACE", "true")
+    path, live = tmp_path / "mock-clock.jsonl", UsageCaller()
+    with patch.object(socket, "socket", side_effect=AssertionError("network_forbidden")):
+        with record(path) as journal:
+            client, headers = client_for(qa(RecordingCaller(live, journal)))
+            before = client.post("/api/assistant/ask", json={"question": QUESTION}, headers=headers)
+        assert before.status_code == 200, before.json
+        fixed_qa_clock.current += timedelta(seconds=1)
+        journal = ModelCassette(path)
+        client, headers = client_for(qa(ReplayCaller(journal)))
+        after = client.post("/api/assistant/ask", json={"question": QUESTION}, headers=headers)
+        assert after.status_code == 503
+        assert "answer" not in after.json
+        # Normalization has no date and matches; generation includes the changed
+        # query timestamp, so its recorded interaction must remain unconsumed.
+        assert journal.summary()["consumed"] == 1
+        with pytest.raises(CassetteMismatch, match="unconsumed_interactions"):
+            journal.assert_consumed()
+        journal.close(complete=False)
 
 
 def test_http_unknown_prompt_reports_failure_without_live_fallback(tmp_path, monkeypatch):

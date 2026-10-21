@@ -6,11 +6,12 @@ already grounded atoms and never promotes an unsupported source into a fact.
 import hashlib
 import json
 import re
+import unicodedata
 
 
 SUBSTANTIVE_TYPES = frozenset({'direct_fact', 'synthesis', 'calculation'})
 _DATE_ONLY = re.compile(r'^(?:该|本|此)?(?:方案|通知|文件|预案|办法)?.{0,12}自?\s*20\d{2}年\d{1,2}月\d{1,2}日.{0,14}(?:施行|实施|印发|发布)[。；\s]*$')
-_ACTIONS = re.compile(r'检查|加固|清理|排查|固定|撤离|转移|清除|更换|消毒|申报|申请|提交|评议|审核|审批|确定|公示|发放|报送|上报|批准|下达|通知|理赔|赔付|核定|报案|查勘|查询|查看|关注|收听|登陆|登录|翻盆倒罐|倒掉|倒空|换水|换一次水|清扫|疏通|投放|穿(?:着)?|佩戴|涂抹|喷涂|安装|装(?:好|上)?(?:纱窗|纱门)|挂(?:上)?蚊帐|使用(?:蚊帐|驱蚊|防蚊|灭蚊|杀虫)|避开')
+_ACTIONS = re.compile(r'检查|加固|清理|排查|固定|撤离|转移|清除|更换|消毒|申报|申请|提交|评议|审核|审批|确定|公示|发放|报送|上报|批准|下达|通知|理赔|赔付|核定|报案|查勘|查询|查看|关注|收听|登陆|登录|设立|观测|翻盆倒罐|倒掉|倒空|换水|换一次水|清扫|疏通|投放|穿(?:着)?|佩戴|涂抹|喷涂|安装|装(?:好|上)?(?:纱窗|纱门)|挂(?:上)?蚊帐|使用(?:蚊帐|驱蚊|防蚊|灭蚊|杀虫)|避开')
 _IDENTITY = re.compile(r'《[^》]{2,100}》')
 _META_ONLY = re.compile(r'^(?:文件|机关|文号|来源|发布单位|适用地区|版本|施行日期|发布日期)[:：]')
 _TIME = re.compile(r'20\d{2}(?:[-年/]\d{1,2}(?:[-月/]\d{1,2}日?)?)?|\d{1,2}月\d{1,2}日|\d{1,2}[:：]\d{2}')
@@ -142,19 +143,91 @@ def _place_present(text, facet):
     return bool(leaf_places(text) or re.search(r'中国|全国|我国|全球|(?<!该)(?<!本)[\u4e00-\u9fff]{2,12}(?:站|岸段|海域|码头)', text))
 
 
+def _typed_table_values(atom, facet):
+    """Read a grounded row's numbers only under its own explicit unit column.
+
+    ``table_header`` travels with a validated atom, not a unit found elsewhere
+    on a page. An inline Markdown table may also carry its own header. Bare
+    values in another column, prose or subsequent table never borrow a unit.
+    """
+    from .quantities import UNITS, declared_column_unit
+    from decimal import Decimal
+    unit_pattern = '|'.join(re.escape(unit) for unit in sorted(UNITS, key=len, reverse=True))
+    number = r'[+-]?\d+(?:\.\d+)?'
+    header = str(atom.get('table_header') or '')
+    result = []
+    question = _question(facet)
+    for raw in str(atom.get('text') or '').splitlines():
+        line = unicodedata.normalize('NFKC', raw).strip()
+        if not line.startswith('|'):
+            header = ''
+            continue
+        cells = [cell.strip() for cell in line.strip('|').split('|')]
+        if all(re.fullmatch(r'[:\s-]+', cell or '-') for cell in cells):
+            continue
+        def column_unit(label):
+            label = unicodedata.normalize('NFKC', label)
+            literal = re.search(r'[/／]\s*(' + unit_pattern + r')\s*$', label)
+            return declared_column_unit(label) or (literal[1] if literal else None)
+        if any(column_unit(cell) for cell in cells) and not any(re.fullmatch(number, cell) for cell in cells):
+            header = line
+            continue
+        columns = [cell.strip() for cell in unicodedata.normalize('NFKC', header).strip('|').split('|')]
+        if not header or len(columns) != len(cells):
+            continue
+        for label, cell in zip(columns, cells):
+            unit = column_unit(label)
+            if not unit:
+                continue
+            if facet.get('quantity_type') == 'normative_angle':
+                if UNITS[unit][0] != 'angle':
+                    continue
+                if '中心角' in question and '角度范围' not in question and '中心角' not in label:
+                    continue
+                if '角度范围' in question and '中心角' not in question and '角度范围' not in label:
+                    continue
+            cell = unicodedata.normalize('NFKC', re.sub(r'\[资料\d+\]', '', cell)).replace('**', '').strip()
+            if cell.endswith(unit):
+                cell = cell[:-len(unit)].strip()
+            if re.fullmatch(number, cell):
+                result.append((Decimal(cell), unit, 0, 0))
+                continue
+            match = re.fullmatch(r'[\[(]\s*(' + number + r')\s*[,，]\s*(' + number + r')\s*[\])]', cell)
+            if match:
+                result.extend((Decimal(value), unit, 0, 0) for value in match.groups())
+    return result
+
+
 def _numeric_rows(facts, facet):
     """A value is not a complete tuple without its own grounded scope.
 
     Never assemble place from one unrelated atom and time/value from another.
     Tables remain one validated atom, preserving column positions.
     """
-    from .quantities import quantities
+    from .quantities import quantities, UNITS
     rows = []
     for atom in facts:
         text = clean_text(atom.get('text', ''))
-        values = quantities(text)
+        values = quantities(text) + _typed_table_values(atom, facet)
         counts = re.findall(r'(?<!\d)\d+(?:\.\d+)?\s*(?:个|条|艘|家|处|座)(?!月)', text)
-        if values or counts:
+        duration_text = re.sub(r'(?:19|20)\d{2}(?:年\d{1,2}月\d{1,2}日?|[-/]\d{1,2}[-/]\d{1,2})(?:\s*\d{1,2}[:：]\d{2})?', ' ', text)
+        written_duration = (facet.get('quantity_type') == 'normative_duration' and
+            re.search(r'(?<!\d)(?!(?:19|20)\d{2}年)(?:\d+(?:\.\d+)?|[零一二三四五六七八九十百两]+)(?:个)?(?:工作日|小时|个月|年|天|日|分钟|h|min)', duration_text, re.I))
+        quantity_type = facet.get('quantity_type')
+        if quantity_type == 'normative_frequency':
+            # A horizon such as 24h is not the number of issues per day.
+            # Both the counter and a period must occur in the same grounded
+            # atom; neither is guessed from the document year or the question.
+            number = r'(?:\d+(?:\.\d+)?|[零一二三四五六七八九十百两]+)'
+            counter = re.search(r'(?<![\d.])' + number + r'\s*次', text)
+            period = re.search(r'每日|每天|一日|一天|每\s*' + number + r'\s*(?:h|小时|天|日)|'
+                               r'次\s*[/／]\s*(?:d|天|日)|日(?:发布|最低|最少)', text, re.I)
+            values, counts, written_duration = [], bool(counter and period), False
+        elif quantity_type in {'normative_duration', 'normative_angle'}:
+            wanted = {'duration', 'workdays'} if quantity_type == 'normative_duration' else {'angle'}
+            values = [value for value in values if UNITS[value[1]][0] in wanted]
+            counts = []
+        if values or counts or written_duration:
             rows.append({'value': True, 'unit': True, 'place': _place_present(text, facet),
                          'time': bool(_TIME.search(text)), 'provenance': _has_refs(atom)})
     return rows
@@ -355,6 +428,28 @@ def clean_text(text):
     return re.sub(r'\[资料\d+\]', '', str(text)).strip(' \t\n#*-。')
 
 
+def _own_atoms(facet, accepted, registry):
+    fid = str(facet.get('fid') or facet.get('id'))
+    own = [a for a in accepted if fid in a.get('facet_ids', [])]
+    if own or not re.search(r'出处|原文来源|第几条|哪一条', _question(facet)):
+        return own
+    # A correctly grounded source statement sometimes stays with the answer
+    # it supports. Reuse only that explicit statement for its provenance-only
+    # sibling; never reassign substantive business conclusions across siblings.
+    titles = set(re.findall(r'《([^》]+)》', _question(facet)))
+    if not titles:
+        titles = {title for row in registry for title in re.findall(r'《([^》]+)》', _question(row))}
+    if len(titles) != 1:
+        return own
+    title = next(iter(titles))
+    for atom in accepted:
+        text = clean_text(atom.get('text', ''))
+        if (atom.get('type') == 'direct_fact' and _has_refs(atom) and title in text
+                and re.search(r'出自|出处|来源|第[一二三四五六七八九十百\d]+条', text)):
+            return [{**atom, 'facet_ids': [fid], 'provenance_owner_reused': True}]
+    return own
+
+
 def substantive(atom):
     """A date, citation, title, or version disclaimer alone is not an answer."""
     if atom.get('type') not in SUBSTANTIVE_TYPES:
@@ -386,7 +481,10 @@ def covered_outputs(facet, own, *, registry=None):
     channel_name, access_path = _channel_parts(facet, facts)
     for name in required:
         if name in {'verdict', 'distinction', 'comparison'}:
-            ok = any(a.get('type') == 'synthesis' for a in facts) or bool(re.search(r'不是一回事|不是同一|并非同一|不能等同|不可等同|不同之处|区别在于|二者不同|三者不同|分别是', text))
+            ok = any(a.get('type') == 'synthesis' for a in facts) or bool(re.search(
+                r'不是一回事|不是同一|并非同一|不能等同|不可等同|不同之处|区别在(?:于)?|二者不同|三者不同|分别是|'
+                r'不能(?:把|将).{1,50}(?:当作|理解为|等同于)|'
+                r'(?:性质|机制|成因|对象|口径|含义|计算方式|适用范围|指标|统计方式).{0,8}不同', text))
         elif name in {'document_identity', 'document', 'document_name'}:
             ok = identities or body_identity
         elif name in {'per_object_basis', 'basis', 'basis_document'}:
@@ -417,6 +515,10 @@ def covered_outputs(facet, own, *, registry=None):
             ok = name in clock_fields
         elif name in {'value', 'numeric_value', 'calculation', 'number'}:
             ok = bool(numeric)
+        elif name in {'frequency', 'duration'}:
+            # A combined provision question needs both predicates. A valid
+            # duration cannot satisfy frequency, or the other way around.
+            ok = bool(_numeric_rows(facts, {**facet, 'quantity_type': 'normative_' + name}))
         elif name in {'unit', 'place', 'time', 'valid_time', 'provenance'}:
             if kind in {'numeric_value', 'calculation'} and numeric:
                 # Select one value tuple; never borrow time or place from a
@@ -476,7 +578,7 @@ def evaluate_delivery(facets, accepted):
     for original in facets:
         f = _facet(original)
         fid = str(f.get('fid') or f.get('id'))
-        own = [a for a in accepted if fid in a.get('facet_ids', [])]
+        own = _own_atoms(f, accepted, [_facet(row) for row in facets])
         facts = [a for a in own if substantive(a) and semantic_match(a, f, facets)]
         gaps = [a for a in own if a.get('type') == 'gap' and a.get('gap_type') in f.get('allowed_gaps', [])]
         covered = covered_outputs(f, own, registry=facets)
@@ -520,7 +622,7 @@ def render_answer(facets, accepted):
     blocks = []
     for f in map(_facet, facets):
         fid = str(f.get('fid') or f.get('id'))
-        own = [a for a in accepted if fid in a.get('facet_ids', []) and semantic_match(a, f, facets)]
+        own = [a for a in _own_atoms(f, accepted, [_facet(row) for row in facets]) if semantic_match(a, f, facets)]
         if not own:
             continue
         title = str(f.get('question') or f.get('text') or fid)

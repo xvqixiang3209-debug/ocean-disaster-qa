@@ -133,6 +133,18 @@ def test_multi_field_and_time_questions_survive_complete_model_omission(monkeypa
         monkeypatch.setenv(name,'true')
     monkeypatch.setenv('MARINE_RELATION_GUARD','off')
     hit,meta,_=setup_data(question=question)
+    # "今天" must be resolved against the same business clock as this
+    # synthetic query record, not whichever day the suite happens to run.
+    from datetime import datetime
+    import marine_kb.facet_contract as contract_module
+    query_time=next(fact['value'] for fact in meta['required_business_facts']
+                    if fact['kind']=='typhoon_timing' and fact.get('field')=='query_time')
+    business_clock=datetime.fromisoformat(query_time)
+    class FixtureClock(datetime):
+        @classmethod
+        def now(cls,tz=None):
+            return business_clock.astimezone(tz) if tz else business_clock.replace(tzinfo=None)
+    monkeypatch.setattr(contract_module,'datetime',FixtureClock)
     parts=['今天活动台风有几个、分别叫什么？','各台风最新中心最大风速是多少？',
            '各台风最低气压是多少？','各台风移动方向是什么？','各台风移动速度是多少？',
            '查询时间与记录时间分别是什么？']

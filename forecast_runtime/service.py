@@ -22,7 +22,7 @@ from .official_warnings import OfficialWarnings,warning_question,warning_summary
 from .answer_facts import delivery_facts,fact_text,delivery_table
 from marine_kb.evidence_selection import select_evidence
 from .activity_policy_queries import policy_question,query_policies,policy_summary
-from .routing import administrative_question,analogue_question,coastal_request as wants_coastal,grid_request as wants_grids,tide_request as wants_tide,numeric_request
+from .routing import administrative_question,analogue_question,coastal_request as wants_coastal,grid_request as wants_grids,tide_request as wants_tide,numeric_request,provision_question
 
 COLORS={'blue':'蓝色','yellow':'黄色','orange':'橙色','red':'红色'}
 
@@ -508,6 +508,9 @@ class ForecastRuntime:
 
     def matches(self,question,sid=None):
         if not self.config()['enabled']:return False
+        if provision_question(question):return False
+        from .objective_bridge import objective_question
+        if getattr(self,'objective',None) is not None and objective_question(question):return True
         if warning_question(question):return True
         if sid:return False
         if re.search(r'系统|智能体|你能|你的|数据来源|多久更新|更新频率',question):return False
@@ -535,6 +538,8 @@ class ForecastRuntime:
 
     @snapshot_query
     def query(self,question,_only=None,_point=None):
+        from .objective_bridge import objective_question,query_objective
+        if _only is None and getattr(self,'objective',None) is not None and objective_question(question):return query_objective(self,question)
         if _only=='warnings' or (_only is None and warning_question(question)):
             return self.warnings.query(question)
         start,end=period(question,now=getattr(self,'request_now',local_now)())
@@ -868,6 +873,13 @@ class ForecastRuntime:
         return header+json.dumps(data,ensure_ascii=False,separators=(',',':'))
 
     def evidence_allowed(self,source):
+        if (source.get('metadata') or {}).get('analogue_program_result') is True:
+            key=str(source.get('source_id') or '').removeprefix('forecast:')
+            record=self.store.state('evidence:'+key) if re.fullmatch('[a-f0-9]{24}',key) else None
+            delivery=(record or {}).get('analogue_delivery') or {}
+            return bool(record and record.get('kind')=='analogue'
+                        and (delivery.get('contract') or {}).get('verified') is True
+                        and delivery.get('result_sha256')==(source.get('metadata') or {}).get('program_result_sha256'))
         if (source.get('metadata') or {}).get('official_typhoon_records') is True:
             key=str(source.get('source_id') or '').removeprefix('forecast:')
             record=self.store.state('evidence:'+key) if re.fullmatch('[a-f0-9]{24}',key) else None
@@ -884,6 +896,8 @@ class ForecastRuntime:
 
     @snapshot_query
     def answer(self,question,qa,meta,allow_web):
+        from .objective_bridge import objective_question,answer_objective
+        if getattr(self,'objective',None) is not None and objective_question(question):return answer_objective(self,question,qa,meta,allow_web)
         if warning_question(question):
             try:return answer_warnings(self,question,qa,meta,allow_web=allow_web)
             except ValueError as exc:
@@ -894,6 +908,9 @@ class ForecastRuntime:
         except (ValueError,KeyError,OSError) as exc:
             reason='数据文件暂不可读取，请查看数据同步状态。' if isinstance(exc,OSError) else '业务变量缺项，请查看数据状态。' if isinstance(exc,KeyError) else str(exc)[:300]
             result={**self.base_result(*period()),'kind':'clarification','state':'unavailable','reason':reason}
+        if result.get('kind') == 'analogue':
+            from .analogue_delivery import answer_analogue
+            return answer_analogue(self, question, result, qa, meta, allow_web)
         typhoon_only=result.get('kind')=='typhoons'
         text=self.summary(result)
         historical_only=result.get('kind')=='historical_comparison' and result.get('comparison_mode')=='historical_events'

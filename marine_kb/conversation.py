@@ -73,8 +73,14 @@ class ConversationStore:
             'context_question': str(meta.get('normalized_question') or question)[:2000],
             'answer': str(result.get('answer') or '')[:3000],
             'sources': (result.get('rag_sources') or []) + (result.get('web_sources') or []),
-            'answer_context_allowed': meta.get('used_mode') == 'llm',
+            'answer_context_allowed': (meta.get('used_mode') == 'llm'
+                or meta.get('analogue_delivery_verified') is True
+                or meta.get('objective_delivery_verified') is True),
         })
+        from .objective_context import product_context
+        objective = product_context(meta.get('objective_context'))
+        if objective:
+            item.turns[-1]['objective_context'] = objective
         from .facet_contract import facet_contract_enabled
         if facet_contract_enabled():
             state = meta.get('turn_state')

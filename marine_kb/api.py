@@ -15,6 +15,8 @@ def create_blueprint(store, ingestion, qa, requirements_path=None, acceptance_di
     token = secrets.token_urlsafe(32)
     catalog_path = Path(requirements_path) if requirements_path is not None else Path(__file__).resolve().parents[1] / "data" / "requirements" / "catalog.json"
     acceptance = MonthOneAcceptance(store, acceptance_directory or Path(__file__).resolve().parents[1] / 'docs')
+    from .library_catalog import LibraryCatalog
+    libraries = LibraryCatalog(store, getattr(qa, 'legacy_rag', None))
 
     @bp.before_request
     def local_admin_boundary():
@@ -48,6 +50,38 @@ def create_blueprint(store, ingestion, qa, requirements_path=None, acceptance_di
             external_model=qa.model_status() if qa is not None else {
                 "state": "unavailable", "enabled": False, "configured": False,
                 "tested": False, "note": "问答服务未安装。"}, csrf_token=token)
+
+    @bp.get('/numeric/status')
+    def numeric_status():
+        from .numeric_access import open_archive
+        try:
+            return jsonify(available=True, **open_archive(store).summary())
+        except FileNotFoundError:
+            return jsonify(available=False, note='数值归档尚未建立'), 404
+
+    @bp.get('/numeric/query')
+    def numeric_query():
+        from .numeric_access import open_archive
+        try:
+            if not any(request.args.get(key) for key in ('file', 'station')):
+                raise ValueError('请至少指定文件或地点列名')
+            return jsonify(**open_archive(store).query(file=request.args.get('file'), station=request.args.get('station'),
+                time_token=request.args.get('time_token'), start=request.args.get('start'), end=request.args.get('end'),
+                limit=min(100, max(1, int(request.args.get('limit', 40))))))
+        except FileNotFoundError:
+            return jsonify(error='数值归档尚未建立'), 404
+        except ValueError as exc:
+            return jsonify(error=str(exc)), 400
+
+    @bp.get('/numeric/coasts')
+    def numeric_coasts():
+        from .numeric_access import open_archive
+        try:
+            archive = open_archive(store)
+            return jsonify(items=archive.coasts(query=request.args.get('q', ''), version=request.args.get('version')),
+                           conflicts=archive.coast_conflicts(), note='并列保留原GeoJSON和SQL版本，不自动选用冲突阈值。')
+        except FileNotFoundError:
+            return jsonify(error='数值归档尚未建立'), 404
 
     @bp.post("/model-test")
     def model_test():
@@ -138,11 +172,20 @@ def create_blueprint(store, ingestion, qa, requirements_path=None, acceptance_di
     @bp.get("/sources")
     def sources():
         try:
+            if 'library' in request.args:
+                return jsonify(libraries.list_sources(library=request.args.get('library','all'),
+                    q=request.args.get('q',''),status=request.args.get('status',''),category=request.args.get('category',''),
+                    page=request.args.get('page',1),limit=request.args.get('limit',40),
+                    review_group=request.args.get('review_group','')))
             return jsonify(store.list_sources(q=request.args.get("q", "")[:300],
                 category=request.args.get("category", ""), status=request.args.get("status", ""),
-                page=int(request.args.get("page", 1))))
-        except ValueError:
-            return jsonify(error="页码无效"), 400
+                page=int(request.args.get("page", 1)),limit=int(request.args.get('limit',40)),
+                review_group=request.args.get('review_group','')))
+        except ValueError as exc:
+            return jsonify(error=str(exc) if 'library' in request.args or 'review_group' in request.args else "页码无效"), 400
+
+    @bp.get('/libraries')
+    def library_summary():return jsonify(libraries.summary())
 
     @bp.get("/sources/<source_id>")
     def detail(source_id):

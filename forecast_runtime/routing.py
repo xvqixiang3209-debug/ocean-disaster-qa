@@ -2,6 +2,32 @@
 import re
 
 
+def provision_question(question):
+    """A rule's quantities are document facts, not a request to sample an NC.
+
+    Keep mixed requests for actual conditions on the business route. Edition
+    years and numerical clauses alone are not operational dates or positions.
+    """
+    text = str(question or '')
+    identity = r'(?:GB|HY|DB\d+)\s*[/∕_ -]?\s*T?\s*\d+(?:\.\d+)*\s*[-—－]\s*\d{4}'
+    reference = bool(re.search(identity, text, re.I) or re.search(
+        r'按.{0,40}(?:标准|规范|条款)|(?:标准|规范|条款).{0,20}(?:规定|要求|频次|频率|时效|单位|定义|阈值|条件)', text))
+    if not reference:
+        return False
+    without_edition = re.sub(identity, '', text, flags=re.I)
+    actual_time = bool(re.search(
+        r'今天|今日|明天|明日|后天|昨天|当前|现在|目前|本次|这次|截至|实况|实测|最新.{0,8}(?:预报|批次|海况)|'
+        r'(?:19|20)\d{2}\s*(?:年\s*\d{1,2}\s*月\s*\d{1,2}|[-/]\d{1,2}[-/]\d{1,2})|'
+        r'\d{1,2}月\d{1,2}日|(?:未来|接下来)\s*\d+\s*(?:小时|天)', without_edition))
+    actual_field = bool(re.search(
+        r'查询|提取|读取|计算|生成|绘制|显示|实况|实测|实际|是否超警|有无超警|会不会超警|能否出海|能不能出海', without_edition))
+    # A query for the definition/standard itself is still documentary.
+    actual_field = actual_field and bool(re.search(
+        r'NC|网格|格点|东经|北纬|经纬度|朱家尖|(?:浙江|舟山|宁波|台州|温州|嘉兴).{0,12}(?:海域|沿海|浪高|波高|潮位|风速|海温|流速)|'
+        r'(?:本站|该站|这个点|当地|目标点).{0,12}(?:预报|潮位|波高|海温|风速)', without_edition, re.I))
+    return not (actual_time or actual_field)
+
+
 def administrative_question(question):
     return bool(re.search(r'核定.{0,12}(?:工作|要求|进度|安排)|(?:工作要求|时间进度|修编周期|职责分工|部门职责|编制计划)|现行.{0,45}(?:预案|规范|标准)|(?:预案|规范|标准).{0,16}(?:关键变化|修订|修编|版本|有哪些)', question))
 
@@ -42,6 +68,8 @@ def tide_request(question):
 
 
 def numeric_request(question):
+    if provision_question(question):
+        return False
     if administrative_question(question):
         return False
     # An explicit forecast subquestion still runs when another part asks why.

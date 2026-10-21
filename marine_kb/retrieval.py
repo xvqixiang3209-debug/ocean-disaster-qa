@@ -132,12 +132,48 @@ def is_question_bank(item: dict[str, Any]) -> bool:
 
 def is_formal_rule(item: dict[str, Any]) -> bool:
     label = " ".join(str(item.get(key) or "") for key in ("category", "filename", "title"))
-    return any(word in label.lower() for word in ("标准", "规范", "预案", "规章", "standard", "regulation", "policy"))
+    return (any(word in label.lower() for word in ("标准", "规范", "预案", "规章", "standard", "regulation", "policy"))
+            or (item.get('metadata', {}).get('review_scope') == 'versioned_reference'
+                and bool(re.search(r'办法|条例', label))))
+
+
+def _named_clause_focus(question, item):
+    """Prefer the requested predicate inside a named act, not its title/date."""
+    if not item.get('named_document_match'):
+        return {'score': 0.0, 'duration_requested': False, 'duration_supported': False,
+                'quoted_subject_supported': False}
+    body = re.sub(r'\s+', '', source_text(item))
+    focus = re.sub(r'《[^》]+》|(?:19|20)\d{2}年(?:公布|发布|修订|修正)?版本', '', question)
+    words = lexical_terms(focus)
+    score = 2 * sum(term in body.lower() for term in words) / max(1, len(words))
+    # A short quoted subject is a stronger locator than a document's long
+    # repeated title. It still needs exact body support; title matches alone
+    # must not displace a provision that actually defines the requested term.
+    quoted = re.findall(r'[“\"‘]([^”\"’\n]{2,24})[”\"’]', focus)
+    subjects = [re.sub(r'\s+', '', value) for value in quoted]
+    if subjects:
+        score += 8 * sum(value in body for value in subjects) / len(subjects)
+    predicates = re.findall(r'(?:何时|什么时候|多久|多长时间)(?:才能|可以|能够|应当|能|可|会|才)?([\u4e00-\u9fff]{2})', focus)
+    predicates += re.findall(r'([\u4e00-\u9fff]{2})(?:多久|多长时间|几年|几个月|几天|几小时)', focus)
+    predicates += [name for name in ('时效', '时限', '期限') if name in focus]
+    predicates = [word for word in predicates if word not in {'资料', '文件', '标准', '规定', '需要'}]
+    duration_supported = False
+    if predicates and any(word in body for word in predicates):
+        score += 4
+        # A signing date is not an answer to an operational duration. Require
+        # an actual duration unit, including written-out Chinese numerals.
+        if re.search(r'[零一二三四五六七八九十百两\d]+(?:个)?(?:工作日|小时|个月|年|天|h)(?:内|前|以上|以下|的|[。；，\s]|$)', body, re.I):
+            score += 2
+            duration_supported = True
+    return {'score': score, 'duration_requested': bool(predicates), 'duration_supported': duration_supported,
+            'quoted_subject_supported': bool(subjects and any(value in body for value in subjects))}
 
 
 def evidence_kind(item: dict[str, Any]) -> str:
     title = str(item.get("title") or item.get("filename") or "")
     text = source_text(item)
+    if is_formal_rule(item):
+        return '法规标准条文（所列版本）'
     if any(word in title for word in ("警报", "预报单", "预报202", "海浪预报20", "风暴潮预报20")) or ("预计" in text and any(word in text for word in ("明天", "将出现", "未来"))):
         return "历史预报/警报，非实况"
     if "模式" in title or any(word in text[:80] for word in ("代理估计", "proxy")):
@@ -152,7 +188,7 @@ def usable_source(item: dict[str, Any], include_pending: bool = False) -> bool:
     if is_question_bank(item) or not source_text(item).strip():
         return False
     if include_pending:
-        return item.get("status") not in {"rejected", "deleted", "quarantined", "error"}
+        return item.get("status") not in {"rejected", "deleted", "quarantined", "error", "archived"}
     if item.get("status") not in {"approved", "indexed"}:
         return False
     if is_formal_rule(item) and item.get("status") != "approved":
@@ -168,6 +204,7 @@ def relevance(question: str, item: dict[str, Any]) -> dict[str, Any]:
     """Transparent lexical coverage; it is not a probability of answer correctness."""
     text = re.sub(r'\s+', '', unicodedata.normalize('NFKC', source_text(item))).lower()
     title = unicodedata.normalize('NFKC', str(item.get("title") or item.get("filename") or "")).lower()
+    metadata = item.get('metadata') or {}
     terms = lexical_terms(question)
     terms_hit = sorted(term for term in terms if term in text)
     coverage = len(terms_hit) / max(1, len(terms))
@@ -188,6 +225,10 @@ def relevance(question: str, item: dict[str, Any]) -> dict[str, Any]:
         if len(set(title_years)) == 1:
             event_year = title_years[0]
     for year in asked_years:
+        edition_request = re.search(r'((?:19|20)\d{2})年(?:公布|发布|修订|修正)?版本', question)
+        if (edition_request and edition_request[1] == year and is_formal_rule(item)
+                and str(metadata.get('document_issued_at') or metadata.get('publication_date') or '').startswith(year)):
+            continue
         if event_year and event_year != year:
             entity_misses.append("event_year:" + year)
         elif not event_year and year not in title and not re.search(rf"(?<!\d){year}\s*(?:年|[-/.]\d{{1,2}})", text):
@@ -237,6 +278,32 @@ def relevance(question: str, item: dict[str, Any]) -> dict[str, Any]:
         matched_field=any(any(word in evidence_body for word in words) for _,words in requested_fields)
         if not matched_field and not other_subject_match:
             direct=False
+    # Explicitly requested document editions are different from an event year.
+    # A 2019 consolidated text can mention its 2017 publication history, which
+    # is not evidence that its amended clauses are the requested 2017 version.
+    edition = re.search(r'((?:19|20)\d{2})年(?:公布|发布|修订|修正)?版本', question)
+    if edition and is_formal_rule(item):
+        date = str(metadata.get('document_issued_at') or metadata.get('publication_date') or '')
+        source_year = re.match(r'(?:19|20)\d{2}', date)
+        if source_year and source_year[0] != edition[1]:
+            entity_misses.append('document_edition:' + edition[1])
+    asked_codes = re.findall(r'(?:GB|HY|DB\d+)\s*[/∕_ -]?\s*T?\s*(\d+(?:\.\d+)?)\s*[-—－]\s*(\d{4})', question, re.I)
+    source_identity = str(metadata.get('standard_id') or title)
+    own_codes = re.findall(r'(?:GB|HY|DB\d+)\s*[/∕_ +\-]?\s*T?\s*(\d+(?:\.\d+)?)\s*[-—－]\s*(\d{4})', source_identity, re.I)
+    if asked_codes and own_codes and not set(asked_codes) & set(own_codes):
+        entity_misses.append('document_standard_identity')
+    from .document_identity import notice_codes
+    asked_notices, own_notices = notice_codes(question), notice_codes(title)
+    if asked_notices and own_notices and not set(asked_notices) & set(own_notices):
+        entity_misses.append('document_notice_identity')
+    if asked_codes and set(asked_codes) & set(own_codes) and re.search(r'全称|名称|版本|编号|出处|发布日期|实施日期|现行', question):
+        direct = True
+    if _named_clause_focus(question, item)['duration_supported'] and is_formal_rule(item):
+        direct = True
+    if _named_clause_focus(question, item)['quoted_subject_supported'] and is_formal_rule(item):
+        # The operative clause can omit the long notice's broad hazard words.
+        # This establishes retrieval relevance, not answer correctness.
+        direct = True
     if entity_misses:
         direct = False
     if not evidence_focus(question, source_text(item)):
@@ -299,6 +366,9 @@ def rank_candidates(question: str, candidates: list[dict], limit: int = 8, *, si
         raw_score = max(0, float(item.get("score") or 0))
         score = 4 * details["coverage"] + 2 * details["topic_coverage"] + .05 * min(10, math.log1p(raw_score))
         score += details['intent_support']
+        if item.get('named_document_match') and details['direct_evidence']:
+            score += 3
+        score += _named_clause_focus(question, item)['score']
         if (details['direct_evidence'] and details['intent_support'] > 0
                 and re.search(r'判据|选取|怎么选|如何选|选站|技术要求|技术流程|发布规则', question)
                 and item.get('status') == 'approved' and is_formal_rule(item)):
@@ -341,6 +411,10 @@ def search(store, question: str, limit: int = 8, sid: str | None = None, include
     if expansions:
         queries.append(question + " " + " ".join(dict.fromkeys(expansions)))
     candidates, ids, rrf = [], set(), {}
+    if hasattr(store, 'named_document_candidates'):
+        for rank, item in enumerate(store.named_document_candidates(question, limit=80, sid=sid, include_pending=include_pending), 1):
+            key = (str(item.get('source_id')), str(item.get('chunk_id')))
+            candidates.append(item); ids.add(key); rrf[key] = 1 / (60 + rank)
     for query in queries:
         for rank, item in enumerate(store.search_candidates(query, limit=80, sid=sid, include_pending=include_pending), 1):
             key = (str(item.get("source_id")), str(item.get("chunk_id")))

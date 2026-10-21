@@ -49,6 +49,29 @@ def _unit(locator, text, kind="text", **metadata):
     return {"locator": locator, "text": _clean(text), "kind": kind, "metadata": metadata}
 
 
+def _quality_content(text):
+    """Discount purchase stamps when deciding whether PDF body OCR is needed.
+
+    Some scan PDFs contain only a selectable order stamp above an image. Its
+    long order/verification numbers cannot establish a readable body. This
+    function does not rewrite source text or grant approval.
+    """
+    purchasers = []
+    for line in text.splitlines():
+        if re.match(r'^\s*订单(?:号|编号)\s*[:：]\s*[A-Za-z0-9-]{6,}', line):
+            match = re.search(r'购买单位\s*[:：]\s*(.+?)\s*$', line)
+            if match:
+                purchasers.append(match[1].strip())
+    retained = []
+    for line in text.splitlines():
+        if re.match(r'^\s*(?:订单(?:号|编号)|防伪编号|授权编号)\s*[:：]\s*[A-Za-z0-9-]{6,}', line):
+            continue
+        if any(re.fullmatch(r'\s*' + re.escape(name) + r'\s*专用\s*', line) for name in purchasers):
+            continue
+        retained.append(line)
+    return re.sub(r"(?:购买|下载|版权所有|仅供|水印|www\.|https?://)[^\n]{0,100}", "", '\n'.join(retained))
+
+
 def _text_quality(text):
     compact = re.sub(r"\s", "", text)
     if not compact:
@@ -58,7 +81,7 @@ def _text_quality(text):
     bad = sum(len(m.group()) for m in re.finditer(r"/G[0-9A-Fa-f]{2,8}|\(cid:\d+\)|\ufffd|[\ue000-\uf8ff]", compact))
     if bad >= 8 and bad / len(compact) > 0.035:
         return "garbled"
-    content = re.sub(r"(?:购买|下载|版权所有|仅供|水印|www\.|https?://)[^\n]{0,100}", "", text)
+    content = _quality_content(text)
     if len(compact) < 30 or len(re.sub(r"\s", "", content)) < 20:
         return "sparse"
     return "usable"

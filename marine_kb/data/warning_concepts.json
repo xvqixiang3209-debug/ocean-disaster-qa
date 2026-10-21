@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "scope": "stable_marine_warning_concepts_only",
+  "reviewed_at": "2026-10-20T20:24:03+08:00",
+  "sources": [
+    {
+      "id": "marine_public_guide_2020",
+      "title": "海洋灾害公众防御指南",
+      "publisher": "福建省海洋与渔业局、福建省渔业减灾中心",
+      "url": "https://hyyyj.fj.gov.cn/xxgk/ztzl/fzjz/fzjzxx/202012/P020201201363275981410.pdf",
+      "published_at": "2020-04",
+      "fetched_at": "2026-10-20T20:24:03+08:00",
+      "sha256": "29f0b094233420aa14c4a4022e00d19e12e7e819f34ffb0ba53ac94dcff197d4",
+      "local_raw": "data/public_references/warning_concepts_20261020/marine_public_guide_2020.pdf",
+      "excerpts": [
+        {"id": "surge_definition", "locator": "PDF第7页（印刷第2页）", "text": "由热带气旋、温带气旋、海上飑线等灾害性天气过境所伴随的强风和气压骤变而引起局部海面振荡或非周期性异常升高（降低）现象，称为风暴潮。"},
+        {"id": "surge_hazard", "locator": "PDF第7页（印刷第2页）", "text": "风暴增水与天文潮、近岸海浪三者叠加影响会引起沿岸海域潮水暴涨导致灾害发生，造成海堤、海塘损毁，沿海码头、工厂、城镇、低洼地带和村庄受淹。"},
+        {"id": "surge_warning", "locator": "PDF第7—8页（印刷第2—3页）", "text": "风暴潮警报分为蓝色、黄色、橙色和红色四个级别，由海洋预报机构通过电视、广播、网络、短信等向社会发布。风暴潮蓝色警报表示：受热带气旋或温带天气系统影响，预计未来受影响区域内有一个或一个以上有代表性的验潮站的高潮位将达到蓝色警戒潮位。"},
+        {"id": "wave_definition", "locator": "PDF第21页（印刷第16页）", "text": "海浪是海洋中由风产生的波浪，包括风浪及其演变而成的涌浪。海浪灾害会引起海上船只损坏和沉没、航道淤积、海洋石油生产设施和海岸工程损毁、海水养殖业受损和人员伤亡等。"},
+        {"id": "wave_warning", "locator": "PDF第21页（印刷第16页）", "text": "海浪警报分为蓝色、黄色、橙色和红色四个级别，由海洋预报机构通过电视、广播、网络、短信等向社会发布。海浪蓝色警报表示：受热带气旋或温带天气系统影响，预计未来24小时受影响近岸海域将出现2.5米至3.5（不含）米有效波高。"}
+      ]
+    },
+    {
+      "id": "marine_plan_2022_news",
+      "title": "自然资源部办公厅印发通知发布新修订的《海洋灾害应急预案》",
+      "publisher": "中国政府网（自然资源部网站）",
+      "url": "https://app.www.gov.cn/govdata/gov/202209/10/489311/article.html",
+      "published_at": "2022-09-10",
+      "fetched_at": "2026-10-20T20:23:49+08:00",
+      "sha256": "c1664767166dd8b2b262d0fa3f59e804d78363e3ae43581832a1ab9f520c24b9",
+      "local_raw": "data/public_references/warning_concepts_20261020/marine_plan_2022_news.html",
+      "excerpts": [
+        {"id": "marine_scope", "locator": "正文第3段", "text": "《预案》包括总则、组织机构及职责、应急响应启动标准、响应程序、保障措施、应急预案管理和附件7部分内容，适用于自然资源部组织开展的我国管辖海域范围内风暴潮、海浪、海冰和海啸灾害的观测、预警和灾害调查评估等工作。"},
+        {"id": "marine_levels", "locator": "正文第4段", "text": "《预案》提出，按照影响严重程度、影响范围和影响时长，海洋灾害应急响应分为Ⅰ级（特别重大）、Ⅱ级（重大）、Ⅲ级（较大）、Ⅳ级（一般）4个级别，分别对应最高至最低响应级别；海洋灾害警报分为红、橙、黄、蓝4色，分别对应最高至最低预警级别。响应级别可根据灾害影响预判情况适当调整。"},
+        {"id": "local_plans", "locator": "正文末段", "text": "沿海各省（区、市）自然资源（海洋）主管部门要参照本预案，结合当地需求和实际，组织制定本省（区、市）的海洋灾害应急预案，并向自然资源部和本省（区、市）应急管理主管部门备案。"}
+      ]
+    },
+    {
+      "id": "national_emergency_2025",
+      "title": "中共中央 国务院印发《国家突发事件总体应急预案》",
+      "publisher": "中国政府网（新华社）",
+      "url": "https://app.www.gov.cn/govdata/gov/202502/25/524896/article.html",
+      "published_at": "2025-02-25",
+      "fetched_at": "2026-10-20T20:23:49+08:00",
+      "sha256": "acec3977d50cdbde2377c0d4a1cf41775ab42edeb4659b2f0d7b3f57b1775879",
+      "local_raw": "data/public_references/warning_concepts_20261020/national_emergency_2025.html",
+      "excerpts": [
+        {"id": "warning_definition", "locator": "3.2.2 预警，第（1）项", "text": "可以预警的自然灾害、事故灾难或者公共卫生事件即将发生或者发生的可能性增大时，根据分级标准确定预警级别，发布相应级别的预警信息，决定并宣布有关地区进入预警期，向有关方面报告、通报情况，并根据事态发展及时作出调整。"},
+        {"id": "warning_contents", "locator": "3.2.2 预警，第（1）项", "text": "预警信息应当采用统一格式，主要内容包括预警类别、预警级别、起始时间、可能影响范围、警示事项、公众应当采取的防范措施和发布机关、发布时间等。"},
+        {"id": "early_actions", "locator": "3.2.2 预警，第（3）项", "text": "预警信息发布后，依法采取转移疏散人员、预置应急力量、调集物资装备、保卫重点目标、保障公共设施安全运行等措施。"},
+        {"id": "forecast_response", "locator": "3.2.2 预警，第（4）项", "text": "突发事件危险已经消除的，及时解除预警，终止预警期，并解除已经采取的有关措施；突发事件已经发生或者研判将要发生的，立即启动应急响应。"},
+        {"id": "response_levels", "locator": "3.3.2 响应分级", "text": "国家建立健全突发事件应急响应制度。国家层面应急响应级别按照突发事件的性质、特点、危害程度和影响范围等因素，由高到低分为一级、二级、三级、四级，具体启动条件和程序在国家有关专项应急预案和部门应急预案中予以明确。地方各级党委和政府应当结合本地实际进一步细化应急响应制度，在突发事件应急预案中确定应急响应级别。"},
+        {"id": "response_actions", "locator": "3.3.4 处置措施", "text": "突发事件发生后，相关地方党委和政府迅速组织力量、调集资源，按照有关规定和实际情况开展人员搜救、抢险救灾、医疗救治、疏散转移、临时安置、应急救助、监测研判、损失评估、封控管控、维护秩序、应急保障等处置工作，采取与突发事件可能造成的社会危害的性质、程度和范围相适应的措施，并防止引发次生、衍生事件。"}
+      ]
+    }
+  ],
+  "facts": [
+    {"id": "wave_object", "topic": "wave_warning", "kind": "grounded_summary", "text": "海浪预警针对危险海浪：风产生风浪及其演变的涌浪，预警关注受影响海域的有效波高，提醒防范船舶、海上设施、海岸工程及人员遭受海浪危害。通俗说，重点是“浪有多大、会影响哪里”。", "supports": ["marine_public_guide_2020:wave_definition", "marine_public_guide_2020:wave_warning"]},
+    {"id": "surge_object", "topic": "surge_warning", "kind": "grounded_summary", "text": "风暴潮预警针对天气引起的异常海面变化：强风和气压骤变会引起海面非周期性异常升高或降低，警报关注受影响地区的高潮位与当地警戒潮位，提醒防范沿海受淹和海堤等设施受损。通俗说，重点是“海水会涨到多高、哪里可能受淹”。", "supports": ["marine_public_guide_2020:surge_definition", "marine_public_guide_2020:surge_hazard", "marine_public_guide_2020:surge_warning"]},
+    {"id": "wave_surge_difference", "topic": "wave_surge_comparison", "kind": "evidence_synthesis", "text": "两种预警关注的对象不同：海浪侧重波浪及有效波高，风暴潮侧重异常海面变化及高潮位。风暴增水、天文潮与近岸海浪还可能叠加造成沿海灾害，因此不能把海浪预警和风暴潮预警当作同一种预警。", "supports": ["marine_public_guide_2020:wave_definition", "marine_public_guide_2020:wave_warning", "marine_public_guide_2020:surge_definition", "marine_public_guide_2020:surge_hazard", "marine_public_guide_2020:surge_warning"]},
+    {"id": "warning_meaning", "topic": "warning_levels", "kind": "grounded_summary", "text": "预警是对可能发生的危险作出预判并发出警示，预警信息包含灾害类别、等级、起始时间、可能影响范围和防范措施等。", "supports": ["national_emergency_2025:warning_definition", "national_emergency_2025:warning_contents"]},
+    {"id": "marine_color_order", "topic": "warning_levels", "kind": "direct_fact", "text": "海浪、风暴潮警报采用蓝、黄、橙、红四色，严重程度由低到高排列，红色最高。颜色表达的是预警等级。", "supports": ["marine_public_guide_2020:wave_warning", "marine_public_guide_2020:surge_warning", "marine_plan_2022_news:marine_levels"]},
+    {"id": "response_meaning", "topic": "emergency_response", "kind": "grounded_summary", "text": "应急响应侧重组织应对：根据事件性质、危害程度和影响范围等组织力量、调集资源，开展人员转移、救援和保障等工作。国家层面及所引海洋灾害预案的响应由高到低分为Ⅰ、Ⅱ、Ⅲ、Ⅳ级；地方具体制度以适用预案为准。", "supports": ["national_emergency_2025:response_levels", "national_emergency_2025:response_actions", "marine_plan_2022_news:marine_levels", "marine_plan_2022_news:local_plans"]},
+    {"id": "warning_response_difference", "topic": "warning_response_comparison", "kind": "evidence_synthesis", "text": "预警等级回答“危险预计有多严重”，应急响应回答“按什么层级组织应对、调动哪些力量”。两者有关联，但属于不同制度，不能只凭颜色或同一个级数，就认定自动对应同一级响应；具体关系和启动程序由适用预案规定。", "supports": ["national_emergency_2025:warning_definition", "national_emergency_2025:warning_contents", "national_emergency_2025:response_levels", "marine_plan_2022_news:marine_levels", "marine_plan_2022_news:local_plans"]},
+    {"id": "response_can_precede_disaster", "topic": "warning_response_comparison", "kind": "grounded_summary", "text": "预警也会带来防范行动；应急响应不必等到灾害已经发生才启动，研判将要发生时也可以启动。", "supports": ["national_emergency_2025:early_actions", "national_emergency_2025:forecast_response"]}
+  ]
+}

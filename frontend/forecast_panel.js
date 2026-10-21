@@ -85,13 +85,26 @@
   window.loadLiveTyphoon=async()=>{
     const button=$('liveTyphoonBtn');button.disabled=true;
     try{
-      const [data,current]=await Promise.all([get('/api/forecast/typhoons'),get('/api/typhoon/current')]);
+      const data=await get('/api/forecast/typhoons');
       if(!data.list?.length)throw Error('当前接口没有可用活动台风。');
+      const stormSelect=$('activeTyphoonSelect'),agencySelect=$('typhoonAgency');
+      const old=stormSelect.value;stormSelect.replaceChildren();
+      if(data.list.length>1){const choose=make('option','请选择一个活动台风');choose.value='';stormSelect.append(choose);}
+      data.list.forEach(storm=>{const option=make('option',(storm.nameCN||storm.nameEN||'台风')+' · '+storm.typhoonID);option.value=String(storm.typhoonID);stormSelect.append(option);});
+      stormSelect.value=data.list.some(s=>String(s.typhoonID)===old)?old:data.list.length===1?String(data.list[0].typhoonID):'';
+      const selected=data.list.find(s=>String(s.typhoonID)===stormSelect.value);
+      if(!selected)throw Error('接口有多个活动台风，请先选择，再读取路径。');
+      const latestForAgency=[...(selected.points||[])].sort((a,b)=>a.time.localeCompare(b.time)).at(-1),previousAgency=agencySelect.value;
+      agencySelect.replaceChildren();const placeholder=make('option','请选择预报机构');placeholder.value='';agencySelect.append(placeholder);
+      Object.keys(latestForAgency?.forecast||{}).forEach(agency=>{const option=make('option',agency);option.value=agency;agencySelect.append(option);});
+      if(Object.hasOwn(latestForAgency?.forecast||{},previousAgency))agencySelect.value=previousAgency;
+      const selection=window.currentTyphoonSelection(),parameters=new URLSearchParams(selection);
+      const current=await get('/api/typhoon/current?'+parameters);
       setMode('typhoon');selectedTyphoonSid=null;lastTyphoonMatchData=null;selectedTyphoonTrackIndexes.clear();updateSelectedContext();
       $('typhoonResults').replaceChildren();$('typhoonJson').value=JSON.stringify(current,null,2);
       if(typhoonLayer)map.removeLayer(typhoonLayer);typhoonLayer=L.layerGroup();
       const bounds=[],agencies=['#7dd8f5','#ffbf73','#d0a4f8','#89dfad'];
-      data.list.forEach(storm=>{
+      data.list.filter(storm=>String(storm.typhoonID)===stormSelect.value).forEach(storm=>{
         const points=storm.points||[],coords=points.map(p=>[p.lat,p.lon]);bounds.push(...coords);
         const name=storm.nameCN||storm.nameEN||String(storm.typhoonID);
         const title=make('span',name+' · 已有路径记录');
@@ -107,8 +120,14 @@
         });
       });
       typhoonLayer.addTo(map);if(bounds.length)map.fitBounds(bounds,{padding:[24,24],maxZoom:6});
-      $('typhoonStatus').textContent='接口返回'+data.list.length+'个活动台风；实线为已有记录，虚线为各机构预报。时间/风速单位采用假设口径。'+(data.cache_stale?' 当前展示缓存，刷新失败。':'');
+      $('typhoonStatus').textContent='接口返回'+data.list.length+'个活动台风；已选择'+(selected.nameCN||selected.nameEN)+'。相似检索使用'+(selection.track_kind==='forecast'?selection.agency+'预报路径':'已发生路径')+'；实线为已有记录，虚线分别标明机构。'+(data.cache_stale?' 当前展示缓存，刷新失败。':'');
     }catch(error){$('typhoonStatus').textContent=error.message;}
     finally{button.disabled=false;}
+  };
+  window.currentTyphoonSelection=()=>{
+    const storm_id=$('activeTyphoonSelect').value,track_kind=$('typhoonTrackKind').value,agency=$('typhoonAgency').value;
+    if(!storm_id)throw Error('请先读取并选择活动台风。');
+    if(track_kind==='forecast'&&!agency)throw Error('请选择一个预报机构，不混合不同机构路径。');
+    return {storm_id,track_kind,...(track_kind==='forecast'?{agency}:{})};
   };
 })();

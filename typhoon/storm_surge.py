@@ -229,7 +229,7 @@ class StormSurgeRepository:
             "linked_storm_count": len(linked),
             "observation_count": observation_count,
             "time_match_counts": time_match_counts,
-            "fallback": "typhoon-condition proxy" if not records else None,
+            "fallback": "missing_observation_no_estimate" if not records else None,
         }
 
     def _lookup(self, storm: dict) -> list[dict]:
@@ -255,7 +255,8 @@ class StormSurgeRepository:
         if provided is not None:
             rows = provided if isinstance(provided, list) else [provided]
             records = [_normalize_record(row) for row in rows if isinstance(row, dict)]
-            if records:
+            if any(row.get('severity') or row.get('warning_level') or row.get('max_surge_m') is not None
+                   or row.get('max_water_level_m') is not None for row in records):
                 return self._aggregate(records, "provided")
         records = self._lookup(storm)
         if records:
@@ -294,7 +295,7 @@ class StormSurgeRepository:
         elif max_surge is not None:
             severity, basis = _relative_severity(max_surge, self._population() + [max_surge])
         else:
-            severity, basis = "一般", "关联记录关键指标不完整，暂作一般影响判断"
+            severity, basis = None, "关联记录关键指标不完整，未判定影响等级"
         details = []
         station_peaks = {}
         for record in records:
@@ -352,37 +353,18 @@ class StormSurgeRepository:
         }
 
     def _proxy(self, storm: dict, track: list[dict]) -> dict:
-        wind = _number(storm.get("wind_at_closest"))
-        if wind is None:
-            wind = _number(storm.get("max_wind"))
-        pressure = _number(storm.get("pressure_at_closest"))
-        if pressure is None:
-            pressure = _number(storm.get("min_pressure"))
-        distance = _number(storm.get("closest_distance_zhejiang"))
-
-        score = 0
-        if wind is not None:
-            score += 3 if wind >= 80 else 2 if wind >= 55 else 1 if wind >= 34 else 0
-        if pressure is not None:
-            score += 2 if pressure <= 950 else 1 if pressure <= 980 else 0
-        if distance is not None:
-            score += 3 if distance <= 100 else 2 if distance <= 250 else 1 if distance <= 500 else 0
-        severity = "严重" if score >= 5 else "一般" if score >= 3 else "轻微"
-        parts = []
-        if distance is not None:
-            parts.append(f"轨迹采样点至浙江参考边界的最小计算距离约{distance:.0f} km")
-        if wind is not None:
-            parts.append(f"近浙江或峰值风速约{format_wind_from_knots(wind)}")
-        if pressure is not None:
-            parts.append(f"中心气压约{pressure:.0f} hPa")
-        conditions = "、".join(parts) if parts else "可用台风条件有限"
+        # Keep the legacy adapter method, but no longer turn centre intensity
+        # and distance into a fictitious Zhejiang storm-surge impact grade.
+        # Actual historical observations are returned by _aggregate instead.
         return {
-            "severity": severity,
+            "severity": None,
             "is_estimate": True,
-            "confidence": "medium" if len(parts) >= 2 else "low",
-            "origin": "proxy",
-            "basis": "台风强度、中心气压及轨迹采样点至浙江参考边界距离的代理判断",
-            "summary": f"暂无关联实测风暴潮数据；依据{conditions}，风暴潮影响潜势粗略判断为{severity}",
+            "data_state": "missing",
+            "confidence": "unavailable",
+            "origin": "missing_observation",
+            "basis": "未取得与该台风身份及时间相符的实测风暴潮或灾害报告",
+            "summary": "暂无关联实测风暴潮数据，风暴潮影响程度尚不能判定；台风中心强度和路径相似度不能代替浙江客观海况预报",
+            "missing_information": ["身份和时次一致的实测增水、潮位及站点记录或灾害报告"],
             "warning_level": None,
             "max_surge_m": None,
             "max_surge_station": None,
